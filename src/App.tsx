@@ -2,15 +2,11 @@ import { useState, useMemo, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   GlassWater,
-  Wine,
   Shuffle,
   Search,
-  X,
   Martini,
-  Flame,
   ChevronRight,
   Store,
-  Smile,
   Heart,
   User,
   Apple
@@ -19,6 +15,7 @@ import clsx from 'clsx';
 import { recipes, type Recipe } from './data/recipes';
 import { supabase } from './supabaseClient';
 import type { Session } from '@supabase/supabase-js';
+import { RecipeDetailModal } from './RecipeDetailModal';
 
 // UI Translations
 const translations = {
@@ -110,25 +107,7 @@ const translations = {
 
 const spiritsList = ['all', 'gin', 'vodka', 'rum', 'tequila', 'whiskey', 'brandy', 'wine', 'liqueur', 'beer'];
 
-const SpecBar = ({ value, label, subLabel, icon: Icon, colorClass, barColorClass }: { value: number; label: string; subLabel: string; icon: any; colorClass: string; barColorClass: string }) => (
-  <div className="space-y-1.5">
-    <div className="flex justify-between items-end">
-      <div className="flex items-center gap-1.5 text-sm font-medium text-zinc-200">
-        <Icon size={14} className={colorClass} />
-        {label}
-      </div>
-      <span className="text-[10px] text-zinc-500 uppercase tracking-wider">{subLabel}</span>
-    </div>
-    <div className="h-2 w-full bg-white/5 rounded-full overflow-hidden border border-white/5">
-      <motion.div
-        initial={{ width: 0 }}
-        animate={{ width: `${value * 10}%` }}
-        transition={{ duration: 1, ease: "easeOut" }}
-        className={clsx("h-full rounded-full", barColorClass)}
-      />
-    </div>
-  </div>
-);
+
 
 // Simple Google Icon SVG
 const GoogleIcon = () => (
@@ -486,136 +465,17 @@ function App() {
       {/* Detail Modal */}
       <AnimatePresence>
         {selectedRecipe && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4"
-          >
-            <div className="absolute inset-0 bg-black/90 backdrop-blur-md" onClick={() => setSelectedRecipe(null)} />
-
-            <motion.div
-              initial={{ y: "100%" }}
-              animate={{ y: 0 }}
-              exit={{ y: "100%" }}
-              transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="bg-zinc-900 w-full max-w-md rounded-t-3xl sm:rounded-3xl overflow-hidden relative border border-white/10 max-h-[90vh] flex flex-col"
-            >
-              {/* Modal Header Image Area */}
-              <div
-                className="h-64 w-full relative overflow-hidden shrink-0"
-              >
-                <img
-                  src={selectedRecipe.image}
-                  alt={selectedRecipe.name[lang]}
-                  className="w-full h-full object-cover"
-                />
-                <div
-                  className="absolute inset-0 bg-gradient-to-t from-zinc-900 via-transparent to-black/40"
-                />
-
-                <button
-                  onClick={() => setSelectedRecipe(null)}
-                  className="absolute top-4 right-4 p-2 rounded-full bg-black/30 hover:bg-black/50 text-white backdrop-blur-md z-20 border border-white/10"
-                >
-                  <X size={20} />
-                </button>
-
-                <button
-                  onClick={(e) => toggleFavorite(selectedRecipe.id, e)}
-                  className="absolute top-4 right-16 p-2 rounded-full bg-black/30 hover:bg-black/50 text-white backdrop-blur-md z-20 border border-white/10"
-                >
-                  <Heart size={20} fill={favorites.has(selectedRecipe.id) ? "#ef4444" : "none"} className={clsx(favorites.has(selectedRecipe.id) && "text-red-500")} />
-                </button>
-              </div>
-
-              {/* Content - Scrollable */}
-              <div className="p-6 space-y-6 overflow-y-auto">
-                <div>
-                  <h2 className="text-3xl font-bold text-white">{selectedRecipe.name[lang]}</h2>
-                  <div className="flex gap-2 mt-2 flex-wrap">
-                    {selectedRecipe.tags[lang].map(tag => (
-                      <span key={tag} className="text-xs uppercase font-bold tracking-wider text-zinc-400">#{tag}</span>
-                    ))}
-                  </div>
-                  <p className="mt-4 text-zinc-300 leading-relaxed">
-                    {selectedRecipe.description[lang]}
-                  </p>
-                </div>
-
-                {/* Taste Profile Scale */}
-                <div className="bg-surface/30 rounded-2xl p-4 border border-white/5 space-y-4">
-                  <SpecBar
-                    label={t.specs.alcohol}
-                    subLabel={t.specs.alcoholDesc}
-                    value={selectedRecipe.specs.alcohol}
-                    icon={Flame}
-                    colorClass="text-red-500"
-                    barColorClass="bg-red-500"
-                  />
-                  <SpecBar
-                    label={t.specs.sweetness}
-                    subLabel={t.specs.sweetnessDesc}
-                    value={selectedRecipe.specs.sweetness}
-                    icon={GlassWater}
-                    colorClass="text-pink-400"
-                    barColorClass="bg-pink-400"
-                  />
-                  <SpecBar
-                    label={t.specs.ease}
-                    subLabel={t.specs.easeDesc}
-                    value={selectedRecipe.specs.ease}
-                    icon={Smile}
-                    colorClass="text-green-400"
-                    barColorClass="bg-green-400"
-                  />
-                </div>
-
-                <div className="space-y-3">
-                  <h3 className="text-sm font-medium text-zinc-400 uppercase tracking-widest flex items-center gap-2">
-                    <Wine size={14} /> {t.ingredients}
-                  </h3>
-                  <div className="bg-surface/50 rounded-xl p-4 border border-white/5 space-y-2">
-                    {selectedRecipe.ingredients[lang].map((ing, i) => (
-                      <div key={i} className="flex justify-between items-center text-sm border-b border-white/5 last:border-0 pb-2 last:pb-0">
-                        <span className="text-zinc-200">{ing.name}</span>
-                        <span className="text-primary font-bold">{ing.amount}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="space-y-3">
-                  <h3 className="text-sm font-medium text-zinc-400 uppercase tracking-widest flex items-center gap-2">
-                    <Flame size={14} /> {t.steps}
-                  </h3>
-                  <div className="space-y-4">
-                    {selectedRecipe.steps[lang].map((step, i) => (
-                      <div key={i} className="flex gap-4">
-                        <div className="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center text-xs font-bold text-primary shrink-0 border border-primary/20 shadow-[0_0_10px_rgba(139,92,246,0.2)]">
-                          {i + 1}
-                        </div>
-                        <p className="text-zinc-300 text-sm leading-relaxed">{step}</p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="pt-4 pb-6">
-                  <button
-                    onClick={() => setSelectedRecipe(null)}
-                    className="w-full py-4 rounded-xl bg-gradient-to-r from-primary to-accent text-zinc-950 font-bold text-lg hover:opacity-90 active:scale-[0.98] transition-all shadow-[0_0_20px_rgba(34,211,238,0.2)]"
-                  >
-                    {t.done}
-                  </button>
-                </div>
-              </div>
-
-            </motion.div>
-          </motion.div>
+          <RecipeDetailModal
+            recipe={selectedRecipe}
+            onClose={() => setSelectedRecipe(null)}
+            isFavorite={favorites.has(selectedRecipe.id)}
+            onToggleFavorite={toggleFavorite}
+            t={t}
+            lang={lang}
+          />
         )}
       </AnimatePresence>
-    </div>
+    </div >
   );
 }
 
