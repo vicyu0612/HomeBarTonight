@@ -905,4 +905,182 @@ export const recipes: Recipe[] = [
         color: '#27272a', // Zinc-800
         image: '/cocktails/espresso-martini.png'
     }
+    ,
+    // CVS Beer Series
+    {
+        id: 'shandy',
+        name: { en: 'Shandy / Radler', zh: '雪碧啤酒 (Radler)' },
+        type: 'cvs',
+        baseSpirit: ['beer'],
+        ingredients: {
+            en: [
+                { name: 'Lager Beer', amount: '50%' },
+                { name: 'Sprite / 7-Up', amount: '50%' },
+                { name: 'Lemon', amount: 'Garnish' }
+            ],
+            zh: [
+                { name: '拉格啤酒', amount: '50%' },
+                { name: '雪碧', amount: '50%' },
+                { name: '檸檬', amount: '裝飾' }
+            ]
+        },
+        steps: {
+            en: [
+                'Fill a chilled glass halfway with beer.',
+                'Top with Sprite.',
+                'Garnish with a lemon slice for freshness.'
+            ],
+            zh: [
+                '將冰鎮的杯子倒一半啤酒。',
+                '加滿雪碧。',
+                '放上一片檸檬增加清爽感。'
+            ]
+        },
+        tags: {
+            en: ['refreshing', 'light', 'summer'],
+            zh: ['清爽', '低酒精', '夏天']
+        },
+        description: {
+            en: 'The ultimate thirst quencher. Lower alcohol, maximum refreshment.',
+            zh: '終極解渴聖品。低酒精，最大程度的清爽。'
+        },
+        specs: {
+            alcohol: 3,
+            sweetness: 6,
+            ease: 10
+        },
+        color: '#facc15', // Yellow-400
+        image: '/cocktails/shandy.png'
+    },
+    {
+        id: 'somaek',
+        name: { en: 'Somaek (Soju Bomb)', zh: '燒啤 (燒酒炸彈)' },
+        type: 'cvs',
+        baseSpirit: ['beer'],
+        ingredients: {
+            en: [
+                { name: 'Lager Beer', amount: '70%' },
+                { name: 'Soju', amount: '30%' }
+            ],
+            zh: [
+                { name: '啤酒', amount: '70%' },
+                { name: '韓國燒酒', amount: '30%' }
+            ]
+        },
+        steps: {
+            en: [
+                'Pour beer into a glass until 70% full.',
+                'Drop a shot glass of soju into the beer.',
+                'Or just mix them. Tap the bottom with a spoon to make it fizz.'
+            ],
+            zh: [
+                '將啤酒倒入杯中至七分滿。',
+                '將一小杯燒酒丟入啤酒中 (炸彈)。',
+                '或者直接混合。用湯匙敲擊杯底讓氣泡噴發。'
+            ]
+        },
+        tags: {
+            en: ['party', 'strong', 'korean'],
+            zh: ['派對', '混酒', '韓式']
+        },
+        description: {
+            en: 'The legendary Korean party starter. "One shot!"',
+            zh: '韓國派對傳奇開場酒。「乾杯！」'
+        },
+        specs: {
+            alcohol: 8,
+            sweetness: 3,
+            ease: 8
+        },
+        color: '#fbbf24', // Amber-400
+        image: '/cocktails/somaek.png'
+    },
+    {
+        id: 'red-eye',
+        name: { en: 'Red Eye', zh: '紅眼' },
+        type: 'cvs',
+        baseSpirit: ['beer'],
+        ingredients: {
+            en: [
+                { name: 'Lager Beer', amount: '50%' },
+                { name: 'Tomato Juice', amount: '50%' },
+                { name: 'Lemon Juice', amount: 'Dash' }
+            ],
+            zh: [
+                { name: '啤酒', amount: '50%' },
+                { name: '番茄汁 (可果美)', amount: '50%' },
+                { name: '檸檬汁', amount: '少許' }
+            ]
+        },
+        steps: {
+            en: [
+                'Fill a glass with ice.',
+                'Pour tomato juice and beer simultaneously.',
+                'Add a dash of lemon juice or Tabasco if you dare.'
+            ],
+            zh: [
+                '杯中加冰。',
+                '同時倒入番茄汁和啤酒。',
+                '加點檸檬汁，膽子大的可以加 Tabasco。'
+            ]
+        },
+        tags: {
+            en: ['savory', 'hangover', 'unique'],
+            zh: ['鹹', '解宿醉', '獨特']
+        },
+        description: {
+            en: 'A classic hangover cure. Sounds weird, tastes good.',
+            zh: '經典解宿醉良方。聽起來很怪，但意外好喝。'
+        },
+        specs: {
+            alcohol: 4,
+            sweetness: 2,
+            ease: 9
+        },
+        color: '#ef4444', // Red-500
+        image: '/cocktails/kalimotxo.png' // Placeholder reused
+    },
+    {
+        id: 'calpis-beer',
+        name: { en: 'Calpis Beer', zh: '可爾必思啤酒' },
+        type: 'cvs',
+        baseSpirit: ['beer'],
+        ingredients: {
+            en: [
+                { name: 'Lager Beer', amount: '80%' },
+                { name: 'Calpis Water/Concentrate', amount: '20%' }
+            ],
+            zh: [
+                { name: '啤酒', amount: '80%' },
+                { name: '可爾必思', amount: '20%' }
+            ]
+        },
+        steps: {
+            en: [
+                'Pour cold beer into a glass.',
+                'Add Calpis slowly and stir.',
+                'Enjoy the creamy foam.'
+            ],
+            zh: [
+                '將冰啤酒倒入杯中。',
+                '緩緩加入可爾必思並攪拌。',
+                '享受綿密的泡沫。'
+            ]
+        },
+        tags: {
+            en: ['sweet', 'creamy', 'easy'],
+            zh: ['甜', '綿密', '簡單']
+        },
+        description: {
+            en: 'Double cultured delight. Sweet and sour perfection.',
+            zh: '雙重發酵的美味。酸甜適中的完美組合。'
+        },
+        specs: {
+            alcohol: 4,
+            sweetness: 7,
+            ease: 10
+        },
+        color: '#fef9c3', // Yellow-100 (Pale creamy)
+        image: '/cocktails/shandy.png' // Placeholder reused
+    }
 ];

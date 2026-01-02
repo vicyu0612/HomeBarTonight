@@ -40,7 +40,8 @@ const translations = {
       whiskey: "Whiskey",
       brandy: "Brandy",
       wine: "Wine",
-      liqueur: "Liqueur"
+      liqueur: "Liqueur",
+      beer: "Beer"
     },
     noResults: "No drinks found.",
     clear: "Clear filters",
@@ -81,7 +82,8 @@ const translations = {
       whiskey: "威士忌",
       brandy: "白蘭地",
       wine: "紅/白酒",
-      liqueur: "香甜酒/奶酒"
+      liqueur: "香甜酒/奶酒",
+      beer: "啤酒"
     },
     noResults: "找不到這款酒。",
     clear: "清除篩選",
@@ -106,7 +108,7 @@ const translations = {
   }
 };
 
-const spiritsList = ['all', 'gin', 'vodka', 'rum', 'tequila', 'whiskey', 'brandy', 'wine', 'liqueur'];
+const spiritsList = ['all', 'gin', 'vodka', 'rum', 'tequila', 'whiskey', 'brandy', 'wine', 'liqueur', 'beer'];
 
 const SpecBar = ({ value, label, subLabel, icon: Icon, colorClass, barColorClass }: { value: number; label: string; subLabel: string; icon: any; colorClass: string; barColorClass: string }) => (
   <div className="space-y-1.5">
