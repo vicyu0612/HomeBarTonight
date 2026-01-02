@@ -1,9 +1,8 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   GlassWater,
   Wine,
-  Beer,
   Shuffle,
   Search,
   X,
@@ -11,13 +10,15 @@ import {
   Flame,
   ChevronRight,
   Store,
-  Languages,
-  Thermometer,
-  Zap,
-  Smile
+  Smile,
+  Heart,
+  User,
+  Apple
 } from 'lucide-react';
 import clsx from 'clsx';
 import { recipes, type Recipe } from './data/recipes';
+import { supabase } from './supabaseClient';
+import type { Session } from '@supabase/supabase-js';
 
 // UI Translations
 const translations = {
@@ -27,7 +28,8 @@ const translations = {
     tabs: {
       all: "All",
       classic: "Classic",
-      cvs: "CVS Mode"
+      cvs: "CVS Mode",
+      favorites: "Favorites"
     },
     spirits: {
       all: "All Spirits",
@@ -37,13 +39,21 @@ const translations = {
       tequila: "Tequila",
       whiskey: "Whiskey",
       brandy: "Brandy",
-      wine: "Wine"
+      wine: "Wine",
+      liqueur: "Liqueur"
     },
     noResults: "No drinks found.",
     clear: "Clear filters",
     ingredients: "Ingredients",
     steps: "Steps",
     done: "Done Making It",
+    login: {
+      title: "Sign In",
+      subtitle: "Save your favorites and sync across devices.",
+      google: "Continue with Google",
+      apple: "Continue with Apple",
+      guest: "Continue as Guest"
+    },
     specs: {
       alcohol: "Alcohol",
       sweetness: "Sweetness",
@@ -59,7 +69,8 @@ const translations = {
     tabs: {
       all: "全部",
       classic: "經典",
-      cvs: "超商模式"
+      cvs: "超商模式",
+      favorites: "我的最愛"
     },
     spirits: {
       all: "所有基酒",
@@ -69,13 +80,21 @@ const translations = {
       tequila: "龍舌蘭",
       whiskey: "威士忌",
       brandy: "白蘭地",
-      wine: "紅/白酒"
+      wine: "紅/白酒",
+      liqueur: "香甜酒/奶酒"
     },
     noResults: "找不到這款酒。",
     clear: "清除篩選",
     ingredients: "材料",
     steps: "步驟",
     done: "調好了！",
+    login: {
+      title: "登入帳號",
+      subtitle: "儲存您的最愛清單並跨裝置同步。",
+      google: "使用 Google 繼續",
+      apple: "使用 Apple 繼續",
+      guest: "以訪客身份繼續"
+    },
     specs: {
       alcohol: "酒精強度",
       sweetness: "酸甜度",
@@ -87,7 +106,7 @@ const translations = {
   }
 };
 
-const spiritsList = ['all', 'gin', 'vodka', 'rum', 'tequila', 'whiskey', 'brandy', 'wine'];
+const spiritsList = ['all', 'gin', 'vodka', 'rum', 'tequila', 'whiskey', 'brandy', 'wine', 'liqueur'];
 
 const SpecBar = ({ value, label, subLabel, icon: Icon, colorClass, barColorClass }: { value: number; label: string; subLabel: string; icon: any; colorClass: string; barColorClass: string }) => (
   <div className="space-y-1.5">
@@ -109,18 +128,108 @@ const SpecBar = ({ value, label, subLabel, icon: Icon, colorClass, barColorClass
   </div>
 );
 
+// Simple Google Icon SVG
+const GoogleIcon = () => (
+  <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M23.52 12.29c0-.85-.08-1.68-.21-2.48H12v4.7h6.45c-.28 1.48-1.12 2.74-2.39 3.59v2.98h3.87c2.26-2.08 3.56-5.15 3.56-8.79z" fill="#4285F4" />
+    <path d="M12 24c3.24 0 5.96-1.07 7.95-2.9l-3.87-2.98c-1.08.72-2.45 1.15-4.08 1.15-3.13 0-5.78-2.11-6.73-4.96H1.36v3.12C3.33 21.36 7.37 24 12 24z" fill="#34A853" />
+    <path d="M5.27 14.29c-.25-.74-.38-1.53-.38-2.34s.13-1.6.38-2.34V6.49H1.36C.49 8.21 0 10.05 0 12c0 1.95.49 3.79 1.36 5.51l3.91-3.22z" fill="#FBBC05" />
+    <path d="M12 4.75c1.76 0 3.34.6 4.58 1.79l3.44-3.44C17.96 1.18 15.24 0 12 0 7.37 0 3.33 2.64 1.36 6.49l3.91 3.22c.95-2.85 3.6-4.96 6.73-4.96z" fill="#EA4335" />
+  </svg>
+);
+
 function App() {
-  const [lang, setLang] = useState<'en' | 'zh'>('zh'); // Default to Chinese
-  const [activeTab, setActiveTab] = useState<'all' | 'classic' | 'cvs'>('all');
+  const [lang, setLang] = useState<'en' | 'zh'>('zh');
+  const [activeTab, setActiveTab] = useState<'all' | 'classic' | 'cvs' | 'favorites'>('all');
   const [activeSpirit, setActiveSpirit] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(null);
+
+  // Auth & User State
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const [session, setSession] = useState<Session | null>(null);
+
+  // Favorites State
+  const [favorites, setFavorites] = useState<Set<string>>(() => {
+    const saved = localStorage.getItem('favorites');
+    return saved ? new Set(JSON.parse(saved)) : new Set();
+  });
+
+  useEffect(() => {
+    if (!supabase) return;
+
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+    });
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  const toggleFavorite = (id: string, e?: React.MouseEvent) => {
+    e?.stopPropagation();
+    setFavorites(prev => {
+      const newFavs = new Set(prev);
+      if (newFavs.has(id)) {
+        newFavs.delete(id);
+      } else {
+        newFavs.add(id);
+      }
+      return newFavs;
+    });
+  };
+
+  const handleLogin = async (provider: 'google' | 'apple') => {
+    if (!supabase) {
+      alert("Please configure Supabase credentials in .env.local to enable login.");
+      return;
+    }
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: provider,
+      options: {
+        redirectTo: window.location.origin
+      }
+    });
+    if (error) {
+      console.error('Error logging in:', error.message);
+    }
+  };
+
+  const handleGuestLogin = async () => {
+    if (!supabase) {
+      alert("Please configure Supabase credentials in .env.local to enable login.");
+      return;
+    }
+    const { error } = await supabase.auth.signInAnonymously();
+    if (error) {
+      console.error('Error logging in anonymously:', error.message);
+      alert(`Guest login failed: ${error.message}\n(Make sure 'Anonymous Sign-ins' are enabled in your Supabase Auth settings)`);
+    } else {
+      setShowLoginModal(false);
+    }
+  };
+
+  const handleLogout = async () => {
+    if (!supabase) return;
+    const { error } = await supabase.auth.signOut();
+    if (error) console.error('Error logging out:', error.message);
+  };
 
   const t = translations[lang];
 
   const filteredRecipes = useMemo(() => {
     return recipes.filter(recipe => {
-      const matchesTab = activeTab === 'all' || recipe.type === activeTab;
+      // Favorite Tab Logic
+      if (activeTab === 'favorites') {
+        if (!favorites.has(recipe.id)) return false;
+      } else if (activeTab !== 'all' && recipe.type !== activeTab) {
+        return false;
+      }
 
       const matchesSpirit = activeSpirit === 'all' || recipe.baseSpirit.includes(activeSpirit);
 
@@ -129,9 +238,9 @@ function App() {
       const searchLower = searchQuery.toLowerCase();
 
       const matchesSearch = name.includes(searchLower) || ingredients.includes(searchLower);
-      return matchesTab && matchesSpirit && matchesSearch;
+      return matchesSpirit && matchesSearch;
     });
-  }, [activeTab, activeSpirit, searchQuery, lang]);
+  }, [activeTab, activeSpirit, searchQuery, lang, favorites]);
 
   const handleRandom = () => {
     const random = filteredRecipes[Math.floor(Math.random() * filteredRecipes.length)];
@@ -165,6 +274,15 @@ function App() {
           </div>
           <div className="flex gap-2">
             <button
+              onClick={() => session ? handleLogout() : setShowLoginModal(true)}
+              className={clsx(
+                "p-3 rounded-full hover:bg-white/20 active:scale-95 transition-all backdrop-blur-md border border-white/5",
+                session ? "bg-primary/20 text-primary border-primary/20" : "bg-white/10 text-zinc-300"
+              )}
+            >
+              {session ? <User size={20} fill="currentColor" /> : <User size={20} />}
+            </button>
+            <button
               onClick={toggleLang}
               className="p-3 rounded-full bg-white/10 hover:bg-white/20 active:scale-95 transition-all text-zinc-300 backdrop-blur-md border border-white/5"
             >
@@ -197,19 +315,20 @@ function App() {
               { id: 'all', label: t.tabs.all, icon: GlassWater },
               { id: 'classic', label: t.tabs.classic, icon: Martini },
               { id: 'cvs', label: t.tabs.cvs, icon: Store },
+              { id: 'favorites', label: t.tabs.favorites, icon: Heart }
             ].map((tab) => (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id as any)}
                 className={clsx(
-                  "flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg text-sm font-medium transition-all duration-300",
+                  "flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-lg text-xs font-bold transition-all duration-300",
                   activeTab === tab.id
                     ? "bg-white/10 text-white shadow-lg"
                     : "text-zinc-500 hover:text-zinc-300 hover:bg-white/5"
                 )}
               >
-                <tab.icon size={16} />
-                {tab.label}
+                <tab.icon size={14} fill={tab.id === 'favorites' && activeTab === 'favorites' ? "currentColor" : "none"} />
+                <span className="truncate">{tab.label}</span>
               </button>
             ))}
           </div>
@@ -245,9 +364,17 @@ function App() {
                 key={recipe.id}
                 onClick={() => setSelectedRecipe(recipe)}
                 whileTap={{ scale: 0.98 }}
-                className="glass-card p-3 flex items-center gap-4 cursor-pointer group hover:bg-white/10 transition-colors overflow-hidden"
+                className="glass-card p-3 flex items-center gap-4 cursor-pointer group hover:bg-white/10 transition-colors overflow-hidden relative"
                 style={{ borderColor: `${recipe.color}30` }}
               >
+                {/* Favorite Button on Card */}
+                <button
+                  onClick={(e) => toggleFavorite(recipe.id, e)}
+                  className="absolute top-2 right-2 p-2 rounded-full z-10 text-white/50 hover:text-red-500 hover:bg-white/10 transition-all active:scale-90"
+                >
+                  <Heart size={18} fill={favorites.has(recipe.id) ? "#ef4444" : "none"} className={clsx(favorites.has(recipe.id) && "text-red-500")} />
+                </button>
+
                 <div className="w-20 h-20 rounded-xl overflow-hidden shrink-0 bg-zinc-800 border border-white/10 relative">
                   <img
                     src={recipe.image}
@@ -261,7 +388,7 @@ function App() {
                 </div>
 
                 <div className="flex-1 min-w-0 py-1">
-                  <div className="flex justify-between items-start">
+                  <div className="flex justify-between items-start pr-8">
                     <h3 className="font-bold text-lg leading-tight truncate text-white">{recipe.name[lang]}</h3>
                   </div>
                   <p className="text-zinc-400 text-xs mt-1 line-clamp-2">{recipe.description[lang]}</p>
@@ -296,6 +423,63 @@ function App() {
         </main>
 
       </div>
+
+      {/* Login Modal */}
+      <AnimatePresence>
+        {showLoginModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4"
+          >
+            <div className="absolute inset-0 bg-black/90 backdrop-blur-md" onClick={() => setShowLoginModal(false)} />
+
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="bg-zinc-900 w-full max-w-sm rounded-[2rem] overflow-hidden relative border border-white/10 p-8 shadow-2xl"
+            >
+              <div className="text-center mb-8">
+                <div className="w-16 h-16 rounded-full bg-primary/20 flex items-center justify-center mx-auto mb-4 border border-primary/20 shadow-[0_0_20px_rgba(139,92,246,0.3)]">
+                  <User size={32} className="text-primary" />
+                </div>
+                <h2 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent">
+                  {t.login.title}
+                </h2>
+                <p className="text-zinc-400 text-sm mt-2">{t.login.subtitle}</p>
+              </div>
+
+              <div className="space-y-3">
+                <button
+                  onClick={() => handleLogin('google')}
+                  className="w-full py-3.5 rounded-xl bg-white text-zinc-900 font-bold flex items-center justify-center gap-3 hover:bg-zinc-200 transition-colors"
+                >
+                  <GoogleIcon />
+                  {t.login.google}
+                </button>
+                <button
+                  onClick={() => handleLogin('apple')}
+                  className="w-full py-3.5 rounded-xl bg-black text-white font-bold flex items-center justify-center gap-3 border border-white/20 hover:bg-zinc-900 transition-colors"
+                >
+                  <div className="w-5 h-5 flex items-center justify-center"><Apple size={20} fill="currentColor" /></div>
+                  {t.login.apple}
+                </button>
+              </div>
+
+              <div className="mt-6 text-center">
+                <button
+                  onClick={handleGuestLogin}
+                  className="text-zinc-500 text-sm hover:text-white transition-colors"
+                >
+                  {t.login.guest}
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Detail Modal */}
       <AnimatePresence>
@@ -333,6 +517,13 @@ function App() {
                   className="absolute top-4 right-4 p-2 rounded-full bg-black/30 hover:bg-black/50 text-white backdrop-blur-md z-20 border border-white/10"
                 >
                   <X size={20} />
+                </button>
+
+                <button
+                  onClick={(e) => toggleFavorite(selectedRecipe.id, e)}
+                  className="absolute top-4 right-16 p-2 rounded-full bg-black/30 hover:bg-black/50 text-white backdrop-blur-md z-20 border border-white/10"
+                >
+                  <Heart size={20} fill={favorites.has(selectedRecipe.id) ? "#ef4444" : "none"} className={clsx(favorites.has(selectedRecipe.id) && "text-red-500")} />
                 </button>
               </div>
 

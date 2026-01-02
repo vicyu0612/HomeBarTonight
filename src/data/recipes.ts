@@ -718,5 +718,191 @@ export const recipes: Recipe[] = [
         },
         color: '#3f2c2c', // Dark cola
         image: '/cocktails/rum-coke.png'
+    },
+    {
+        id: 'white-russian',
+        name: { en: 'White Russian', zh: '白色俄羅斯' },
+        type: 'classic',
+        baseSpirit: ['vodka', 'liqueur'],
+        ingredients: {
+            en: [
+                { name: 'Vodka', amount: '50ml' },
+                { name: 'Coffee Liqueur (Kahlua)', amount: '20ml' },
+                { name: 'Heavy Cream', amount: '30ml' }
+            ],
+            zh: [
+                { name: '伏特加', amount: '50ml' },
+                { name: '咖啡香甜酒', amount: '20ml' },
+                { name: '鮮奶油', amount: '30ml' }
+            ]
+        },
+        steps: {
+            en: [
+                'Add vodka and coffee liqueur into a glass with ice.',
+                'Float fresh cream on top.',
+                'Stir slowly to create a swirl effect.'
+            ],
+            zh: [
+                '將伏特加和咖啡酒倒入裝滿冰的杯中。',
+                '在上層緩緩倒入鮮奶油。',
+                '輕輕攪拌製造出美麗的雲霧紋路。'
+            ]
+        },
+        tags: {
+            en: ['creamy', 'sweet', 'classic'],
+            zh: ['奶香', '甜', '經典']
+        },
+        description: {
+            en: 'The Dude abides. A creamy coffee delight.',
+            zh: '電影《謀殺綠腳趾》主角最愛。濃郁的咖啡奶香。'
+        },
+        specs: {
+            alcohol: 6,
+            sweetness: 7,
+            ease: 8
+        },
+        color: '#e7e5e4', // Warm stone/Cream
+        image: '/cocktails/white-russian.png'
+    },
+    {
+        id: 'mudslide',
+        name: { en: 'Mudslide', zh: '土石流' },
+        type: 'classic',
+        baseSpirit: ['vodka', 'liqueur'],
+        ingredients: {
+            en: [
+                { name: 'Vodka', amount: '30ml' },
+                { name: 'Coffee Liqueur', amount: '30ml' },
+                { name: 'Irish Cream (Baileys)', amount: '30ml' },
+                { name: 'Heavy Cream', amount: '30ml' }
+            ],
+            zh: [
+                { name: '伏特加', amount: '30ml' },
+                { name: '咖啡香甜酒', amount: '30ml' },
+                { name: '貝禮詩奶酒', amount: '30ml' },
+                { name: '鮮奶油', amount: '30ml' }
+            ]
+        },
+        steps: {
+            en: [
+                'Shake all ingredients with ice.',
+                'Strain into a glass with fresh ice.',
+                'Optional: Drizzle chocolate syrup inside the glass.'
+            ],
+            zh: [
+                '將所有材料加冰搖盪均勻。',
+                '濾冰倒入裝滿新冰的杯中。',
+                '可選：在杯壁淋上巧克力醬裝飾。'
+            ]
+        },
+        tags: {
+            en: ['dessert', 'rich', 'sweet'],
+            zh: ['甜點', '濃郁', '甜']
+        },
+        description: {
+            en: 'A boozy chocolate milkshake for adults.',
+            zh: '給大人喝的酒精版巧克力奶昔。'
+        },
+        specs: {
+            alcohol: 6,
+            sweetness: 9,
+            ease: 6
+        },
+        color: '#78350f', // Amber-900 (Chocolatey)
+        image: '/cocktails/mudslide.png'
+    },
+    {
+        id: 'b52',
+        name: { en: 'B-52', zh: 'B-52 轟炸機' },
+        type: 'classic',
+        baseSpirit: ['liqueur'],
+        ingredients: {
+            en: [
+                { name: 'Coffee Liqueur', amount: '1/3 part' },
+                { name: 'Irish Cream', amount: '1/3 part' },
+                { name: 'Grand Marnier', amount: '1/3 part' }
+            ],
+            zh: [
+                { name: '咖啡香甜酒', amount: '1/3 等份' },
+                { name: '貝禮詩奶酒', amount: '1/3 等份' },
+                { name: '柑橘酒 (Grand Marnier)', amount: '1/3 等份' }
+            ]
+        },
+        steps: {
+            en: [
+                'Layer ingredients carefully into a shot glass.',
+                'Order: Coffee Liqueur -> Irish Cream -> Grand Marnier.',
+                'Pour slowly over the back of a spoon.'
+            ],
+            zh: [
+                '將材料小心分層倒入 Shot 杯。',
+                '順序：咖啡酒 -> 奶酒 -> 柑橘酒。',
+                '使用吧叉匙背面緩衝，慢慢倒入。'
+            ]
+        },
+        tags: {
+            en: ['shot', 'layer', 'party'],
+            zh: ['一口酒', '分層', '派對']
+        },
+        description: {
+            en: 'The most famous layered shot in the world.',
+            zh: '世界上最著名的分層調酒。'
+        },
+        specs: {
+            alcohol: 7,
+            sweetness: 9,
+            ease: 4
+        },
+        color: '#f59e0b', // Amber-500
+        image: '/cocktails/b52.png'
+    },
+    {
+        id: 'espresso-martini',
+        name: { en: 'Espresso Martini', zh: '濃縮咖啡馬丁尼' },
+        type: 'classic',
+        baseSpirit: ['vodka', 'liqueur'],
+        ingredients: {
+            en: [
+                { name: 'Vodka', amount: '50ml' },
+                { name: 'Coffee Liqueur', amount: '30ml' },
+                { name: 'Espresso (Fresh)', amount: '30ml' },
+                { name: 'Sugar Syrup', amount: '10ml (Optional)' }
+            ],
+            zh: [
+                { name: '伏特加', amount: '50ml' },
+                { name: '咖啡香甜酒', amount: '30ml' },
+                { name: '濃縮咖啡 (熱)', amount: '30ml' },
+                { name: '糖水', amount: '10ml (選用)' }
+            ]
+        },
+        steps: {
+            en: [
+                'Brew a fresh shot of espresso.',
+                'Shake vehemently with ice to create foam.',
+                'Strain into a chilled coupe glass.',
+                'Garnish with 3 coffee beans.'
+            ],
+            zh: [
+                '煮一份新鮮的濃縮咖啡。',
+                '加冰塊大力搖盪以產生綿密泡沫。',
+                '濾冰倒入冰鎮的淺碟酒杯。',
+                '放上3顆咖啡豆裝飾。'
+            ]
+        },
+        tags: {
+            en: ['coffee', 'strong', 'modern'],
+            zh: ['咖啡', '提神', '現代經典']
+        },
+        description: {
+            en: 'Wake me up, and then fuck me up.',
+            zh: '「讓我清醒，再讓我醉。」當代咖啡調酒的經典。'
+        },
+        specs: {
+            alcohol: 7,
+            sweetness: 5,
+            ease: 5
+        },
+        color: '#27272a', // Zinc-800
+        image: '/cocktails/espresso-martini.png'
     }
 ];
