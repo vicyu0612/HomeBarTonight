@@ -1083,4 +1083,360 @@ export const recipes: Recipe[] = [
         color: '#fef9c3', // Yellow-100 (Pale creamy)
         image: '/cocktails/shandy.png' // Placeholder reused
     }
+    ,
+    // CVS Gin & Tequila
+    {
+        id: 'gin-tea',
+        name: { en: 'Gin & Tea', zh: '茶琴 (Tea Gin)' },
+        type: 'cvs',
+        baseSpirit: ['gin'],
+        ingredients: {
+            en: [
+                { name: 'Gin', amount: '45ml' },
+                { name: 'Oolong/Green Tea (Bottled)', amount: 'Top up' }
+            ],
+            zh: [
+                { name: '琴酒', amount: '45ml' },
+                { name: '烏龍茶或綠茶 (瓶裝)', amount: '加滿' }
+            ]
+        },
+        steps: {
+            en: [
+                'Fill glass with ice.',
+                'Pour gin.',
+                'Top with cold tea. No sugar needed.'
+            ],
+            zh: [
+                '杯中裝滿冰塊。',
+                '倒入琴酒。',
+                '加滿冰茶。推薦無糖茶。'
+            ]
+        },
+        tags: {
+            en: ['tea', 'refreshing', 'easy'],
+            zh: ['茶香', '清爽', '簡單']
+        },
+        description: {
+            en: 'Elegant, simple, and surprisingly sophisticated.',
+            zh: '優雅簡單，意外地有層次感。超商調酒的清流。'
+        },
+        specs: {
+            alcohol: 6,
+            sweetness: 1,
+            ease: 10
+        },
+        color: '#d97706', // Amber-600
+        image: '/cocktails/gin-tea.png'
+    },
+    {
+        id: 'gin-cc',
+        name: { en: 'Gin & CC Lemon', zh: '琴酒檸檬氣泡' },
+        type: 'cvs',
+        baseSpirit: ['gin'],
+        ingredients: {
+            en: [
+                { name: 'Gin', amount: '45ml' },
+                { name: 'CC Lemon / Lemon Soda', amount: 'Top up' }
+            ],
+            zh: [
+                { name: '琴酒', amount: '45ml' },
+                { name: 'CC檸檬 / 檸檬汽水', amount: '加滿' }
+            ]
+        },
+        steps: {
+            en: [
+                'Ice in glass.',
+                'Gin in glass.',
+                'CC Lemon in glass. Done.'
+            ],
+            zh: [
+                '冰塊進杯子。',
+                '琴酒進杯子。',
+                'CC檸檬倒滿。搞定。'
+            ]
+        },
+        tags: {
+            en: ['sweet', 'sour', 'fizzy'],
+            zh: ['酸甜', '氣泡', '維他命C']
+        },
+        description: {
+            en: 'Poor man\'s Gin Fizz. Tastes better than it sounds.',
+            zh: '窮人版的 Gin Fizz (琴費士)。比聽起來好喝兩百倍。'
+        },
+        specs: {
+            alcohol: 5,
+            sweetness: 8,
+            ease: 10
+        },
+        color: '#facc15', // Yellow-400
+        image: '/cocktails/gin-cc.png'
+    },
+    {
+        id: 'tequila-coke',
+        name: { en: 'Batanga (Tequila Coke)', zh: '巴坦加 (龍舌蘭可樂)' },
+        type: 'cvs',
+        baseSpirit: ['tequila'],
+        ingredients: {
+            en: [
+                { name: 'Tequila', amount: '50ml' },
+                { name: 'Coca-Cola', amount: 'Top up' },
+                { name: 'Lime Juice', amount: '15ml' }
+            ],
+            zh: [
+                { name: '龍舌蘭', amount: '50ml' },
+                { name: '可樂', amount: '加滿' },
+                { name: '檸檬汁', amount: '15ml' }
+            ]
+        },
+        steps: {
+            en: [
+                'Salt the rim if you feel fancy.',
+                'Ice, Tequila, Lime Juice.',
+                'Top with Coke and stir with a knife (tradition).'
+            ],
+            zh: [
+                '杯口抹鹽 (如果想講究一點)。',
+                '加冰、龍舌蘭、檸檬汁。',
+                '加滿可樂。據傳統要用餐刀攪拌。'
+            ]
+        },
+        tags: {
+            en: ['party', 'sweet', 'classic'],
+            zh: ['派對', '甜', '經典']
+        },
+        description: {
+            en: 'Mexico\'s Rum & Coke. The salt rim makes a difference.',
+            zh: '墨西哥版的蘭姆可樂。鹽口杯是靈魂所在。'
+        },
+        specs: {
+            alcohol: 6,
+            sweetness: 8,
+            ease: 9
+        },
+        color: '#3f2c2c', // Dark cola
+        image: '/cocktails/tequila-coke.png'
+    },
+    {
+        id: 'tequila-cider',
+        name: { en: 'Tequila Cider', zh: '龍舌蘭蘋果酒' },
+        type: 'cvs',
+        baseSpirit: ['tequila'],
+        ingredients: {
+            en: [
+                { name: 'Tequila', amount: '45ml' },
+                { name: 'Apple Cider (Somersby etc)', amount: 'Top up' }
+            ],
+            zh: [
+                { name: '龍舌蘭', amount: '45ml' },
+                { name: '蘋果酒 (Somersby等)', amount: '加滿' }
+            ]
+        },
+        steps: {
+            en: [
+                'Fill a glass with ice.',
+                'Pour tequila.',
+                'Top with apple cider.'
+            ],
+            zh: [
+                '杯中裝滿冰塊。',
+                '倒入龍舌蘭。',
+                '加滿蘋果酒。'
+            ]
+        },
+        tags: {
+            en: ['fruity', 'sweet', 'autumn'],
+            zh: ['果味', '甜', '妹酒']
+        },
+        description: {
+            en: 'Dangerous. Tastes like juice but hits hard.',
+            zh: '危險。喝起來像果汁，但後勁很強。'
+        },
+        specs: {
+            alcohol: 7,
+            sweetness: 8,
+            ease: 10
+        },
+        color: '#fcd34d', // Amber-300
+        image: '/cocktails/tequila-cider.png'
+    }
+    ,
+    // CVS Brandy & Liqueur & others
+    {
+        id: 'brandy-sidra',
+        name: { en: 'Brandy Sidra', zh: '白蘭地蘋果西打' },
+        type: 'cvs',
+        baseSpirit: ['brandy'],
+        ingredients: {
+            en: [
+                { name: 'Brandy', amount: '45ml' },
+                { name: 'Apple Sidra (Taiwanese Soda)', amount: 'Top up' }
+            ],
+            zh: [
+                { name: '白蘭地', amount: '45ml' },
+                { name: '蘋果西打', amount: '加滿' }
+            ]
+        },
+        steps: {
+            en: [
+                'Fill a glass with ice.',
+                'Pour brandy.',
+                'Top with Apple Sidra.',
+                'The "Champagne of Taiwan".'
+            ],
+            zh: [
+                '杯中裝滿冰塊。',
+                '倒入白蘭地。',
+                '加滿蘋果西打。',
+                '這就是台灣人的香檳。'
+            ]
+        },
+        tags: {
+            en: ['sweet', 'sparkling', 'taiwanese'],
+            zh: ['甜', '氣泡', '台式經典']
+        },
+        description: {
+            en: 'Local wisdom. The apple soda perfectly complements the brandy.',
+            zh: '在地人的智慧。蘋果西打跟白蘭地是天作之合。'
+        },
+        specs: {
+            alcohol: 5,
+            sweetness: 8,
+            ease: 10
+        },
+        color: '#ca8a04', // Yellow-600
+        image: '/cocktails/brandy-sidra.png'
+    },
+    {
+        id: 'baileys-milktea',
+        name: { en: 'Baileys Milk Tea', zh: '貝禮詩奶茶' },
+        type: 'cvs',
+        baseSpirit: ['liqueur'],
+        ingredients: {
+            en: [
+                { name: 'Baileys', amount: '50ml' },
+                { name: 'Milk Tea (Minechine/Assam)', amount: 'Top up' }
+            ],
+            zh: [
+                { name: '貝禮詩奶酒', amount: '50ml' },
+                { name: '麥香/阿薩姆奶茶', amount: '加滿' }
+            ]
+        },
+        steps: {
+            en: [
+                'Ice in glass.',
+                'Pour Baileys.',
+                'Add convenience store milk tea.',
+                'Hot or cold both work wonders.'
+            ],
+            zh: [
+                '加冰塊 (熱喝也可以)。',
+                '倒入奶酒。',
+                '加入超商奶茶。',
+                '冬天微波加熱喝更是極品。'
+            ]
+        },
+        tags: {
+            en: ['sweet', 'creamy', 'comfort'],
+            zh: ['甜', '奶香', '療癒']
+        },
+        description: {
+            en: 'The adult version of bubble tea (minus the bubbles).',
+            zh: '大人的奶茶。甜上加甜，但是很幸福。'
+        },
+        specs: {
+            alcohol: 4,
+            sweetness: 10,
+            ease: 10
+        },
+        color: '#a16207', // Brown
+        image: '/cocktails/baileys-milktea.png'
+    },
+    {
+        id: 'vodka-yakult',
+        name: { en: 'Vodka Yakult', zh: '伏特加養樂多' },
+        type: 'cvs',
+        baseSpirit: ['vodka'],
+        ingredients: {
+            en: [
+                { name: 'Vodka', amount: '45ml' },
+                { name: 'Yakult (Probiotic Drink)', amount: '2 bottles' }
+            ],
+            zh: [
+                { name: '伏特加', amount: '45ml' },
+                { name: '養樂多', amount: '2瓶' }
+            ]
+        },
+        steps: {
+            en: [
+                'Fill glass with ice.',
+                'Pour vodka.',
+                'Add Yakult. Shake/Stir well.'
+            ],
+            zh: [
+                '杯中裝滿冰塊。',
+                '倒入伏特加。',
+                '加入養樂多。攪拌均勻。'
+            ]
+        },
+        tags: {
+            en: ['sweet', 'creamy', 'easy'],
+            zh: ['酸甜', '妹酒', '超簡單']
+        },
+        description: {
+            en: 'Dangerous. Tastes exactly like yogurt drink.',
+            zh: '危險。喝起來完全就是養樂多，不知不覺就醉了。'
+        },
+        specs: {
+            alcohol: 6,
+            sweetness: 9,
+            ease: 10
+        },
+        color: '#fef08a', // Pale yellow
+        image: '/cocktails/vodka-yakult.png'
+    },
+    {
+        id: 'rum-guava',
+        name: { en: 'Rum & Guava', zh: '蘭姆芭樂' },
+        type: 'cvs',
+        baseSpirit: ['rum'],
+        ingredients: {
+            en: [
+                { name: 'White Rum', amount: '45ml' },
+                { name: 'Guava Juice', amount: 'Top up' },
+                { name: 'Lemon', amount: 'Squeeze' }
+            ],
+            zh: [
+                { name: '白蘭姆酒', amount: '45ml' },
+                { name: '芭樂汁 (辦桌那種)', amount: '加滿' },
+                { name: '檸檬', amount: '擠一點' }
+            ]
+        },
+        steps: {
+            en: [
+                'Ice in glass.',
+                'Rum and Guava juice.',
+                'Squeeze some lemon to balance the sweetness.'
+            ],
+            zh: [
+                '冰塊。',
+                '蘭姆酒加芭樂汁。',
+                '擠一點檸檬汁來平衡甜度 (重要)。'
+            ]
+        },
+        tags: {
+            en: ['tropical', 'sweet', 'taiwanese'],
+            zh: ['熱帶', '台式', '辦桌味']
+        },
+        description: {
+            en: 'Taiwanese banquet style. The lemon makes it pop.',
+            zh: '台式辦桌風味。加了檸檬之後層次完全不同。'
+        },
+        specs: {
+            alcohol: 5,
+            sweetness: 8,
+            ease: 10
+        },
+        color: '#bef264', // Lime-200
+        image: '/cocktails/rum-guava.png'
+    }
 ];
