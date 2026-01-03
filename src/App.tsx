@@ -8,8 +8,7 @@ import {
   ChevronRight,
   Store,
   Heart,
-  User,
-  Apple
+  User
 } from 'lucide-react';
 import clsx from 'clsx';
 import { recipes as localRecipes, type Recipe } from './data/recipes';
@@ -137,6 +136,29 @@ function App() {
     return saved ? new Set(JSON.parse(saved)) : new Set();
   });
 
+  // Sync favorites from DB on login
+  useEffect(() => {
+    const fetchFavorites = async () => {
+      if (!session || !supabase) return;
+
+      const { data, error } = await supabase
+        .from('favorites')
+        .select('recipe_id')
+        .eq('user_id', session.user.id);
+
+      if (!error && data) {
+        const dbFavs = new Set(data.map((f: any) => f.recipe_id));
+        setFavorites(prev => {
+          // Merge local and DB favorites
+          const merged = new Set([...prev, ...dbFavs]);
+          return merged;
+        });
+      }
+    };
+
+    fetchFavorites();
+  }, [session]);
+
   // Data State
   const [allRecipes, setAllRecipes] = useState<Recipe[]>(localRecipes);
 
@@ -184,8 +206,10 @@ function App() {
     return () => subscription.unsubscribe();
   }, []);
 
-  const toggleFavorite = (id: string, e?: React.MouseEvent) => {
+  const toggleFavorite = async (id: string, e?: React.MouseEvent) => {
     e?.stopPropagation();
+
+    // Optimistic UI update
     setFavorites(prev => {
       const newFavs = new Set(prev);
       if (newFavs.has(id)) {
@@ -195,9 +219,21 @@ function App() {
       }
       return newFavs;
     });
+
+    // Sync to DB if logged in
+    if (session && supabase) {
+      const isFavorited = favorites.has(id); // Check current state before toggle
+      if (isFavorited) {
+        // Remove from DB (We are checking previous state, so if it WAS faved, we remove)
+        await supabase.from('favorites').delete().eq('user_id', session.user.id).eq('recipe_id', id);
+      } else {
+        // Add to DB
+        await supabase.from('favorites').insert({ user_id: session.user.id, recipe_id: id });
+      }
+    }
   };
 
-  const handleLogin = async (provider: 'google' | 'apple') => {
+  const handleLogin = async (provider: 'google') => {
     if (!supabase) {
       alert("Please configure Supabase credentials in .env.local to enable login.");
       return;
@@ -205,7 +241,11 @@ function App() {
     const { error } = await supabase.auth.signInWithOAuth({
       provider: provider,
       options: {
-        redirectTo: window.location.origin
+        redirectTo: window.location.origin,
+        queryParams: {
+          access_type: 'offline',
+          prompt: 'consent',
+        },
       }
     });
     if (error) {
@@ -290,11 +330,21 @@ function App() {
             <button
               onClick={() => session ? handleLogout() : setShowLoginModal(true)}
               className={clsx(
-                "p-3 rounded-full hover:bg-white/20 active:scale-95 transition-all backdrop-blur-md border border-white/5",
-                session ? "bg-primary/20 text-primary border-primary/20" : "bg-white/10 text-zinc-300"
+                "p-1 rounded-full hover:bg-white/20 active:scale-95 transition-all backdrop-blur-md border border-white/5 overflow-hidden",
+                session ? "border-primary/50" : "bg-white/10 text-zinc-300"
               )}
             >
-              {session ? <User size={20} fill="currentColor" /> : <User size={20} />}
+              {session?.user?.user_metadata?.avatar_url ? (
+                <img src={session.user.user_metadata.avatar_url} alt="User" className="w-8 h-8 rounded-full" />
+              ) : session ? (
+                <div className="w-8 h-8 bg-primary/20 flex items-center justify-center rounded-full text-primary">
+                  <User size={18} />
+                </div>
+              ) : (
+                <div className="w-8 h-8 flex items-center justify-center">
+                  <User size={20} />
+                </div>
+              )}
             </button>
             <button
               onClick={toggleLang}
@@ -472,13 +522,6 @@ function App() {
                 >
                   <GoogleIcon />
                   {t.login.google}
-                </button>
-                <button
-                  onClick={() => handleLogin('apple')}
-                  className="w-full py-3.5 rounded-xl bg-black text-white font-bold flex items-center justify-center gap-3 border border-white/20 hover:bg-zinc-900 transition-colors"
-                >
-                  <div className="w-5 h-5 flex items-center justify-center"><Apple size={20} fill="currentColor" /></div>
-                  {t.login.apple}
                 </button>
               </div>
 
