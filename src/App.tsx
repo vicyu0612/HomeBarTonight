@@ -132,9 +132,18 @@ function App() {
 
   // Favorites State
   const [favorites, setFavorites] = useState<Set<string>>(() => {
-    const saved = localStorage.getItem('favorites');
-    return saved ? new Set(JSON.parse(saved)) : new Set();
+    try {
+      const saved = localStorage.getItem('favorites');
+      return saved ? new Set(JSON.parse(saved)) : new Set();
+    } catch (e) {
+      return new Set();
+    }
   });
+
+  // Save to localStorage whenever favorites change
+  useEffect(() => {
+    localStorage.setItem('favorites', JSON.stringify(Array.from(favorites)));
+  }, [favorites]);
 
   // Sync favorites from DB on login
   useEffect(() => {
