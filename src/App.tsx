@@ -97,11 +97,11 @@ const translations = {
     },
     specs: {
       alcohol: "酒精強度",
-      sweetness: "酸甜度",
+      sweetness: "甜度",
       ease: "易飲度",
       alcoholDesc: "無酒精 - 高酒精",
-      sweetnessDesc: "清爽酸 - 甜蜜蜜",
-      easeDesc: "酒鬼 - 輕鬆喝"
+      sweetnessDesc: "清爽不甜 - 甜蜜蜜",
+      easeDesc: "有個性 - 輕鬆喝"
     }
   }
 };
