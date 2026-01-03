@@ -1,0 +1,217 @@
+[
+    {
+        "id": "kalimotxo",
+        "name": {
+            "en": "Kalimotxo",
+            "zh": "卡力摩氣 (紅酒可樂)"
+        },
+        "type": "cvs",
+        "base_spirit": [
+            "wine"
+        ],
+        "ingredients": {
+            "en": [
+                {
+                    "name": "Red Wine",
+                    "amount": "50%"
+                },
+                {
+                    "name": "Coca-Cola",
+                    "amount": "50%"
+                }
+            ],
+            "zh": [
+                {
+                    "name": "紅酒",
+                    "amount": "50%"
+                },
+                {
+                    "name": "可樂",
+                    "amount": "50%"
+                }
+            ]
+        },
+        "steps": {
+            "en": [
+                "Fill highball glass with ice.",
+                "Pour red wine.",
+                "Top with Coke.",
+                "Garnish with lemon if available."
+            ],
+            "zh": [
+                "高球杯加冰。",
+                "倒入紅酒。",
+                "加滿可樂。",
+                "有檸檬可以加一片。"
+            ]
+        },
+        "tags": {
+            "en": [
+                "party",
+                "cheap",
+                "spanish"
+            ],
+            "zh": [
+                "派對",
+                "便宜",
+                "西班牙"
+            ]
+        },
+        "description": {
+            "en": "The Basque icon. Don't waste expensive wine on this. Cheap wine works best.",
+            "zh": "西班牙巴斯克地區的經典。千萬別用貴的紅酒，越便宜的越好喝。"
+        },
+        "specs": {
+            "alcohol": 5,
+            "sweetness": 7,
+            "ease": 10
+        },
+        "color": "#7f1d1d",
+        "image": "/cocktails/kalimotxo.png"
+    },
+    {
+        "id": "whiskey-tea",
+        "name": {
+            "en": "Whiskey & Black Tea",
+            "zh": "威士忌紅茶"
+        },
+        "type": "cvs",
+        "base_spirit": [
+            "whiskey"
+        ],
+        "ingredients": {
+            "en": [
+                {
+                    "name": "Whiskey",
+                    "amount": "45ml"
+                },
+                {
+                    "name": "Black Tea (Sweet)",
+                    "amount": "Top up"
+                }
+            ],
+            "zh": [
+                {
+                    "name": "威士忌",
+                    "amount": "45ml"
+                },
+                {
+                    "name": "紅茶 (微糖/半糖)",
+                    "amount": "加滿"
+                }
+            ]
+        },
+        "steps": {
+            "en": [
+                "Ice in glass.",
+                "Pour whiskey.",
+                "Top with sweet black tea."
+            ],
+            "zh": [
+                "冰塊。",
+                "威士忌。",
+                "加滿紅茶。建議微糖最順口。"
+            ]
+        },
+        "tags": {
+            "en": [
+                "tea",
+                "smooth",
+                "taiwanese"
+            ],
+            "zh": [
+                "茶香",
+                "順口",
+                "台式"
+            ]
+        },
+        "description": {
+            "en": "A Taiwanese KTV staple. The sweetness of the tea masks the alcohol bite perfectly.",
+            "zh": "台灣 KTV 必點。紅茶的甜味完美掩蓋了酒精的嗆辣，不知不覺就喝多了。"
+        },
+        "specs": {
+            "alcohol": 6,
+            "sweetness": 5,
+            "ease": 10
+        },
+        "color": "#b45309",
+        "image": "/cocktails/whiskey-tea.png"
+    },
+    {
+        "id": "soju-melona",
+        "name": {
+            "en": "Soju Melona",
+            "zh": "燒酒哈密瓜冰棒"
+        },
+        "type": "cvs",
+        "base_spirit": [
+            "vodka",
+            "liqueur"
+        ],
+        "ingredients": {
+            "en": [
+                {
+                    "name": "Soju (Plain)",
+                    "amount": "50ml"
+                },
+                {
+                    "name": "Sprite",
+                    "amount": "Top up"
+                },
+                {
+                    "name": "Melona Ice Bar",
+                    "amount": "1"
+                }
+            ],
+            "zh": [
+                {
+                    "name": "韓國燒酒 (原味)",
+                    "amount": "50ml"
+                },
+                {
+                    "name": "雪碧",
+                    "amount": "加滿"
+                },
+                {
+                    "name": "Melona 哈密瓜冰棒",
+                    "amount": "1支"
+                }
+            ]
+        },
+        "steps": {
+            "en": [
+                "Pour Soju and Sprite into a wide glass.",
+                "Unwrap the ice bar.",
+                "Stir the drink with the ice bar until it melts and turns creamy."
+            ],
+            "zh": [
+                "將燒酒和雪碧倒入寬口杯。",
+                "拆開冰棒。",
+                "用冰棒攪拌飲料直到融化變濃稠。"
+            ]
+        },
+        "tags": {
+            "en": [
+                "fun",
+                "creamy",
+                "korean"
+            ],
+            "zh": [
+                "好玩",
+                "綿密",
+                "韓式"
+            ]
+        },
+        "description": {
+            "en": "A viral Korean hack. It's like a boozy melon milkshake.",
+            "zh": "韓國爆紅喝法。喝起來就像帶有酒感的哈密瓜奶昔。"
+        },
+        "specs": {
+            "alcohol": 5,
+            "sweetness": 9,
+            "ease": 9
+        },
+        "color": "#86efac",
+        "image": "/cocktails/soju-melona.png"
+    }
+]

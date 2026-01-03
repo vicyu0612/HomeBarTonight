@@ -12,10 +12,11 @@ import {
   Apple
 } from 'lucide-react';
 import clsx from 'clsx';
-import { recipes, type Recipe } from './data/recipes';
+import { recipes as localRecipes, type Recipe } from './data/recipes';
 import { supabase } from './supabaseClient';
 import type { Session } from '@supabase/supabase-js';
 import { RecipeDetailModal } from './RecipeDetailModal';
+import { RecipeManager } from './admin/RecipeManager';
 
 // UI Translations
 const translations = {
@@ -136,6 +137,10 @@ function App() {
     return saved ? new Set(JSON.parse(saved)) : new Set();
   });
 
+  // Data State
+  const [allRecipes, setAllRecipes] = useState<Recipe[]>(localRecipes);
+  const [isLoadingRecipes, setIsLoadingRecipes] = useState(false);
+
   useEffect(() => {
     if (!supabase) return;
 
@@ -148,6 +153,36 @@ function App() {
     } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
     });
+
+    // Fetch Recipes from DB
+    const fetchRecipes = async () => {
+      if (!supabase) return;
+      setIsLoadingRecipes(true);
+      const { data, error } = await supabase
+        .from('recipes')
+        .select('*');
+
+      if (error) {
+        console.error('Error fetching recipes:', error);
+      } else if (data && data.length > 0) {
+        const mappedRecipes: Recipe[] = data.map((r: any) => ({
+          id: r.id,
+          name: r.name,
+          type: r.type,
+          baseSpirit: r.base_spirit,
+          ingredients: r.ingredients,
+          steps: r.steps,
+          tags: r.tags,
+          description: r.description,
+          specs: r.specs,
+          color: r.color,
+          image: r.image
+        }));
+        setAllRecipes(mappedRecipes);
+      }
+      setIsLoadingRecipes(false);
+    };
+    fetchRecipes();
 
     return () => subscription.unsubscribe();
   }, []);
@@ -204,7 +239,7 @@ function App() {
   const t = translations[lang];
 
   const filteredRecipes = useMemo(() => {
-    return recipes.filter(recipe => {
+    return allRecipes.filter(recipe => {
       // Favorite Tab Logic
       if (activeTab === 'favorites') {
         if (!favorites.has(recipe.id)) return false;
@@ -221,7 +256,7 @@ function App() {
       const matchesSearch = name.includes(searchLower) || ingredients.includes(searchLower);
       return matchesSpirit && matchesSearch;
     });
-  }, [activeTab, activeSpirit, searchQuery, lang, favorites]);
+  }, [activeTab, activeSpirit, searchQuery, lang, favorites, allRecipes]);
 
   const handleRandom = () => {
     const random = filteredRecipes[Math.floor(Math.random() * filteredRecipes.length)];
@@ -234,6 +269,7 @@ function App() {
 
   return (
     <div className="min-h-screen pb-20 bg-zinc-950 text-zinc-100 font-sans">
+      <RecipeManager />
       {/* Background Image with Fallback */}
       <div
         className="fixed inset-0 z-0 opacity-40 bg-cover bg-center"
