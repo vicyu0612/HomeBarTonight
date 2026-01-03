@@ -357,15 +357,19 @@ function App() {
             </button>
             <button
               onClick={toggleLang}
-              className="p-3 rounded-full bg-white/10 hover:bg-white/20 active:scale-95 transition-all text-zinc-300 backdrop-blur-md border border-white/5"
+              className="p-1 rounded-full bg-white/10 hover:bg-white/20 active:scale-95 transition-all text-zinc-300 backdrop-blur-md border border-white/5 overflow-hidden"
             >
-              <span className="font-bold text-xs">{lang === 'en' ? '中' : 'EN'}</span>
+              <div className="w-8 h-8 flex items-center justify-center">
+                <span className="font-bold text-xs">{lang === 'en' ? '中' : 'EN'}</span>
+              </div>
             </button>
             <button
               onClick={handleRandom}
-              className="p-3 rounded-full bg-white/10 hover:bg-white/20 active:scale-95 transition-all text-accent backdrop-blur-md border border-white/5"
+              className="p-1 rounded-full bg-white/10 hover:bg-white/20 active:scale-95 transition-all text-accent backdrop-blur-md border border-white/5 overflow-hidden"
             >
-              <Shuffle size={20} />
+              <div className="w-8 h-8 flex items-center justify-center">
+                <Shuffle size={20} />
+              </div>
             </button>
           </div>
         </header>
@@ -495,71 +499,75 @@ function App() {
           )}
         </main>
 
-      </div>
+      </div >
 
       {/* Login Modal */}
       <AnimatePresence>
-        {showLoginModal && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4"
-          >
-            <div className="absolute inset-0 bg-black/90 backdrop-blur-md" onClick={() => setShowLoginModal(false)} />
-
+        {
+          showLoginModal && (
             <motion.div
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
-              className="bg-zinc-900 w-full max-w-sm rounded-[2rem] overflow-hidden relative border border-white/10 p-8 shadow-2xl"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 z-50 flex items-center justify-center p-4"
             >
-              <div className="text-center mb-8">
-                <div className="w-16 h-16 rounded-full bg-primary/20 flex items-center justify-center mx-auto mb-4 border border-primary/20 shadow-[0_0_20px_rgba(139,92,246,0.3)]">
-                  <User size={32} className="text-primary" />
+              <div className="absolute inset-0 bg-black/90 backdrop-blur-md" onClick={() => setShowLoginModal(false)} />
+
+              <motion.div
+                initial={{ scale: 0.9, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.9, opacity: 0 }}
+                className="bg-zinc-900 w-full max-w-sm rounded-[2rem] overflow-hidden relative border border-white/10 p-8 shadow-2xl"
+              >
+                <div className="text-center mb-8">
+                  <div className="w-16 h-16 rounded-full bg-primary/20 flex items-center justify-center mx-auto mb-4 border border-primary/20 shadow-[0_0_20px_rgba(139,92,246,0.3)]">
+                    <User size={32} className="text-primary" />
+                  </div>
+                  <h2 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent">
+                    {t.login.title}
+                  </h2>
+                  <p className="text-zinc-400 text-sm mt-2">{t.login.subtitle}</p>
                 </div>
-                <h2 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent">
-                  {t.login.title}
-                </h2>
-                <p className="text-zinc-400 text-sm mt-2">{t.login.subtitle}</p>
-              </div>
 
-              <div className="space-y-3">
-                <button
-                  onClick={() => handleLogin('google')}
-                  className="w-full py-3.5 rounded-xl bg-white text-zinc-900 font-bold flex items-center justify-center gap-3 hover:bg-zinc-200 transition-colors"
-                >
-                  <GoogleIcon />
-                  {t.login.google}
-                </button>
-              </div>
+                <div className="space-y-3">
+                  <button
+                    onClick={() => handleLogin('google')}
+                    className="w-full py-3.5 rounded-xl bg-white text-zinc-900 font-bold flex items-center justify-center gap-3 hover:bg-zinc-200 transition-colors"
+                  >
+                    <GoogleIcon />
+                    {t.login.google}
+                  </button>
+                </div>
 
-              <div className="mt-6 text-center">
-                <button
-                  onClick={handleGuestLogin}
-                  className="text-zinc-500 text-sm hover:text-white transition-colors"
-                >
-                  {t.login.guest}
-                </button>
-              </div>
+                <div className="mt-6 text-center">
+                  <button
+                    onClick={handleGuestLogin}
+                    className="text-zinc-500 text-sm hover:text-white transition-colors"
+                  >
+                    {t.login.guest}
+                  </button>
+                </div>
+              </motion.div>
             </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+          )
+        }
+      </AnimatePresence >
 
       {/* Detail Modal */}
       <AnimatePresence>
-        {selectedRecipe && (
-          <RecipeDetailModal
-            recipe={selectedRecipe}
-            onClose={() => setSelectedRecipe(null)}
-            isFavorite={favorites.has(selectedRecipe.id)}
-            onToggleFavorite={toggleFavorite}
-            t={t}
-            lang={lang}
-          />
-        )}
-      </AnimatePresence>
+        {
+          selectedRecipe && (
+            <RecipeDetailModal
+              recipe={selectedRecipe}
+              onClose={() => setSelectedRecipe(null)}
+              isFavorite={favorites.has(selectedRecipe.id)}
+              onToggleFavorite={toggleFavorite}
+              t={t}
+              lang={lang}
+            />
+          )
+        }
+      </AnimatePresence >
     </div >
   );
 }
