@@ -30,6 +30,8 @@ export const RecipeManager = () => {
                 image: r.image
             }));
 
+            if (!supabase) throw new Error('Supabase client not initialized');
+
             const { error } = await supabase
                 .from('recipes')
                 .upsert(rows, { onConflict: 'id' });

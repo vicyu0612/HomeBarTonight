@@ -139,7 +139,6 @@ function App() {
 
   // Data State
   const [allRecipes, setAllRecipes] = useState<Recipe[]>(localRecipes);
-  const [isLoadingRecipes, setIsLoadingRecipes] = useState(false);
 
   useEffect(() => {
     if (!supabase) return;
@@ -157,7 +156,6 @@ function App() {
     // Fetch Recipes from DB
     const fetchRecipes = async () => {
       if (!supabase) return;
-      setIsLoadingRecipes(true);
       const { data, error } = await supabase
         .from('recipes')
         .select('*');
@@ -180,7 +178,6 @@ function App() {
         }));
         setAllRecipes(mappedRecipes);
       }
-      setIsLoadingRecipes(false);
     };
     fetchRecipes();
 
