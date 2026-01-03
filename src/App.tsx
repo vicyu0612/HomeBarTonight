@@ -59,6 +59,12 @@ const translations = {
       alcoholDesc: "Low - High",
       sweetnessDesc: "Dry - Sweet",
       easeDesc: "Expert - Easy"
+    },
+    logout: {
+      title: "Sign Out",
+      message: "Are you sure you want to sign out?",
+      confirm: "Sign Out",
+      cancel: "Cancel"
     }
   },
   zh: {
@@ -101,6 +107,12 @@ const translations = {
       alcoholDesc: "無酒精 - 高酒精",
       sweetnessDesc: "清爽不甜 - 甜蜜蜜",
       easeDesc: "有個性 - 輕鬆喝"
+    },
+    logout: {
+      title: "登出",
+      message: "確定要登出帳號嗎？",
+      confirm: "登出",
+      cancel: "取消"
     }
   }
 };
@@ -128,6 +140,7 @@ function App() {
 
   // Auth & User State
   const [showLoginModal, setShowLoginModal] = useState(false);
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const [session, setSession] = useState<Session | null>(null);
 
   // Favorites State
@@ -280,6 +293,7 @@ function App() {
     if (!supabase) return;
     const { error } = await supabase.auth.signOut();
     if (error) console.error('Error logging out:', error.message);
+    setShowLogoutConfirm(false);
   };
 
   const t = translations[lang];
@@ -337,7 +351,7 @@ function App() {
           </div>
           <div className="flex gap-2">
             <button
-              onClick={() => session ? handleLogout() : setShowLoginModal(true)}
+              onClick={() => session ? setShowLogoutConfirm(true) : setShowLoginModal(true)}
               className={clsx(
                 "p-1 rounded-full hover:bg-white/20 active:scale-95 transition-all backdrop-blur-md border border-white/5 overflow-hidden",
                 session ? "border-primary/50" : "bg-white/10 text-zinc-300"
@@ -551,7 +565,46 @@ function App() {
             </motion.div>
           )
         }
-      </AnimatePresence >
+      </AnimatePresence>
+
+      {/* Logout Confirmation Modal */}
+      <AnimatePresence>
+        {showLogoutConfirm && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4"
+          >
+            <div className="absolute inset-0 bg-black/90 backdrop-blur-md" onClick={() => setShowLogoutConfirm(false)} />
+
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="bg-zinc-900 w-full max-w-xs rounded-3xl overflow-hidden relative border border-white/10 p-6 shadow-2xl text-center"
+            >
+              <h3 className="text-xl font-bold text-white mb-2">{t.logout.title}</h3>
+              <p className="text-zinc-400 text-sm mb-6">{t.logout.message}</p>
+
+              <div className="flex gap-3">
+                <button
+                  onClick={() => setShowLogoutConfirm(false)}
+                  className="flex-1 py-3 rounded-xl bg-zinc-800 text-zinc-300 font-bold hover:bg-zinc-700 transition-colors"
+                >
+                  {t.logout.cancel}
+                </button>
+                <button
+                  onClick={handleLogout}
+                  className="flex-1 py-3 rounded-xl bg-red-500/10 text-red-500 border border-red-500/20 font-bold hover:bg-red-500/20 transition-colors"
+                >
+                  {t.logout.confirm}
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Detail Modal */}
       <AnimatePresence>
