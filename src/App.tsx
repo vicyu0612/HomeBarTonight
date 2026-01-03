@@ -134,19 +134,20 @@ const GoogleIcon = () => (
 // Custom Shaker Icon for Animation
 const ShakerIcon = () => (
   <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
-    {/* Bottom Tin - Curved and Tapered */}
-    <path d="M7 8 L8.5 20 C8.7 21.5 9.5 22 12 22 C14.5 22 15.3 21.5 15.5 20 L17 8 H7 Z" fill="#e4e4e7" stroke="#52525b" strokeWidth="1.5" strokeLinejoin="round" />
+    {/* Bottom Tin - Significant Taper for that "Cobbler" look */}
+    <path d="M5.5 9.5 C5.5 16 7.5 22 10 22.5H14C16.5 22 18.5 16 18.5 9.5H5.5Z" fill="#e4e4e7" stroke="#52525b" strokeWidth="1.5" strokeLinejoin="round" />
 
-    {/* Middle Strainer Section - Rounded shoulders */}
-    <path d="M6 5 L18 5 L17 8 H7 L6 5 Z" fill="#d4d4d8" stroke="#52525b" strokeWidth="1.5" strokeLinejoin="round" />
-    <path d="M6 5 C6 3.5 8 2.5 12 2.5 C16 2.5 18 3.5 18 5" fill="#d4d4d8" stroke="#52525b" strokeWidth="1.5" strokeLinejoin="round" />
+    {/* Middle Strainer - Bell Curve Shape */}
+    <path d="M5.5 9.5 C5.5 6.5 8 5.5 8.5 4.5H15.5 C16 5.5 18.5 6.5 18.5 9.5H5.5Z" fill="#d4d4d8" stroke="#52525b" strokeWidth="1.5" strokeLinejoin="round" />
 
-    {/* Top Cap */}
-    <path d="M10 2.5 L10.5 1 C10.5 0.5 13.5 0.5 13.5 1 L14 2.5" fill="#e4e4e7" stroke="#52525b" strokeWidth="1.5" strokeLinejoin="round" />
+    {/* Top Cap - Rounded Dome */}
+    <path d="M9 4.5 V3.5 C9 2 15 2 15 3.5 V4.5 H9Z" fill="#e4e4e7" stroke="#52525b" strokeWidth="1.5" strokeLinejoin="round" />
 
-    {/* Shine/Reflection Details */}
-    <path d="M10 10 Q 10.5 15 11 20" stroke="#ffffff" strokeWidth="1" strokeLinecap="round" opacity="0.6" />
-    <path d="M8 6 L16 6" stroke="#52525b" strokeWidth="1" opacity="0.3" />
+    {/* Metallic Center Reflection Line */}
+    <path d="M12 2.5 V22" stroke="#ffffff" strokeWidth="2" strokeLinecap="round" opacity="0.4" />
+
+    {/* Side Shadows for 3D effect */}
+    <path d="M17 10 C17 15 16 20 14 22" stroke="#52525b" strokeWidth="1" strokeLinecap="round" opacity="0.1" />
   </svg>
 );
 
