@@ -134,15 +134,19 @@ const GoogleIcon = () => (
 // Custom Shaker Icon for Animation
 const ShakerIcon = () => (
   <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
-    {/* Shaker Tin */}
-    <path d="M6 8L7 21C7 21.55 7.45 22 8 22H16C16.55 22 17 21.55 17 21L18 8H6Z" fill="#e4e4e7" stroke="#3f3f46" strokeWidth="1.5" strokeLinejoin="round" />
-    {/* Cap Section */}
-    <path d="M5 5H19L18 8H6L5 5Z" fill="#d4d4d8" stroke="#3f3f46" strokeWidth="1.5" strokeLinejoin="round" />
-    {/* Top Lid */}
-    <path d="M9 2H15L16 5H8L9 2Z" fill="#d4d4d8" stroke="#3f3f46" strokeWidth="1.5" strokeLinejoin="round" />
-    {/* Shine lines */}
-    <path d="M10 10V18" stroke="#fafafa" strokeWidth="1" strokeLinecap="round" opacity="0.5" />
-    <path d="M14 12V16" stroke="#fafafa" strokeWidth="1" strokeLinecap="round" opacity="0.5" />
+    {/* Bottom Tin - Curved and Tapered */}
+    <path d="M7 8 L8.5 20 C8.7 21.5 9.5 22 12 22 C14.5 22 15.3 21.5 15.5 20 L17 8 H7 Z" fill="#e4e4e7" stroke="#52525b" strokeWidth="1.5" strokeLinejoin="round" />
+
+    {/* Middle Strainer Section - Rounded shoulders */}
+    <path d="M6 5 L18 5 L17 8 H7 L6 5 Z" fill="#d4d4d8" stroke="#52525b" strokeWidth="1.5" strokeLinejoin="round" />
+    <path d="M6 5 C6 3.5 8 2.5 12 2.5 C16 2.5 18 3.5 18 5" fill="#d4d4d8" stroke="#52525b" strokeWidth="1.5" strokeLinejoin="round" />
+
+    {/* Top Cap */}
+    <path d="M10 2.5 L10.5 1 C10.5 0.5 13.5 0.5 13.5 1 L14 2.5" fill="#e4e4e7" stroke="#52525b" strokeWidth="1.5" strokeLinejoin="round" />
+
+    {/* Shine/Reflection Details */}
+    <path d="M10 10 Q 10.5 15 11 20" stroke="#ffffff" strokeWidth="1" strokeLinecap="round" opacity="0.6" />
+    <path d="M8 6 L16 6" stroke="#52525b" strokeWidth="1" opacity="0.3" />
   </svg>
 );
 
