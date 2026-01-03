@@ -179,27 +179,46 @@ function App() {
     localStorage.setItem('favorites', JSON.stringify(Array.from(favorites)));
   }, [favorites]);
 
-  // Sync favorites from DB on login
+  // Sync favorites (Two-way: DB -> Local & Local -> DB) on login
   useEffect(() => {
-    const fetchFavorites = async () => {
+    const syncFavorites = async () => {
       if (!session || !supabase) return;
 
-      const { data, error } = await supabase
+      // 1. Fetch Remote Favorites from DB
+      const { data: dbData, error } = await supabase
         .from('favorites')
         .select('recipe_id')
         .eq('user_id', session.user.id);
 
-      if (!error && data) {
-        const dbFavs = new Set(data.map((f: any) => f.recipe_id));
-        setFavorites(prev => {
-          // Merge local and DB favorites
-          const merged = new Set([...prev, ...dbFavs]);
-          return merged;
-        });
+      if (error) {
+        console.error("Error fetching favorites:", error);
+        return;
       }
+
+      const dbFavIds = new Set(dbData?.map((f: any) => f.recipe_id) || []);
+      const localFavs = Array.from(favorites);
+
+      // 2. Find items in Local but NOT in DB (Guest favorites to be synced up)
+      const toUpload = localFavs.filter(id => !dbFavIds.has(id));
+
+      if (toUpload.length > 0) {
+        const { error: insertError } = await supabase
+          .from('favorites')
+          .insert(toUpload.map(id => ({ user_id: session.user.id, recipe_id: id })));
+
+        if (insertError) console.error("Error syncing local favorites to DB:", insertError);
+      }
+
+      // 3. Update local state to reflect the Union (DB + Local)
+      setFavorites(prev => {
+        const merged = new Set([...prev, ...dbFavIds]);
+        return merged;
+      });
     };
 
-    fetchFavorites();
+    if (session?.user) {
+      syncFavorites();
+    }
   }, [session]);
 
   // Data State
@@ -314,6 +333,11 @@ function App() {
     if (!supabase) return;
     const { error } = await supabase.auth.signOut();
     if (error) console.error('Error logging out:', error.message);
+
+    // Clear favorites on logout
+    setFavorites(new Set());
+    localStorage.removeItem('favorites');
+
     setShowLogoutConfirm(false);
   };
 
