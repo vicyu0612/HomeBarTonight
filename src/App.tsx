@@ -131,12 +131,28 @@ const GoogleIcon = () => (
   </svg>
 );
 
+// Custom Shaker Icon for Animation
+const ShakerIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
+    {/* Shaker Tin */}
+    <path d="M6 8L7 21C7 21.55 7.45 22 8 22H16C16.55 22 17 21.55 17 21L18 8H6Z" fill="#e4e4e7" stroke="#3f3f46" strokeWidth="1.5" strokeLinejoin="round" />
+    {/* Cap Section */}
+    <path d="M5 5H19L18 8H6L5 5Z" fill="#d4d4d8" stroke="#3f3f46" strokeWidth="1.5" strokeLinejoin="round" />
+    {/* Top Lid */}
+    <path d="M9 2H15L16 5H8L9 2Z" fill="#d4d4d8" stroke="#3f3f46" strokeWidth="1.5" strokeLinejoin="round" />
+    {/* Shine lines */}
+    <path d="M10 10V18" stroke="#fafafa" strokeWidth="1" strokeLinecap="round" opacity="0.5" />
+    <path d="M14 12V16" stroke="#fafafa" strokeWidth="1" strokeLinecap="round" opacity="0.5" />
+  </svg>
+);
+
 function App() {
   const [lang, setLang] = useState<'en' | 'zh'>('zh');
   const [activeTab, setActiveTab] = useState<'all' | 'classic' | 'cvs' | 'favorites'>('all');
   const [activeSpirit, setActiveSpirit] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(null);
+  const [isShaking, setIsShaking] = useState(false);
 
   // Auth & User State
   const [showLoginModal, setShowLoginModal] = useState(false);
@@ -319,8 +335,15 @@ function App() {
   }, [activeTab, activeSpirit, searchQuery, lang, favorites, allRecipes]);
 
   const handleRandom = () => {
-    const random = filteredRecipes[Math.floor(Math.random() * filteredRecipes.length)];
-    if (random) setSelectedRecipe(random);
+    if (filteredRecipes.length === 0) return;
+    setIsShaking(true);
+
+    // Simulate Shaking Time
+    setTimeout(() => {
+      const random = filteredRecipes[Math.floor(Math.random() * filteredRecipes.length)];
+      setIsShaking(false);
+      if (random) setSelectedRecipe(random);
+    }, 1800);
   };
 
   const toggleLang = () => {
@@ -602,6 +625,68 @@ function App() {
                 </button>
               </div>
             </motion.div>
+          </motion.div>
+
+        )}
+      </AnimatePresence>
+
+      {/* Shaker Animation Overlay */}
+      <AnimatePresence>
+        {isShaking && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[60] flex flex-col items-center justify-center bg-black/80 backdrop-blur-md"
+          >
+            <motion.div
+              animate={{
+                rotate: [0, -15, 15, -15, 15, 0],
+                y: [0, -10, 5, -10, 5, 0],
+                scale: [1, 1.1, 1.1, 1.1, 1]
+              }}
+              transition={{
+                duration: 0.5,
+                repeat: 3,
+                ease: "easeInOut"
+              }}
+              className="w-32 h-32 text-indigo-400 drop-shadow-[0_0_15px_rgba(129,140,248,0.5)]"
+            >
+              <ShakerIcon />
+            </motion.div>
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5 }}
+              className="mt-8 text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-300 to-purple-300 tracking-widest uppercase"
+            >
+              Mixing...
+            </motion.p>
+
+            {/* Ice Cubes Particles */}
+            {[...Array(5)].map((_, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 0, x: 0 }}
+                animate={{
+                  opacity: [0, 1, 0],
+                  y: [0, Math.random() * -100 - 50],
+                  x: [(Math.random() - 0.5) * 100],
+                  rotate: Math.random() * 360
+                }}
+                transition={{
+                  duration: 1.2,
+                  delay: Math.random() * 0.5,
+                  repeat: Infinity
+                }}
+                className="absolute w-4 h-4 bg-white/20 border border-white/40 rounded-sm backdrop-blur-sm"
+                style={{
+                  left: `calc(50% + ${(Math.random() - 0.5) * 50}px)`,
+                  top: '45%'
+                }}
+              />
+            ))}
+
           </motion.div>
         )}
       </AnimatePresence>
