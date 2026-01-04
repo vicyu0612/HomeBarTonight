@@ -8,14 +8,17 @@ import {
   ChevronRight,
   Store,
   Heart,
-  User
+  User,
+  Wine
 } from 'lucide-react';
-import clsx from 'clsx';
 import { recipes as localRecipes, type Recipe } from './data/recipes';
+import clsx from 'clsx';
 import { supabase } from './supabaseClient';
 import type { Session } from '@supabase/supabase-js';
+import { MyBarModal } from './components/MyBarModal';
 import { RecipeDetailModal } from './RecipeDetailModal';
 import { RecipeManager } from './admin/RecipeManager';
+import { normalizeIngredient } from './utils/normalization';
 
 // UI Translations
 const translations = {
@@ -26,7 +29,8 @@ const translations = {
       all: "All",
       classic: "Classic",
       cvs: "CVS Mode",
-      favorites: "Favorites"
+      favorites: "Favorites",
+      my_bar: "My Bar"
     },
     spirits: {
       all: "All Spirits",
@@ -74,7 +78,8 @@ const translations = {
       all: "全部",
       classic: "經典",
       cvs: "超商模式",
-      favorites: "我的最愛"
+      favorites: "我的最愛",
+      my_bar: "我的吧台"
     },
     spirits: {
       all: "所有基酒",
@@ -153,7 +158,7 @@ const ShakerIcon = () => (
 
 function App() {
   const [lang, setLang] = useState<'en' | 'zh'>('zh');
-  const [activeTab, setActiveTab] = useState<'all' | 'classic' | 'cvs' | 'favorites'>('all');
+  const [activeTab, setActiveTab] = useState<'all' | 'classic' | 'cvs' | 'favorites' | 'my_bar'>('all');
   const [activeSpirit, setActiveSpirit] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(null);
@@ -163,6 +168,55 @@ function App() {
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const [session, setSession] = useState<Session | null>(null);
+
+  // My Bar State
+  const [showMyBarModal, setShowMyBarModal] = useState(false);
+  const [myInventory, setMyInventory] = useState<Set<string>>(() => {
+    try {
+      const saved = localStorage.getItem('myInventory');
+      return saved ? new Set(JSON.parse(saved)) : new Set();
+    } catch (e) {
+      return new Set();
+    }
+  });
+
+  // Persist My Inventory
+  useEffect(() => {
+    localStorage.setItem('myInventory', JSON.stringify(Array.from(myInventory)));
+  }, [myInventory]);
+
+  // Clean up inventory on load to remove obsolete aliases (Migration)
+  useEffect(() => {
+    setMyInventory(prev => {
+      const next = new Set<string>();
+
+      prev.forEach(item => {
+        // Attempt to normalize potentially raw names to canonical IDs
+        // We try both EN and ZH since we don't know the source lang of the raw string
+        const enIds = normalizeIngredient(item, 'en');
+        const zhIds = normalizeIngredient(item, 'zh');
+
+        // If normalization changed the item (e.g. 'Green Tea (Bottled)' -> 'oolong_tea')
+        // We want to use the new ID. 
+        // Note: normalizeIngredient returns array.
+
+        const allIds = new Set([...enIds, ...zhIds]);
+
+        if (allIds.size === 0) {
+          // Should not happen with fallback, but safe to keep original if nothing returned
+          next.add(item);
+        } else {
+          allIds.forEach(id => next.add(id));
+        }
+
+      });
+
+      // Only update if we actually migrated something to avoid infinite loops if this was dependent on myInventory
+      // But this effect has [] dependency so it runs once. 
+      // Actually, we want to update the state with the cleaned version.
+      return next;
+    });
+  }, []); // Run once on mount to migrate data
 
   // Favorites State
   const [favorites, setFavorites] = useState<Set<string>>(() => {
@@ -211,7 +265,7 @@ function App() {
 
       // 3. Update local state to reflect the Union (DB + Local)
       setFavorites(prev => {
-        const merged = new Set([...prev, ...dbFavIds]);
+        const merged = new Set<string>([...prev, ...dbFavIds]);
         return merged;
       });
     };
@@ -223,6 +277,59 @@ function App() {
 
   // Data State
   const [allRecipes, setAllRecipes] = useState<Recipe[]>(localRecipes);
+
+  const filteredRecipes = useMemo(() => {
+    return allRecipes.filter(recipe => {
+      // Tab Logic
+      if (activeTab === 'favorites') {
+        if (!favorites.has(recipe.id)) return false;
+      } else if (activeTab === 'my_bar') {
+        // Smart match: Must have ALL ingredients, EXCEPT garnishes/ice/water
+        // CRITICAL: Always use English definition for logic to ensure consistency across languages.
+        // Chinese translations might vary in "Amount" description (e.g., "Garnish" vs "Slice"), 
+        // causing logic divergence. English is the source of truth for structure.
+        const needed = recipe.ingredients['en'];
+
+        const hasAll = needed.every(ing => {
+          // 1. Check if it's a garnish or optional by Amount string heuristic (English Only)
+          const amt = ing.amount.toLowerCase();
+          if (
+            amt.includes('garnish') || amt.includes('rim') || amt.includes('twist') ||
+            amt.includes('peel') || amt.includes('wedge') || amt.includes('slice') ||
+            amt.includes('decor') || amt.includes('zest') || amt.includes('top') ||
+            amt.includes('splash') || amt.includes('dash') || amt.includes('drop') ||
+            amt.includes('optional')
+          ) {
+            return true; // Skip requirement
+          }
+
+          const canonicals = normalizeIngredient(ing.name, 'en');
+
+          // 2. Check if normalized ID is implicitly optional (Ice, Water, Salt)
+          if (canonicals.some(c => c === 'ice' || c === 'water' || c === 'salt' || c === 'sugar')) {
+            return true;
+          }
+
+          // 3. Strict check for the rest
+          return canonicals.some(c => myInventory.has(c));
+        });
+        if (!hasAll) return false;
+      } else if (activeTab !== 'all' && recipe.type !== activeTab) {
+        return false;
+      }
+
+      const matchesSpirit = activeSpirit === 'all' || recipe.baseSpirit.includes(activeSpirit);
+
+      const name = recipe.name[lang].toLowerCase();
+      const ingredients = recipe.ingredients[lang].map(i => i.name.toLowerCase()).join(' ');
+      const searchLower = searchQuery.toLowerCase();
+
+      const matchesSearch = name.includes(searchLower) || ingredients.includes(searchLower);
+      return matchesSpirit && matchesSearch;
+    });
+  }, [activeTab, activeSpirit, searchQuery, lang, favorites, allRecipes, myInventory]);
+
+
 
   useEffect(() => {
     if (!supabase) return;
@@ -343,25 +450,7 @@ function App() {
 
   const t = translations[lang];
 
-  const filteredRecipes = useMemo(() => {
-    return allRecipes.filter(recipe => {
-      // Favorite Tab Logic
-      if (activeTab === 'favorites') {
-        if (!favorites.has(recipe.id)) return false;
-      } else if (activeTab !== 'all' && recipe.type !== activeTab) {
-        return false;
-      }
 
-      const matchesSpirit = activeSpirit === 'all' || recipe.baseSpirit.includes(activeSpirit);
-
-      const name = recipe.name[lang].toLowerCase();
-      const ingredients = recipe.ingredients[lang].map(i => i.name.toLowerCase()).join(' ');
-      const searchLower = searchQuery.toLowerCase();
-
-      const matchesSearch = name.includes(searchLower) || ingredients.includes(searchLower);
-      return matchesSpirit && matchesSearch;
-    });
-  }, [activeTab, activeSpirit, searchQuery, lang, favorites, allRecipes]);
 
   const handleRandom = () => {
     if (filteredRecipes.length === 0) return;
@@ -458,7 +547,8 @@ function App() {
               { id: 'all', label: t.tabs.all, icon: GlassWater },
               { id: 'classic', label: t.tabs.classic, icon: Martini },
               { id: 'cvs', label: t.tabs.cvs, icon: Store },
-              { id: 'favorites', label: t.tabs.favorites, icon: Heart }
+              { id: 'favorites', label: t.tabs.favorites, icon: Heart },
+              { id: 'my_bar', label: t.tabs.my_bar, icon: Wine }
             ].map((tab) => (
               <button
                 key={tab.id}
@@ -494,6 +584,29 @@ function App() {
             ))}
           </div>
         </div>
+
+        {/* My Bar Edit Button */}
+        <AnimatePresence>
+          {activeTab === 'my_bar' && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: 'auto', opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              className="px-6 mb-2 overflow-hidden"
+            >
+              <button
+                onClick={() => setShowMyBarModal(true)}
+                className="w-full py-3 rounded-xl bg-gradient-to-r from-zinc-800 to-zinc-900 border border-amber-500/30 text-amber-500 font-bold text-sm flex items-center justify-center gap-2 hover:bg-zinc-800/80 transition-all shadow-lg shadow-amber-900/10 active:scale-[0.99]"
+              >
+                <Wine size={16} />
+                {lang === 'zh' ? '管理我的吧台庫存' : 'Manage My Bar Inventory'}
+                <span className="bg-amber-500/20 text-amber-500 text-[10px] px-2 py-0.5 rounded-full ml-1">
+                  {myInventory.size}
+                </span>
+              </button>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {/* Recipe Grid */}
         <main className="flex-1 px-6 grid gap-4 pb-24">
@@ -550,16 +663,23 @@ function App() {
 
           {filteredRecipes.length === 0 && (
             <div className="text-center py-20 text-zinc-500">
-              <p>{t.noResults}</p>
+              <p>{activeTab === 'my_bar' && myInventory.size === 0
+                ? (lang === 'zh' ? '您的吧台空空如也，快去添加材料吧！' : 'Your bar is empty. Add some ingredients!')
+                : t.noResults}
+              </p>
               <button
                 onClick={() => {
-                  setSearchQuery('');
-                  setActiveTab('all');
-                  setActiveSpirit('all');
+                  if (activeTab === 'my_bar') {
+                    setShowMyBarModal(true);
+                  } else {
+                    setSearchQuery('');
+                    setActiveTab('all');
+                    setActiveSpirit('all');
+                  }
                 }}
                 className="mt-4 text-primary underline"
               >
-                {t.clear}
+                {activeTab === 'my_bar' ? (lang === 'zh' ? '添加材料' : 'Add Ingredients') : t.clear}
               </button>
             </div>
           )}
@@ -735,6 +855,14 @@ function App() {
           )
         }
       </AnimatePresence >
+      <MyBarModal
+        isOpen={showMyBarModal}
+        onClose={() => setShowMyBarModal(false)}
+        allRecipes={allRecipes}
+        myInventory={myInventory}
+        setMyInventory={setMyInventory}
+        lang={lang}
+      />
     </div >
   );
 }
