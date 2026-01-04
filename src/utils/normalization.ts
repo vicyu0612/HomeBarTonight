@@ -10,7 +10,7 @@ export const INGREDIENT_DB: Record<string, { en: string; zh: string }> = {
 
     // Other Alcohol
     'beer': { en: 'Beer', zh: '啤酒' },
-    'lager': { en: 'Lager', zh: '拉格啤酒' },
+    // 'lager': { en: 'Lager', zh: '拉格啤酒' }, // Removed: merged to beer
     'wine': { en: 'Red Wine', zh: '紅酒' },
     'soju': { en: 'Soju', zh: '燒酒' },
     'sake': { en: 'Sake', zh: '清酒' },
@@ -116,7 +116,7 @@ const ALIAS_MAP_ZH: Record<string, string> = {
     "白蘭地": "brandy",
     "紅酒 (便宜的就好)": "wine",
     "紅酒": "wine",
-    "拉格啤酒": "lager",
+    "拉格啤酒": "beer", // Updated
     "蘋果酒 (Somersby等)": "hard_cider",
     "蘋果酒": "hard_cider",
 
@@ -205,7 +205,7 @@ const ALIAS_MAP_EN: Record<string, string> = {
     "mini whiskey bottle": "whiskey",
     "bourbon": "whiskey",
     "whiskey": "whiskey",
-    "rye whiskey": "whiskey", // Added
+    "rye whiskey": "whiskey",
     "gin": "gin",
     "vodka": "vodka",
     "vodka citron": "vodka", // Added
@@ -220,8 +220,8 @@ const ALIAS_MAP_EN: Record<string, string> = {
     "brandy": "brandy",
     "red wine (cheap is fine)": "wine",
     "red wine": "wine",
-    "lager beer": "lager",
-    "lager": "lager",
+    "lager beer": "beer", // Updated
+    "lager": "beer", // Updated
     "beer": "beer",
     "tequila cider": "hard_cider",
     "cider": "hard_cider",
@@ -372,6 +372,7 @@ export function normalizeIngredient(name: string, lang: 'en' | 'zh'): string[] {
                 else if (p.includes('龍舌蘭')) id = 'tequila';
                 else if (p.includes('白蘭地')) id = 'brandy';
                 else if (p.includes('香艾酒')) id = 'vermouth';
+                else if (p.includes('燒酒')) id = 'soju'; // Added
                 else if (p.includes('可可')) id = 'cocoa_liqueur';
                 else if (p.includes('可可')) id = 'cocoa_liqueur';
                 else if (p.includes('麥香') || p.includes('奶茶') || p.includes('紅茶') || p.includes('茶')) id = 'tea';
@@ -380,7 +381,7 @@ export function normalizeIngredient(name: string, lang: 'en' | 'zh'): string[] {
                 else if (p.includes('養樂多')) id = 'yakult';
                 else if (p.includes('雪碧')) id = 'sprite';
                 else if (p.includes('七喜')) id = 'sprite'; // 7-up
-                else if (p.includes('拉格啤酒')) id = 'lager';
+                else if (p.includes('拉格啤酒')) id = 'beer'; // Updated
                 else if (p.includes('啤酒')) id = 'beer';
                 else if (p.includes('氣泡水')) id = 'soda';
                 else if (p.includes('糖水') || p.includes('糖漿')) id = 'sugar';
@@ -415,9 +416,9 @@ export function normalizeIngredient(name: string, lang: 'en' | 'zh'): string[] {
                 else if (lowerP.includes('calpis')) id = 'calpis';
                 else if (lowerP.includes('yakult')) id = 'yakult';
                 else if (lowerP.includes('sprite') || lowerP.includes('7-up')) id = 'sprite';
-                else if (lowerP.includes('lager')) id = 'lager';
+                else if (lowerP.includes('lager')) id = 'beer'; // Updated
                 else if (lowerP.includes('beer')) id = 'beer';
-                else if (lowerP.includes('shochu')) id = 'soju';
+                else if (lowerP.includes('shochu') || lowerP.includes('soju')) id = 'soju'; // Updated
                 else if (lowerP.includes('black tea') || lowerP.includes('tea')) id = 'tea';
                 else if (lowerP.includes('oolong') || lowerP.includes('green tea')) id = 'oolong_tea';
                 else if (lowerP.includes('cider')) id = 'hard_cider';

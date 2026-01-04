@@ -325,7 +325,7 @@ function App() {
               'liqueur', 'cointreau', 'grand_marnier', 'amaretto',
               'coffee_liqueur', 'cocoa_liqueur', 'baileys', 'malibu',
               'campari', 'aperol', 'vermouth', 'dry_vermouth',
-              'beer', 'lager', 'wine', 'soju', 'sake', 'champagne', 'hard_cider'
+              'beer', 'wine', 'soju', 'sake', 'champagne', 'hard_cider'
             ]);
             if (alcohol.has(id)) return true;
 

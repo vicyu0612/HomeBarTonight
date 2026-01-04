@@ -64,7 +64,7 @@ export function MyBarModal({
                     else if (
                         id === 'beer' || id === 'wine' ||
                         id === 'soju' || id === 'sake' || id === 'champagne' ||
-                        id === 'lager' || id === 'hard_cider' || id === 'cider'
+                        id === 'hard_cider' || id === 'cider'
                     ) {
                         cats.other_alc.add(id);
                     }
