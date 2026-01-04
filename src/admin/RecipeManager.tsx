@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { supabase } from '../supabaseClient';
 import { recipes } from '../data/recipes';
 
@@ -12,15 +12,12 @@ export const RecipeManager = () => {
             setStatus('uploading');
             setMessage('Starting upload...');
 
-            // Normalize data to snake_case for Supabase if strictly mapping, 
-            // but since we are using JSONB for most fields, we can keep the structure 
-            // OR we map camelCase TS fields to snake_case DB columns (standard practice).
-
+            // Normalize data to snake_case
             const rows = recipes.map(r => ({
                 id: r.id,
                 name: r.name,
                 type: r.type,
-                base_spirit: r.baseSpirit, // Map camelCase to snake_case
+                base_spirit: r.baseSpirit,
                 ingredients: r.ingredients,
                 steps: r.steps,
                 tags: r.tags,
@@ -46,6 +43,13 @@ export const RecipeManager = () => {
             setMessage(err.message || 'Failed to upload recipes');
         }
     };
+
+    // Auto-sync on mount for development convenience
+    useEffect(() => {
+        if (import.meta.env.DEV) {
+            uploadRecipes();
+        }
+    }, []);
 
     if (!supabase) return null;
     if (import.meta.env.MODE === 'production') return null; // Hide in prod for safety

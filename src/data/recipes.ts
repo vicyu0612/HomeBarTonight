@@ -1275,56 +1275,7 @@ export const recipes: Recipe[] = [
         color: '#f59e0b', // Amber-500
         image: '/cocktails/b52.png'
     },
-    {
-        id: 'espresso-martini',
-        name: { en: 'Espresso Martini', zh: '濃縮咖啡馬丁尼' },
-        type: 'classic',
-        baseSpirit: ['vodka', 'liqueur'],
-        ingredients: {
-            en: [
-                { name: 'Vodka', amount: '50ml' },
-                { name: 'Coffee Liqueur', amount: '30ml' },
-                { name: 'Espresso (Fresh)', amount: '30ml' },
-                { name: 'Sugar Syrup', amount: '10ml (Optional)' }
-            ],
-            zh: [
-                { name: '伏特加', amount: '50ml' },
-                { name: '咖啡香甜酒', amount: '30ml' },
-                { name: '濃縮咖啡 (熱)', amount: '30ml' },
-                { name: '糖水', amount: '10ml (選用)' }
-            ]
-        },
-        steps: {
-            en: [
-                'Brew a fresh shot of espresso.',
-                'Shake vehemently with ice to create foam.',
-                'Strain into a chilled coupe glass.',
-                'Garnish with 3 coffee beans.'
-            ],
-            zh: [
-                '煮一份新鮮的濃縮咖啡。',
-                '加冰塊大力搖盪以產生綿密泡沫。',
-                '濾冰倒入冰鎮的淺碟酒杯。',
-                '放上3顆咖啡豆裝飾。'
-            ]
-        },
-        tags: {
-            en: ['coffee', 'strong', 'modern'],
-            zh: ['咖啡', '提神', '現代經典']
-        },
-        description: {
-            en: 'Wake me up, and then fuck me up.',
-            zh: '「讓我清醒，再讓我醉。」當代咖啡調酒的經典。'
-        },
-        specs: {
-            alcohol: 7,
-            sweetness: 5,
-            ease: 5
-        },
-        color: '#27272a', // Zinc-800
-        image: '/cocktails/espresso-martini.png'
-    }
-    ,
+
     // CVS Beer Series
     {
         id: 'shandy',
