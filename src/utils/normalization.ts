@@ -33,6 +33,7 @@ export const INGREDIENT_DB: Record<string, { en: string; zh: string }> = {
     'malibu': { en: 'Malibu', zh: '馬利寶' },
 
     // Mixers & Others
+    // Mixers & Others
     'soda': { en: 'Soda Water', zh: '氣泡水' },
     'tonic': { en: 'Tonic Water', zh: '通寧水' },
     'coke': { en: 'Coke', zh: '可樂' },
@@ -43,6 +44,7 @@ export const INGREDIENT_DB: Record<string, { en: string; zh: string }> = {
     'apple_soda': { en: 'Apple Sidra', zh: '蘋果西打' },
     'juice': { en: 'Juice', zh: '果汁' },
     'orange_juice': { en: 'Orange Juice', zh: '柳橙汁' },
+    'cranberry_juice': { en: 'Cranberry Juice', zh: '蔓越莓汁' }, // Added
     'tomato_juice': { en: 'Tomato Juice', zh: '番茄汁' },
     'guava_juice': { en: 'Guava Juice', zh: '芭樂汁' },
     'tea': { en: 'Tea', zh: '奶茶' },
@@ -52,8 +54,10 @@ export const INGREDIENT_DB: Record<string, { en: string; zh: string }> = {
     'milk': { en: 'Milk', zh: '牛奶' },
     'calpis': { en: 'Calpis', zh: '可爾必思' },
     'yakult': { en: 'Yakult', zh: '養樂多' },
-    'cider': { en: 'Apple Cider', zh: '西打' }, // Deprecated fallback
+    'cider': { en: 'Apple Cider', zh: '西打' },
     'grenadine': { en: 'Grenadine', zh: '紅石榴糖漿' },
+    'orgeat': { en: 'Orgeat', zh: '杏仁糖漿' }, // Added
+    'lime_cordial': { en: 'Lime Cordial', zh: '莱姆汁 (Cordial)' }, // Added
     'melon_popsicle': { en: 'Melon Popsicle', zh: '哈密瓜冰棒' },
     'water': { en: 'Water', zh: '水' },
 
@@ -62,10 +66,13 @@ export const INGREDIENT_DB: Record<string, { en: string; zh: string }> = {
     'sugar': { en: 'Sugar', zh: '糖' },
     'salt': { en: 'Salt', zh: '鹽' },
     'bitters': { en: 'Bitters', zh: '苦精' },
+    'worcestershire': { en: 'Worcestershire', zh: '伍斯特醬' }, // Added
+    'hot_sauce': { en: 'Tabasco', zh: '辣椒醬' }, // Added
     'lemon': { en: 'Lemon', zh: '檸檬' },
-    'lime': { en: 'Lime', zh: '萊姆' }, // Often merged to Lemon in logic but DB keeps distinct if needed
+    'lime': { en: 'Lime', zh: '萊姆' },
     'mint': { en: 'Mint', zh: '薄荷' },
     'cucumber': { en: 'Cucumber', zh: '小黃瓜' },
+    'celery': { en: 'Celery', zh: '芹菜' }, // Added
     'cream': { en: 'Heavy Cream', zh: '鮮奶油' },
     'honey': { en: 'Honey', zh: '蜂蜜' },
     'egg': { en: 'Egg', zh: '蛋' },
@@ -88,7 +95,7 @@ Object.entries(INGREDIENT_DB).forEach(([id, { en, zh }]) => {
 const ALIAS_MAP_ZH: Record<string, string> = {
     "小樣酒 (威士忌)": "whiskey",
     "小樣酒（威士忌）": "whiskey",
-    "小樣酒": "whiskey", // Catch-all for simple "小樣酒"
+    "小樣酒": "whiskey",
     "波本或黑麥威士忌": "whiskey",
     "波本威士忌": "whiskey",
     "波本": "whiskey",
@@ -115,19 +122,21 @@ const ALIAS_MAP_ZH: Record<string, string> = {
 
     "不甜香艾酒": "dry_vermouth",
     "香艾酒": "vermouth",
+    "甜香艾酒": "vermouth", // Added
 
     // Updated Liqueur Maps
     "君度橙酒": "cointreau",
     "橙酒": "cointreau",
-    "白柑橘酒": "cointreau", // Merged
-    "藍柑橘酒": "cointreau", // Merged
-    "柑橘酒": "cointreau", // Merged
+    "白柑橘酒": "cointreau",
+    "藍柑橘酒": "cointreau",
+    "柑橘酒": "cointreau",
+    "柑橘香甜酒": "cointreau", // Added
     "柑曼怡": "grand_marnier",
     "杏仁酒": "amaretto",
 
     "咖啡香甜酒": "coffee_liqueur",
     "咖啡酒": "coffee_liqueur",
-    "可可香甜酒": "cocoa_liqueur", // Maps to cocoa_liqueur
+    "可可香甜酒": "cocoa_liqueur",
     "可可酒": "cocoa_liqueur",
     "貝禮詩奶酒": "baileys",
     "奶酒": "baileys",
@@ -146,17 +155,21 @@ const ALIAS_MAP_ZH: Record<string, string> = {
     "薑汁汽水": "ginger_ale",
     "可樂": "coke",
     "柳橙汁": "orange_juice",
+    "蔓越莓汁": "cranberry_juice", // Added
     "番茄汁": "tomato_juice",
     "番茄汁 (可果美)": "tomato_juice",
     "芭樂汁": "guava_juice",
     "芭樂汁 (辦桌那種)": "guava_juice",
     "檸檬汁": "lemon",
     "新鮮檸檬汁": "lemon",
-    "萊姆汁": "lemon",
+    "萊姆汁": "lemon", // Keep lemon for generic lime usually, but...
+    "莱姆汁": "lime_cordial", // Distinguish Cordial if strictly matched
     "檸檬": "lemon",
     "萊姆": "lemon",
     "黃檸檬": "lemon",
     "小黃瓜": "cucumber",
+    "芹菜": "celery", // Added
+    "芹菜棒": "celery", // Added
     "檸檬皮": "lemon_peel",
     "薄荷葉": "mint",
     "薄荷": "mint",
@@ -166,10 +179,13 @@ const ALIAS_MAP_ZH: Record<string, string> = {
     "糖漿": "sugar",
     "砂糖": "sugar",
     "糖": "sugar",
+    "杏仁糖漿": "orgeat", // Added
     "鹽": "salt",
     "鮮奶油": "cream",
     "苦精 (Angostura)": "bitters",
     "苦精": "bitters",
+    "伍斯特醬": "worcestershire", // Added
+    "辣椒醬": "hot_sauce", // Added
     "紅石榴糖漿": "grenadine",
     "麥香/阿薩姆奶茶": "tea",
     "麥香": "tea",
@@ -181,6 +197,7 @@ const ALIAS_MAP_ZH: Record<string, string> = {
     "綠茶 (瓶裝)": "oolong_tea",
     "濃縮咖啡 (熱)": "espresso",
     "濃縮咖啡": "espresso",
+    "蛋白": "egg", // Added
 };
 
 const ALIAS_MAP_EN: Record<string, string> = {
@@ -188,13 +205,16 @@ const ALIAS_MAP_EN: Record<string, string> = {
     "mini whiskey bottle": "whiskey",
     "bourbon": "whiskey",
     "whiskey": "whiskey",
+    "rye whiskey": "whiskey", // Added
     "gin": "gin",
     "vodka": "vodka",
+    "vodka citron": "vodka", // Added
     "shochu or vodka": "vodka",
     "tequila blanco": "tequila",
     "tequila": "tequila",
     "white rum": "rum",
     "rum": "rum",
+    "aged rum": "rum", // Added
     "cognac": "brandy",
     "cognac/brandy": "brandy",
     "brandy": "brandy",
@@ -204,24 +224,26 @@ const ALIAS_MAP_EN: Record<string, string> = {
     "lager": "lager",
     "beer": "beer",
     "tequila cider": "hard_cider",
-    "cider": "hard_cider", // Context dependent, but usually hard cider in spirits context
+    "cider": "hard_cider",
     "apple cider": "hard_cider",
-    "somersby": "hard_cider", // Brand alias
+    "somersby": "hard_cider",
 
     "dry vermouth": "dry_vermouth",
+    "sweet vermouth": "vermouth", // Added
     "vermouth": "vermouth",
     "cointreau (triple sec)": "cointreau",
     "cointreau": "cointreau",
     "triple sec": "cointreau",
-    "blue curacao": "cointreau", // Merged
-    "curacao": "cointreau", // Merged
+    "orange curacao": "cointreau", // Added
+    "blue curacao": "cointreau",
+    "curacao": "cointreau",
     "grand marnier": "grand_marnier",
     "amaretto": "amaretto",
     "coffee liqueur (kahlua)": "coffee_liqueur",
     "coffee liqueur": "coffee_liqueur",
     "creme de cacao": "cocoa_liqueur",
     "irish cream (baileys)": "baileys",
-    "baileys": "baileys", // Explicit alias
+    "baileys": "baileys",
     "heavy cream": "cream",
     "cream": "cream",
     "lemon sparkling water (cc lemon etc)": "lemon_soda",
@@ -233,7 +255,7 @@ const ALIAS_MAP_EN: Record<string, string> = {
     "apple sidra": "apple_soda",
     "melona": "melon_popsicle",
     "honeydew melon popsicle": "melon_popsicle",
-    "club soda": "soda", // Added
+    "club soda": "soda",
     "sparkling water": "soda",
     "soda water": "soda",
     "tonic water": "tonic",
@@ -247,41 +269,50 @@ const ALIAS_MAP_EN: Record<string, string> = {
     "assam": "tea",
     "black tea": "tea",
     "minechine": "tea",
-    "apple juice": "juice", // generic mapping
+    "apple juice": "juice",
     "orange juice": "orange_juice",
+    "cranberry juice": "cranberry_juice", // Added
     "tomato juice": "tomato_juice",
     "guava juice": "guava_juice",
     "oolong tea": "oolong_tea",
-    "oolong": "oolong_tea", // Fix for "Oolong"
+    "oolong": "oolong_tea",
     "green tea": "oolong_tea",
     "espresso": "espresso",
+    "espresso (fresh)": "espresso", // Added
 
-    "lime juice": "lemon",
+    "lime juice": "lemon", // Standard mapping
     "fresh lime juice": "lemon",
     "lemon juice": "lemon",
     "lime": "lemon",
     "lemon": "lemon",
+    "lime cordial": "lime_cordial", // Added
     "lemon twist": "lemon_peel",
     "lemon peel": "lemon_peel",
     "cucumber": "cucumber",
+    "celery": "celery", // Added
+    "celery stalk": "celery", // Added
     "mint leaves": "mint",
     "mint": "mint",
     "sugar cube": "sugar",
     "simple syrup": "sugar",
     "sugar syrup": "sugar",
     "rich syrup": "sugar",
+    "orgeat syrup": "orgeat", // Added
     "syrup": "sugar",
     "sugar": "sugar",
     "salt": "salt",
     "olive": "olive",
     "nutmeg": "nutmeg",
-    "shochu": "soju", // Category logic maps to soju
+    "shochu": "soju",
     "water": "water",
     "hot water": "water",
     "cold water": "water",
     "angostura bitters": "bitters",
     "bitters": "bitters",
+    "worcestershire": "worcestershire", // Added
+    "tabasco": "hot_sauce", // Added
     "grenadine": "grenadine",
+    "egg white": "egg", // Added
 };
 
 /**

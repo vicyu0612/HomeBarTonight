@@ -291,26 +291,51 @@ function App() {
         const needed = recipe.ingredients['en'];
 
         const hasAll = needed.every(ing => {
-          // 1. Check if it's a garnish or optional by Amount string heuristic (English Only)
-          const amt = ing.amount.toLowerCase();
-          if (
-            amt.includes('garnish') || amt.includes('rim') || amt.includes('twist') ||
-            amt.includes('peel') || amt.includes('wedge') || amt.includes('slice') ||
-            amt.includes('decor') || amt.includes('zest') || amt.includes('top') ||
-            amt.includes('splash') || amt.includes('dash') || amt.includes('drop') ||
-            amt.includes('optional')
-          ) {
-            return true; // Skip requirement
-          }
-
           const canonicals = normalizeIngredient(ing.name, 'en');
 
-          // 2. Check if normalized ID is implicitly optional (Ice, Water, Salt)
-          if (canonicals.some(c => c === 'ice' || c === 'water' || c === 'salt' || c === 'sugar')) {
-            return true;
-          }
+          // Definition of Groups (Sync with MyBarModal logic)
+          // We only check if it belongs to a REQUIRED group. 
+          // If it's not in a required group, it's considered a Garnish (Ignored).
 
-          // 3. Strict check for the rest
+          const isRequired = canonicals.some(id => {
+            // 1. Essentials (Ignored since Step 1801 request was to keep common drinks/essentials, 
+            // but Step 1811 request says "ignore essentials group also")
+            // So we skip this block. 
+            // const essentials = new Set([...]); 
+            // if (essentials.has(id)) return true; // REMOVED
+
+
+            // 2. Mixers (Must have)
+            const mixers = new Set([
+              'soda', 'tonic', 'ginger_ale', 'coke', 'sprite',
+              'lemon_soda', 'grapefruit_soda', 'apple_soda',
+              'juice', 'orange_juice', 'cranberry_juice', 'tomato_juice', 'guava_juice',
+              'tea', 'oolong_tea', 'coffee', 'espresso', 'milk',
+              'calpis', 'yakult', 'cider', 'grenadine',
+              'orgeat', 'lime_cordial', 'melon_popsicle', 'water'
+            ]);
+            if (mixers.has(id)) return true;
+
+            // 3. Base Spirits (Must have)
+            const base = new Set(['whiskey', 'gin', 'vodka', 'rum', 'tequila', 'brandy']);
+            if (base.has(id)) return true;
+
+            // 4. Liqueurs & Other Alc (Must have)
+            const alcohol = new Set([
+              'liqueur', 'cointreau', 'grand_marnier', 'amaretto',
+              'coffee_liqueur', 'cocoa_liqueur', 'baileys', 'malibu',
+              'campari', 'aperol', 'vermouth', 'dry_vermouth',
+              'beer', 'lager', 'wine', 'soju', 'sake', 'champagne', 'hard_cider'
+            ]);
+            if (alcohol.has(id)) return true;
+
+            return false; // Not in a required group -> Garnish
+          });
+
+          // If NOT required (Garnish), skip check
+          if (!isRequired) return true;
+
+          // If required, check inventory
           return canonicals.some(c => myInventory.has(c));
         });
         if (!hasAll) return false;

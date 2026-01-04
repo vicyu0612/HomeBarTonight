@@ -72,7 +72,8 @@ export function MyBarModal({
                     else if (
                         id === 'ice' || id === 'sugar' || id === 'salt' ||
                         id === 'bitters' || id === 'lemon' || id === 'lime' ||
-                        id === 'cream' || id === 'egg' || id === 'honey'
+                        id === 'cream' || id === 'egg' || id === 'honey' ||
+                        id === 'worcestershire' || id === 'hot_sauce'
                     ) {
                         cats.essential.add(id);
                     }
@@ -85,13 +86,15 @@ export function MyBarModal({
                         id === 'calpis' || id === 'milk' || id === 'grenadine' ||
                         id === 'melon_popsicle' || id === 'apple_soda' ||
                         id === 'espresso' || id === 'tomato_juice' || id === 'guava_juice' ||
-                        id === 'grapefruit_soda' || id === 'oolong_tea'
+                        id === 'grapefruit_soda' || id === 'oolong_tea' ||
+                        id === 'cranberry_juice' || id === 'orgeat' || id === 'lime_cordial'
                     ) {
                         cats.mixer.add(id);
                     }
                     // 6. Garnishes & Others
                     else {
                         cats.garnish.add(id);
+                        // Explicitly check for known garnishes if needed, but else block catches 'celery', 'olive', 'nutmeg' etc.
                     }
                 });
             });
