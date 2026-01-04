@@ -28,9 +28,12 @@ const translations = {
     tabs: {
       all: "All",
       classic: "Classic",
-      cvs: "CVS Mode",
+      cvs: "Convenience Store",
+      cvs_mobile: "CVS",
       favorites: "Favorites",
-      my_bar: "My Bar"
+      favorites_mobile: "Favs",
+      my_bar: "My Bar",
+      my_bar_mobile: "MyBar"
     },
     spirits: {
       all: "All Spirits",
@@ -78,8 +81,11 @@ const translations = {
       all: "全部",
       classic: "經典",
       cvs: "超商模式",
+      cvs_mobile: "超商",
       favorites: "我的最愛",
-      my_bar: "我的吧台"
+      favorites_mobile: "最愛",
+      my_bar: "我的吧台",
+      my_bar_mobile: "吧台"
     },
     spirits: {
       all: "所有基酒",
@@ -571,23 +577,23 @@ function App() {
             {[
               { id: 'all', label: t.tabs.all, icon: GlassWater },
               { id: 'classic', label: t.tabs.classic, icon: Martini },
-              { id: 'cvs', label: t.tabs.cvs, icon: Store },
-              { id: 'favorites', label: t.tabs.favorites, icon: Heart },
-              { id: 'my_bar', label: t.tabs.my_bar, icon: Wine }
+              { id: 'cvs', label: t.tabs.cvs, mobileLabel: (t.tabs as any).cvs_mobile, icon: Store },
+              { id: 'favorites', label: t.tabs.favorites, mobileLabel: (t.tabs as any).favorites_mobile, icon: Heart },
+              { id: 'my_bar', label: t.tabs.my_bar, mobileLabel: (t.tabs as any).my_bar_mobile, icon: Wine }
             ].map((tab) => (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id as any)}
                 className={clsx(
-                  "flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-lg text-xs font-bold transition-all duration-300",
+                  "flex-1 flex items-center justify-center gap-1 md:gap-1.5 py-2 md:py-2.5 rounded-lg text-[10px] md:text-xs font-bold transition-all duration-300 min-w-0",
                   activeTab === tab.id
                     ? "bg-white/10 text-white shadow-lg"
                     : "text-zinc-500 hover:text-zinc-300 hover:bg-white/5"
                 )}
               >
-                <tab.icon size={14} fill={tab.id === 'favorites' && activeTab === 'favorites' ? "currentColor" : "none"} />
+                <tab.icon size={14} fill={tab.id === 'favorites' && activeTab === 'favorites' ? "currentColor" : "none"} className="flex-shrink-0" />
                 <span className="truncate hidden md:inline">{tab.label}</span>
-                <span className="truncate md:hidden">{tab.label}</span>
+                <span className="truncate md:hidden">{tab.mobileLabel || tab.label}</span>
               </button>
             ))}
           </div>
