@@ -480,7 +480,7 @@ function App() {
       {/* Dark Overlay */}
       <div className="fixed inset-0 bg-background/80 backdrop-blur-sm z-0" />
 
-      <div className="relative z-10 max-w-md mx-auto min-h-screen flex flex-col">
+      <div className="relative z-10 w-full max-w-[1024px] mx-auto min-h-screen flex flex-col md:px-4">
 
         {/* Header */}
         <header className="p-6 pt-12 flex justify-between items-center bg-gradient-to-b from-background to-transparent sticky top-0 z-20">
@@ -529,8 +529,8 @@ function App() {
           </div>
         </header>
 
-        {/* Search & Filter */}
-        <div className="px-6 space-y-4">
+        {/* Search & Filter - Constrained width on desktop */}
+        <div className="px-6 space-y-4 w-full">
           <div className="relative group">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500 group-focus-within:text-white transition-colors" size={18} />
             <input
@@ -561,13 +561,14 @@ function App() {
                 )}
               >
                 <tab.icon size={14} fill={tab.id === 'favorites' && activeTab === 'favorites' ? "currentColor" : "none"} />
-                <span className="truncate">{tab.label}</span>
+                <span className="truncate hidden md:inline">{tab.label}</span>
+                <span className="truncate md:hidden">{tab.label}</span>
               </button>
             ))}
           </div>
 
           {/* Scrollable Spirit Filter */}
-          <div className="flex gap-2 overflow-x-auto pb-4 no-scrollbar -mx-6 px-6 mask-linear-fade">
+          <div className="flex gap-2 overflow-x-auto pb-4 no-scrollbar mask-linear-fade justify-start">
             {spiritsList.map((spirit) => (
               <button
                 key={spirit}
@@ -592,7 +593,7 @@ function App() {
               initial={{ height: 0, opacity: 0 }}
               animate={{ height: 'auto', opacity: 1 }}
               exit={{ height: 0, opacity: 0 }}
-              className="px-6 mb-2 overflow-hidden"
+              className="px-6 mb-4 overflow-hidden w-full"
             >
               <button
                 onClick={() => setShowMyBarModal(true)}
@@ -609,7 +610,7 @@ function App() {
         </AnimatePresence>
 
         {/* Recipe Grid */}
-        <main className="flex-1 px-6 grid gap-4 pb-24">
+        <main className="flex-1 px-6 grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 pb-24">
           <AnimatePresence mode="popLayout">
             {filteredRecipes.map((recipe) => (
               <motion.div
@@ -662,7 +663,7 @@ function App() {
           </AnimatePresence>
 
           {filteredRecipes.length === 0 && (
-            <div className="text-center py-20 text-zinc-500">
+            <div className="col-span-full text-center py-20 text-zinc-500">
               <p>{activeTab === 'my_bar' && myInventory.size === 0
                 ? (lang === 'zh' ? '您的吧台空空如也，快去添加材料吧！' : 'Your bar is empty. Add some ingredients!')
                 : t.noResults}

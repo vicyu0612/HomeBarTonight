@@ -447,51 +447,470 @@ export const recipes: Recipe[] = [
         image: '/cocktails/brandy-alexander.png'
     },
     {
-        id: 'horses-neck',
-        name: { en: "Horse's Neck", zh: '馬頸' },
+        id: 'daiquiri',
+        name: { en: 'Daiquiri', zh: '戴吉利' },
         type: 'classic',
-        baseSpirit: ['brandy'],
+        baseSpirit: ['rum'],
         ingredients: {
             en: [
-                { name: 'Brandy', amount: '50ml' },
-                { name: 'Ginger Ale', amount: 'Top up' },
-                { name: 'Lemon Peel', amount: 'Long Strip' },
-                { name: 'Bitters', amount: 'Optional' }
+                { name: 'White Rum', amount: '60ml' },
+                { name: 'Lime Juice', amount: '30ml' },
+                { name: 'Sugar Syrup', amount: '15ml' }
             ],
             zh: [
-                { name: '白蘭地', amount: '50ml' },
-                { name: '薑汁汽水', amount: '加滿' },
-                { name: '檸檬皮', amount: '長條' },
-                { name: '苦精', amount: '選用' }
+                { name: '白蘭姆酒', amount: '60ml' },
+                { name: '檸檬汁', amount: '30ml' },
+                { name: '糖漿', amount: '15ml' }
             ]
         },
         steps: {
             en: [
-                'Peel a long spiral of lemon zest.',
-                'Place the zest in a highball glass with one end hanging over the rim.',
-                'Add ice and brandy, top with ginger ale.'
+                'Shake all ingredients with ice.',
+                'Double strain into a chilled coupe glass.',
+                'Garnish with a lime wheel (optional).'
             ],
             zh: [
-                '削一條長長的螺旋狀檸檬皮。',
-                '將皮放入高球杯，一端掛在杯口。',
-                '加冰和白蘭地，倒滿薑汁汽水。'
+                '將所有材料加冰搖盪。',
+                '雙重過濾倒入冰鎮淺碟酒杯。',
+                '可用檸檬片裝飾（選用）。'
             ]
         },
         tags: {
-            en: ['refreshing', 'spicy', 'easy'],
-            zh: ['清爽', '辛香', '簡單']
+            en: ['sour', 'refreshing', 'classic'],
+            zh: ['酸', '清爽', '經典']
         },
         description: {
-            en: 'A classic highball distinguished by its long lemon garnish.',
-            zh: '以超長檸檬皮裝飾聞名的經典高球酒。'
+            en: 'A perfect balance of rum, sweetness, and citrus.',
+            zh: '蘭姆酒、甜味與柑橘的完美平衡。'
+        },
+        specs: {
+            alcohol: 7,
+            sweetness: 5,
+            ease: 6
+        },
+        color: '#f0fdf4',
+        image: '/cocktails/daiquiri.png'
+    },
+    {
+        id: 'whiskey-sour',
+        name: { en: 'Whiskey Sour', zh: '威士忌酸酒' },
+        type: 'classic',
+        baseSpirit: ['whiskey'],
+        ingredients: {
+            en: [
+                { name: 'Bourbon', amount: '60ml' },
+                { name: 'Lemon Juice', amount: '30ml' },
+                { name: 'Sugar Syrup', amount: '15ml' },
+                { name: 'Egg White', amount: '1 (Optional)' },
+                { name: 'Bitters', amount: 'Dash' }
+            ],
+            zh: [
+                { name: '波本威士忌', amount: '60ml' },
+                { name: '檸檬汁', amount: '30ml' },
+                { name: '糖漿', amount: '15ml' },
+                { name: '蛋白', amount: '1顆 (選用)' },
+                { name: '苦精', amount: '少許' }
+            ]
+        },
+        steps: {
+            en: [
+                'Dry shake (no ice) all ingredients to emulsify egg white.',
+                'Add ice and shake again vigorously.',
+                'Strain into a rocks glass over fresh ice.',
+                'Garnish with orange slice and cherry.'
+            ],
+            zh: [
+                '將所有材料不加冰乾搖以乳化蛋白。',
+                '加入冰塊再次劇烈搖盪。',
+                '濾入裝有新冰的威士忌杯。',
+                '裝飾柳橙片和櫻桃。'
+            ]
+        },
+        tags: {
+            en: ['sour', 'creamy', 'classic'],
+            zh: ['酸', '綿密', '經典']
+        },
+        description: {
+            en: 'Silky texture with a sour punch.',
+            zh: '口感綿密，酸度帶勁。'
+        },
+        specs: {
+            alcohol: 6,
+            sweetness: 5,
+            ease: 6
+        },
+        color: '#fde047',
+        image: '/cocktails/whiskey-sour.png'
+    },
+    {
+        id: 'negroni',
+        name: { en: 'Negroni', zh: '內格羅尼' },
+        type: 'classic',
+        baseSpirit: ['gin'],
+        ingredients: {
+            en: [
+                { name: 'Gin', amount: '30ml' },
+                { name: 'Campari', amount: '30ml' },
+                { name: 'Sweet Vermouth', amount: '30ml' }
+            ],
+            zh: [
+                { name: '琴酒', amount: '30ml' },
+                { name: '金巴利', amount: '30ml' },
+                { name: '甜香艾酒', amount: '30ml' }
+            ]
+        },
+        steps: {
+            en: [
+                'Stir all ingredients with ice.',
+                'Strain into a rocks glass over a large ice cube.',
+                'Garnish with an orange peel.'
+            ],
+            zh: [
+                '將所有材料加冰攪拌。',
+                '濾入裝有大冰塊的威士忌杯。',
+                '裝飾柳橙皮。'
+            ]
+        },
+        tags: {
+            en: ['bitter', 'strong', 'aperitif'],
+            zh: ['苦', '烈', '開胃酒']
+        },
+        description: {
+            en: 'The ultimate Italian aperitif.',
+            zh: '義大利開胃酒的極致。'
+        },
+        specs: {
+            alcohol: 8,
+            sweetness: 4,
+            ease: 9
+        },
+        color: '#ef4444',
+        image: '/cocktails/negroni.png'
+    },
+    {
+        id: 'manhattan',
+        name: { en: 'Manhattan', zh: '曼哈頓' },
+        type: 'classic',
+        baseSpirit: ['whiskey'],
+        ingredients: {
+            en: [
+                { name: 'Rye Whiskey', amount: '60ml' },
+                { name: 'Sweet Vermouth', amount: '30ml' },
+                { name: 'Angostura Bitters', amount: '2 dashes' }
+            ],
+            zh: [
+                { name: '黑麥威士忌', amount: '60ml' },
+                { name: '甜香艾酒', amount: '30ml' },
+                { name: '苦精', amount: '2配' }
+            ]
+        },
+        steps: {
+            en: [
+                'Stir all ingredients with ice.',
+                'Strain into a chilled coupe glass.',
+                'Garnish with a brandied cherry.'
+            ],
+            zh: [
+                '將所有材料加冰攪拌。',
+                '濾入冰鎮淺碟酒杯。',
+                '裝飾酒漬櫻桃。'
+            ]
+        },
+        tags: {
+            en: ['strong', 'sophisticated', 'classic'],
+            zh: ['烈', '成熟', '經典']
+        },
+        description: {
+            en: 'Sophisticated and complex, the queen of cocktails.',
+            zh: '複雜成熟，雞尾酒之后。'
+        },
+        specs: {
+            alcohol: 9,
+            sweetness: 3,
+            ease: 8
+        },
+        color: '#b91c1c',
+        image: '/cocktails/manhattan.png'
+    },
+    {
+        id: 'espresso-martini',
+        name: { en: 'Espresso Martini', zh: '濃縮咖啡馬丁尼' },
+        type: 'classic',
+        baseSpirit: ['vodka', 'liqueur'],
+        ingredients: {
+            en: [
+                { name: 'Vodka', amount: '40ml' },
+                { name: 'Coffee Liqueur', amount: '20ml' },
+                { name: 'Espresso', amount: '30ml' },
+                { name: 'Sugar Syrup', amount: '5ml (Optional)' }
+            ],
+            zh: [
+                { name: '伏特加', amount: '40ml' },
+                { name: '咖啡香甜酒', amount: '20ml' },
+                { name: '濃縮咖啡', amount: '30ml' },
+                { name: '糖漿', amount: '5ml (選用)' }
+            ]
+        },
+        steps: {
+            en: [
+                'Shake vigorously with ice to create foam.',
+                'Strain into a chilled martini glass.',
+                'Garnish with 3 coffee beans.'
+            ],
+            zh: [
+                '加冰劇烈搖盪以產生泡沫。',
+                '濾入冰鎮馬丁尼杯。',
+                '裝飾三顆咖啡豆。'
+            ]
+        },
+        tags: {
+            en: ['coffee', 'energizing', 'sweet'],
+            zh: ['咖啡', '提神', '甜']
+        },
+        description: {
+            en: 'Wake me up, and then fuck me up.',
+            zh: '讓我清醒，再讓我醉。'
+        },
+        specs: {
+            alcohol: 6,
+            sweetness: 6,
+            ease: 5
+        },
+        color: '#451a03',
+        image: '/cocktails/espresso-martini.png'
+    },
+    {
+        id: 'cosmopolitan',
+        name: { en: 'Cosmopolitan', zh: '柯夢波丹' },
+        type: 'classic',
+        baseSpirit: ['vodka'],
+        ingredients: {
+            en: [
+                { name: 'Vodka Citron', amount: '45ml' },
+                { name: 'Cointreau', amount: '15ml' },
+                { name: 'Cranberry Juice', amount: '30ml' },
+                { name: 'Lime Juice', amount: '10ml' }
+            ],
+            zh: [
+                { name: '檸檬伏特加', amount: '45ml' },
+                { name: '君度橙酒', amount: '15ml' },
+                { name: '蔓越莓汁', amount: '30ml' },
+                { name: '檸檬汁', amount: '10ml' }
+            ]
+        },
+        steps: {
+            en: [
+                'Shake all ingredients with ice.',
+                'Strain into a chilled martini glass.',
+                'Garnish with a lime wheel or zest.'
+            ],
+            zh: [
+                '將所有材料加冰搖盪。',
+                '濾入冰鎮馬丁尼杯。',
+                '裝飾檸檬片或皮。'
+            ]
+        },
+        tags: {
+            en: ['fruity', 'sour', 'popular'],
+            zh: ['果味', '酸', '流行']
+        },
+        description: {
+            en: 'A modern classic made famous by Sex and the City.',
+            zh: '因《慾望城市》而聞名的現代經典。'
+        },
+        specs: {
+            alcohol: 6,
+            sweetness: 5,
+            ease: 7
+        },
+        color: '#db2777',
+        image: '/cocktails/cosmopolitan.png'
+    },
+    {
+        id: 'mai-tai',
+        name: { en: 'Mai Tai', zh: '包含泰' },
+        type: 'classic',
+        baseSpirit: ['rum'],
+        ingredients: {
+            en: [
+                { name: 'Aged Rum', amount: '45ml' },
+                { name: 'Orange Curacao', amount: '15ml' },
+                { name: 'Orgeat Syrup', amount: '15ml' },
+                { name: 'Lime Juice', amount: '30ml' }
+            ],
+            zh: [
+                { name: '陳年蘭姆酒', amount: '45ml' },
+                { name: '柑橘香甜酒', amount: '15ml' },
+                { name: '杏仁糖漿', amount: '15ml' },
+                { name: '檸檬汁', amount: '30ml' }
+            ]
+        },
+        steps: {
+            en: [
+                'Shake all ingredients with ice.',
+                'Strain into a double rocks glass over crushed ice.',
+                'Garnish with mint sprig and lime shell.'
+            ],
+            zh: [
+                '將所有材料加冰搖盪。',
+                '濾入裝有碎冰的雙份威士忌杯。',
+                '裝飾薄荷枝和檸檬皮。'
+            ]
+        },
+        tags: {
+            en: ['tiki', 'complex', 'tropical'],
+            zh: ['提基', '層次', '熱帶']
+        },
+        description: {
+            en: 'Out of this world! The quintessential Tiki drink.',
+            zh: '好喝到上天！提基調酒的代表作。'
+        },
+        specs: {
+            alcohol: 8,
+            sweetness: 6,
+            ease: 5
+        },
+        color: '#b45309',
+        image: '/cocktails/mai-tai.png'
+    },
+    {
+        id: 'bloody-mary',
+        name: { en: 'Bloody Mary', zh: '血腥瑪麗' },
+        type: 'classic',
+        baseSpirit: ['vodka'],
+        ingredients: {
+            en: [
+                { name: 'Vodka', amount: '45ml' },
+                { name: 'Tomato Juice', amount: '90ml' },
+                { name: 'Lemon Juice', amount: '15ml' },
+                { name: 'Worcestershire', amount: '2 dashes' },
+                { name: 'Tabasco', amount: 'Top taste' }
+            ],
+            zh: [
+                { name: '伏特加', amount: '45ml' },
+                { name: '番茄汁', amount: '90ml' },
+                { name: '檸檬汁', amount: '15ml' },
+                { name: '伍斯特醬', amount: '2滴' },
+                { name: '辣椒醬', amount: '適量' }
+            ]
+        },
+        steps: {
+            en: [
+                'Roll ingredients back and forth with ice (do not shake).',
+                'Strain into a highball glass over fresh ice.',
+                'Garnish with celery stalk and lemon wedge.'
+            ],
+            zh: [
+                '將材料加冰來回倒換（不要搖盪）。',
+                '濾入裝有新冰的高球杯。',
+                '裝飾芹菜棒和檸檬角。'
+            ]
+        },
+        tags: {
+            en: ['savory', 'spicy', 'brunch'],
+            zh: ['鹹', '辣', '早午餐']
+        },
+        description: {
+            en: 'The world’s favorite hangover cure.',
+            zh: '世界上最受歡迎的宿醉解藥。'
+        },
+        specs: {
+            alcohol: 4,
+            sweetness: 1,
+            ease: 6
+        },
+        color: '#dc2626',
+        image: '/cocktails/bloody-mary.png'
+    },
+    {
+        id: 'gimlet',
+        name: { en: 'Gimlet', zh: '吉姆雷特' },
+        type: 'classic',
+        baseSpirit: ['gin'],
+        ingredients: {
+            en: [
+                { name: 'Gin', amount: '60ml' },
+                { name: 'Lime Cordial', amount: '30ml' }
+            ],
+            zh: [
+                { name: '琴酒', amount: '60ml' },
+                { name: '莱姆汁', amount: '30ml' }
+            ]
+        },
+        steps: {
+            en: [
+                'Stir ingredients with ice.',
+                'Strain into a coupe glass.',
+                'Garnish with a lime wheel.'
+            ],
+            zh: [
+                '將材料加冰攪拌。',
+                '濾入淺碟酒杯。',
+                '裝飾檸檬片。'
+            ]
+        },
+        tags: {
+            en: ['sour', 'strong', 'classic'],
+            zh: ['酸', '烈', '經典']
+        },
+        description: {
+            en: 'A sharp, refreshing classic.',
+            zh: '銳利、清爽的經典。'
+        },
+        specs: {
+            alcohol: 8,
+            sweetness: 4,
+            ease: 8
+        },
+        color: '#bef264',
+        image: '/cocktails/gimlet.png'
+    },
+    {
+        id: 'tom-collins',
+        name: { en: 'Tom Collins', zh: '湯姆柯林斯' },
+        type: 'classic',
+        baseSpirit: ['gin'],
+        ingredients: {
+            en: [
+                { name: 'Gin', amount: '45ml' },
+                { name: 'Lemon Juice', amount: '30ml' },
+                { name: 'Sugar Syrup', amount: '15ml' },
+                { name: 'Soda Water', amount: 'Top up' }
+            ],
+            zh: [
+                { name: '琴酒', amount: '45ml' },
+                { name: '檸檬汁', amount: '30ml' },
+                { name: '糖漿', amount: '15ml' },
+                { name: '氣泡水', amount: '加滿' }
+            ]
+        },
+        steps: {
+            en: [
+                'Build in a highball glass with ice.',
+                'Stir gin, lemon, and sugar.',
+                'Top with soda and garnish with lemon slice.'
+            ],
+            zh: [
+                '在高球杯中加冰直調。',
+                '攪拌琴酒、檸檬汁和糖。',
+                '加滿氣泡水，裝飾檸檬片。'
+            ]
+        },
+        tags: {
+            en: ['refreshing', 'fizzy', 'summer'],
+            zh: ['清爽', '氣泡', '夏天']
+        },
+        description: {
+            en: 'Like a sparkling lemonade for adults.',
+            zh: '大人的氣泡檸檬水。'
         },
         specs: {
             alcohol: 5,
-            sweetness: 6,
+            sweetness: 5,
             ease: 9
         },
-        color: '#ca8a04', // Yellow-600
-        image: '/cocktails/horses-neck.png'
+        color: '#fef9c3', // Lemonade
+        image: '/cocktails/tom-collins.png'
     },
     // CVS / Home Hacks
     {
