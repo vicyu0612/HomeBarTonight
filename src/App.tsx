@@ -525,12 +525,13 @@ function App() {
             <button
               onClick={() => session ? setShowLogoutConfirm(true) : setShowLoginModal(true)}
               className={clsx(
-                "p-1 rounded-full hover:bg-white/20 active:scale-95 transition-all backdrop-blur-md border border-white/5 overflow-hidden",
+                "rounded-full hover:bg-white/20 active:scale-95 transition-all backdrop-blur-md border border-white/5 overflow-hidden",
+                session?.user?.user_metadata?.avatar_url ? "p-0" : "p-1", // Remove padding for avatar
                 session ? "border-primary/50" : "bg-white/10 text-zinc-300"
               )}
             >
               {session?.user?.user_metadata?.avatar_url ? (
-                <img src={session.user.user_metadata.avatar_url} alt="User" className="w-8 h-8 rounded-full" />
+                <img src={session.user.user_metadata.avatar_url} alt="User" className="w-10 h-10 rounded-full" />
               ) : session ? (
                 <div className="w-8 h-8 bg-primary/20 flex items-center justify-center rounded-full text-primary">
                   <User size={18} />
