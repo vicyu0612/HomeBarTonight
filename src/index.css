@@ -9,6 +9,13 @@
 body {
   @apply bg-background text-zinc-100 antialiased selection:bg-primary selection:text-white;
   overscroll-behavior-y: none;
+  /* iOS Native Feel */
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+  /* Safe Area Support */
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: env(safe-area-inset-bottom);
 }
 
 .glass {
