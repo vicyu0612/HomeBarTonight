@@ -495,12 +495,14 @@ function App() {
 
     // Sync to DB if logged in
     if (session && supabase) {
-      if (favorites.has(id)) {
-        // Remove from DB (We are checking previous state, so if it WAS faved, we remove)
-        await supabase.from('favorites').delete().eq('user_id', session.user.id).eq('recipe_id', id);
+      if (favoritesRef.current.has(id)) {
+        // Remove from DB
+        const { error } = await supabase.from('favorites').delete().eq('user_id', session.user.id).eq('recipe_id', id);
+        if (error) console.error("Toggle Delete Error:", error);
       } else {
         // Add to DB
-        await supabase.from('favorites').insert({ user_id: session.user.id, recipe_id: id });
+        const { error } = await supabase.from('favorites').insert({ user_id: session.user.id, recipe_id: id });
+        if (error) console.error("Toggle Insert Error:", error);
       }
     }
   };
@@ -589,11 +591,16 @@ function App() {
 
   const handleLogout = async () => {
     if (!supabase) return;
-    const { error } = await supabase.auth.signOut();
-    if (error) console.error('Error logging out:', error.message);
+    try {
+      await supabase.auth.signOut();
+    } catch (e) {
+      console.error("Logout error (ignored):", e);
+    }
 
-    // Clear favorites on logout
+    // Force clear state
+    setSession(null);
     setFavorites(new Set());
+    favoritesRef.current = new Set();
     localStorage.removeItem('favorites');
 
     setShowLogoutConfirm(false);
