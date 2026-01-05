@@ -455,11 +455,21 @@ function App() {
       if (isFavorited) {
         // Remove from DB
         const { error } = await supabase.from('favorites').delete().eq('user_id', session.user.id).eq('recipe_id', id);
-        if (error) console.error("Remove Fav Error:", error);
+        if (error) {
+          console.error("Remove Fav Error:", error);
+          // Revert UI if failed
+          setFavorites(prev => { const n = new Set(prev); n.add(id); return n; });
+          alert(`Failed to remove favorite: ${error.message}`);
+        }
       } else {
         // Add to DB
         const { error } = await supabase.from('favorites').insert({ user_id: session.user.id, recipe_id: id });
-        if (error) console.error("Add Fav Error:", error);
+        if (error) {
+          console.error("Add Fav Error:", error);
+          // Revert UI if failed
+          setFavorites(prev => { const n = new Set(prev); n.delete(id); return n; });
+          alert(`Failed to add favorite: ${error.message}`);
+        }
       }
     }
   };
@@ -554,12 +564,14 @@ function App() {
       console.error("Logout error (ignored):", e);
     }
 
-    // Force clear state
+    // Force clear state and storage
     setSession(null);
     setFavorites(new Set());
-    localStorage.removeItem('favorites');
-
+    localStorage.clear(); // Clear all local storage to be safe
     setShowLogoutConfirm(false);
+
+    // Reload page to ensure clean state
+    window.location.reload();
   };
 
   const t = translations[lang];
