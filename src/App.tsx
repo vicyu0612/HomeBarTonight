@@ -321,6 +321,23 @@ function App() {
     if (session?.user) {
       syncFavorites();
       syncInventory();
+
+      // Add Focus Listener for "Resume Sync"
+      // This ensures if user modified data on another device, when they come back to this app, it updates.
+      const handleResume = () => {
+        if (document.visibilityState === 'visible') {
+          syncFavorites();
+          syncInventory();
+        }
+      };
+
+      window.addEventListener('focus', handleResume);
+      window.addEventListener('visibilitychange', handleResume);
+
+      return () => {
+        window.removeEventListener('focus', handleResume);
+        window.removeEventListener('visibilitychange', handleResume);
+      };
     }
   }, [session]);
 
@@ -467,39 +484,8 @@ function App() {
       }
     };
     fetchRecipes();
-    // Realtime Favorites Sync
-    let channel: any = null;
-
-    if (session?.user && supabase) {
-      channel = supabase.channel('favorites_change')
-        .on(
-          'postgres_changes',
-          {
-            event: '*',
-            schema: 'public',
-            table: 'favorites',
-            filter: `user_id=eq.${session.user.id}`,
-          },
-          async (_payload) => {
-            if (!supabase) return;
-            // On any change (Insert/Delete), we re-fetch the authoritative list from DB
-            const { data, error } = await supabase
-              .from('favorites')
-              .select('recipe_id')
-              .eq('user_id', session.user.id);
-
-            if (!error && data) {
-              const newFavs = new Set(data.map((r: any) => r.recipe_id));
-              setFavorites(newFavs);
-            }
-          }
-        )
-        .subscribe();
-    }
-
     return () => {
       subscription.unsubscribe();
-      if (channel && supabase) supabase.removeChannel(channel);
     };
   }, [session]);
 
