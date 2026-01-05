@@ -15,7 +15,7 @@ import { recipes as localRecipes, type Recipe } from './data/recipes';
 import clsx from 'clsx';
 import { supabase } from './supabaseClient';
 import type { Session } from '@supabase/supabase-js';
-import { MyBarModal } from './components/MyBarModal';
+import { MyBarModal, type IngredientItem } from './components/MyBarModal';
 import { RecipeDetailModal } from './RecipeDetailModal';
 import { RecipeManager } from './admin/RecipeManager';
 import { normalizeIngredient } from './utils/normalization';
@@ -300,6 +300,7 @@ function App() {
 
   // Data State
   const [allRecipes, setAllRecipes] = useState<Recipe[]>(localRecipes);
+  const [allIngredients, setAllIngredients] = useState<IngredientItem[]>([]);
 
   const filteredRecipes = useMemo(() => {
     return allRecipes.filter(recipe => {
@@ -412,17 +413,19 @@ function App() {
       }
     });
 
-    // Fetch Recipes from DB
-    const fetchRecipes = async () => {
+    // Fetch Data from DB
+    const fetchData = async () => {
       if (!supabase) return;
-      const { data, error } = await supabase
+
+      // 1. Fetch Recipes
+      const { data: recipeData, error: recipeError } = await supabase
         .from('recipes')
         .select('*');
 
-      if (error) {
-        console.error('Error fetching recipes:', error);
-      } else if (data && data.length > 0) {
-        const mappedRecipes: Recipe[] = data.map((r: any) => ({
+      if (recipeError) {
+        console.error('Error fetching recipes:', recipeError);
+      } else if (recipeData && recipeData.length > 0) {
+        const mappedRecipes: Recipe[] = recipeData.map((r: any) => ({
           id: r.id,
           name: r.name,
           type: r.type,
@@ -437,8 +440,19 @@ function App() {
         }));
         setAllRecipes(mappedRecipes);
       }
+
+      // 2. Fetch Ingredients
+      const { data: ingData, error: ingError } = await supabase
+        .from('ingredients')
+        .select('*');
+
+      if (ingError) {
+        console.error("Error fetching ingredients:", ingError);
+      } else if (ingData) {
+        setAllIngredients(ingData as IngredientItem[]);
+      }
     };
-    fetchRecipes();
+    fetchData();
     return () => {
       subscription.unsubscribe();
     };
@@ -1025,10 +1039,10 @@ function App() {
           setShowMyBarModal(false);
           saveInventory(myInventory);
         }}
-        allRecipes={allRecipes}
         myInventory={myInventory}
         setMyInventory={setMyInventory}
         lang={lang}
+        allIngredients={allIngredients}
       />
     </div >
   );

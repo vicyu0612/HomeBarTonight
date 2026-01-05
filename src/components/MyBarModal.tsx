@@ -2,115 +2,73 @@ import { useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Check } from 'lucide-react';
 import clsx from 'clsx';
-import type { Recipe } from '../data/recipes';
-import { normalizeIngredient, getIngredientLabel } from '../utils/normalization';
+
+// Define Ingredient interface matching DB schema
+export interface IngredientItem {
+    id: string;
+    name_en: string;
+    name_zh: string;
+    category: 'base' | 'liqueur' | 'other_alc' | 'essential' | 'mixer' | 'garnish';
+}
 
 interface MyBarModalProps {
     isOpen: boolean;
     onClose: () => void;
-    allRecipes: Recipe[];
+    // allRecipes removed as we use allIngredients from DB now
     myInventory: Set<string>;
     setMyInventory: (inventory: Set<string>) => void;
     lang: 'en' | 'zh';
+    allIngredients: IngredientItem[]; // New Prop
 }
 
 export function MyBarModal({
     isOpen,
     onClose,
-    allRecipes,
     myInventory,
     setMyInventory,
-    lang
+    lang,
+    allIngredients
 }: MyBarModalProps) {
 
-    // Extract and categorize ingredients
+    // Extract and categorize ingredients from DB Data directly
     const categories = useMemo(() => {
         const cats = {
-            base: new Set<string>(),
-            liqueur: new Set<string>(),
-            other_alc: new Set<string>(),
-            essential: new Set<string>(),
-            mixer: new Set<string>(),
-            garnish: new Set<string>(),
-            other: new Set<string>()
+            base: [] as string[],
+            liqueur: [] as string[],
+            other_alc: [] as string[],
+            essential: [] as string[],
+            mixer: [] as string[],
+            garnish: [] as string[],
         };
 
-        allRecipes.forEach(recipe => {
-            recipe.ingredients[lang].forEach(ing => {
-                // normalizeIngredient now returns IDs
-                const ids = normalizeIngredient(ing.name, lang);
-
-                ids.forEach(id => {
-                    // ID-based categorization
-
-                    // 1. Base Spirits
-                    if (
-                        id === 'whiskey' || id === 'gin' || id === 'vodka' ||
-                        id === 'rum' || id === 'tequila' || id === 'brandy'
-                    ) {
-                        cats.base.add(id);
-                    }
-                    // 2. Liqueurs & Vermouth
-                    else if (
-                        id === 'liqueur' || id === 'cointreau' || id === 'coffee_liqueur' ||
-                        id === 'baileys' || id === 'malibu' || id === 'campari' ||
-                        id === 'aperol' || id === 'vermouth' || id === 'dry_vermouth' ||
-                        id === 'cocoa_liqueur' ||
-                        id === 'grand_marnier' || id === 'amaretto'
-                    ) {
-                        cats.liqueur.add(id);
-                    }
-                    // 3. Other Alcohols
-                    else if (
-                        id === 'beer' || id === 'wine' ||
-                        id === 'soju' || id === 'sake' || id === 'champagne' ||
-                        id === 'hard_cider' || id === 'cider' || id === 'kaoliang'
-                    ) {
-                        cats.other_alc.add(id);
-                    }
-                    // 4. Essentials
-                    else if (
-                        id === 'ice' || id === 'sugar' || id === 'salt' ||
-                        id === 'bitters' || id === 'lemon' || id === 'lime' ||
-                        id === 'cream' || id === 'egg' || id === 'honey' ||
-                        id === 'worcestershire' || id === 'hot_sauce'
-                    ) {
-                        cats.essential.add(id);
-                    }
-                    // 5. Common Drinks & Desserts (Mixers)
-                    else if (
-                        id === 'soda' || id === 'tonic' || id === 'ginger_ale' ||
-                        id === 'coke' || id === 'sprite' || id === 'lemon_soda' ||
-                        id === 'juice' || id === 'orange_juice' || id === 'tea' ||
-                        id === 'coffee' || id === 'water' || id === 'yakult' ||
-                        id === 'calpis' || id === 'milk' || id === 'grenadine' ||
-                        id === 'melon_popsicle' || id === 'apple_soda' ||
-                        id === 'espresso' || id === 'tomato_juice' || id === 'guava_juice' ||
-                        id === 'grapefruit_soda' || id === 'oolong_tea' ||
-                        id === 'cranberry_juice' || id === 'orgeat' || id === 'lime_cordial' ||
-                        id === 'sarsaparilla' || id === 'grape_juice' || id === 'aloe'
-                    ) {
-                        cats.mixer.add(id);
-                    }
-                    // 6. Garnishes & Others
-                    else {
-                        cats.garnish.add(id);
-                        // Explicitly check for known garnishes if needed, but else block catches 'celery', 'olive', 'nutmeg' etc.
-                    }
-                });
-            });
+        // Sort ingredients alphabetically or by ID? Let's use DB order (usually insert order) or Name?
+        // Let's sort by Name for better UX
+        const sorted = [...allIngredients].sort((a, b) => {
+            const nameA = lang === 'zh' ? a.name_zh : a.name_en;
+            const nameB = lang === 'zh' ? b.name_zh : b.name_en;
+            return nameA.localeCompare(nameB);
         });
 
-        // Convert Sets to sorted Arrays
-        return {
-            base: Array.from(cats.base).sort(),
-            liqueur: Array.from(cats.liqueur).sort(),
-            other_alc: Array.from(cats.other_alc).sort(),
-            essential: Array.from(cats.essential).sort(),
-            mixer: Array.from(cats.mixer).sort(),
-            garnish: Array.from(cats.garnish).sort().concat(Array.from(cats.other).sort())
-        };
-    }, [allRecipes, lang]);
+        sorted.forEach(ing => {
+            if (cats[ing.category]) {
+                cats[ing.category].push(ing.id);
+            } else {
+                // Fallback for unknown categories
+                cats.garnish.push(ing.id);
+            }
+        });
+
+        return cats;
+    }, [allIngredients, lang]);
+
+    // Dynamic Label Helper
+    const getLabel = (id: string) => {
+        const found = allIngredients.find(i => i.id === id);
+        if (found) {
+            return lang === 'zh' ? found.name_zh : found.name_en;
+        }
+        return id;
+    };
 
     const toggleItem = (item: string) => {
         const newSet = new Set(myInventory);
@@ -233,7 +191,7 @@ export function MyBarModal({
                                                     <span className={clsx(
                                                         "truncate",
                                                         myInventory.has(item) && "text-white"
-                                                    )}>{getIngredientLabel(item, lang)}</span>
+                                                    )}>{getLabel(item)}</span>
 
                                                     {/* Active Glow Background override */}
                                                     {myInventory.has(item) && (
