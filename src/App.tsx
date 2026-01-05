@@ -276,10 +276,67 @@ function App() {
       });
     };
 
+    const syncInventory = async () => {
+      if (!session || !supabase) return;
+
+      // 1. Fetch Remote Inventory
+      const { data, error } = await supabase
+        .from('user_inventory')
+        .select('ingredients')
+        .eq('user_id', session.user.id)
+        .single();
+
+      if (error && error.code !== 'PGRST116') { // Ignore "Row not found"
+        console.error("Error fetching inventory:", error);
+        return;
+      }
+
+      const remoteIngredients = new Set<string>(data?.ingredients || []);
+
+      // 2. Merge Strategies
+      // If Remote is Empty but Local has data -> Upload Local (First sync case)
+      // If Remote has data -> Merge Local into Remote (Union)
+
+      setMyInventory(prev => {
+        const merged = new Set([...prev, ...remoteIngredients]);
+
+        // If the merged result is different from remote (meaning we had local additions), sync back up
+        if (merged.size > remoteIngredients.size) {
+          supabase!
+            .from('user_inventory')
+            .upsert({
+              user_id: session.user.id,
+              ingredients: Array.from(merged),
+              updated_at: new Date().toISOString()
+            })
+            .then(({ error }) => {
+              if (error) console.error("Error pushing merged inventory:", error);
+            });
+        }
+
+        return merged;
+      });
+    };
+
     if (session?.user) {
       syncFavorites();
+      syncInventory();
     }
   }, [session]);
+
+  const saveInventory = async (currentInventory: Set<string>) => {
+    if (!session?.user || !supabase) return;
+
+    const { error } = await supabase
+      .from('user_inventory')
+      .upsert({
+        user_id: session.user.id,
+        ingredients: Array.from(currentInventory),
+        updated_at: new Date().toISOString()
+      });
+
+    if (error) console.error("Error saving inventory:", error);
+  };
 
   // Data State
   const [allRecipes, setAllRecipes] = useState<Recipe[]>(localRecipes);
@@ -913,7 +970,10 @@ function App() {
       </AnimatePresence >
       <MyBarModal
         isOpen={showMyBarModal}
-        onClose={() => setShowMyBarModal(false)}
+        onClose={() => {
+          setShowMyBarModal(false);
+          saveInventory(myInventory);
+        }}
         allRecipes={allRecipes}
         myInventory={myInventory}
         setMyInventory={setMyInventory}
