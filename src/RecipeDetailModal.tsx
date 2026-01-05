@@ -48,6 +48,10 @@ export const RecipeDetailModal = ({ recipe, onClose, isFavorite, onToggleFavorit
                     <motion.img
                         src={recipe.image}
                         alt={recipe.name.en}
+                        onError={(e) => {
+                            e.currentTarget.src = "/placeholder.png";
+                            e.currentTarget.onerror = null;
+                        }}
                         className="w-full h-full object-cover"
                         style={{ filter: useMotionTemplate`blur(${imageBlur}px)`, scale: imageScale }}
                     />

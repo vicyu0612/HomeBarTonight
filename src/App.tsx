@@ -668,6 +668,10 @@ function App() {
                   <img
                     src={recipe.image}
                     alt={recipe.name[lang]}
+                    onError={(e) => {
+                      e.currentTarget.src = "/placeholder.png";
+                      e.currentTarget.onerror = null; // prevent loop
+                    }}
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                   />
                   {/* Icon overlay just in case image fails or for style */}
