@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect, useRef } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   GlassWater,
@@ -234,101 +234,54 @@ function App() {
     }
   });
 
-  // Ref to hold latest favorites for Sync Effect without triggering it
-  const favoritesRef = useRef(favorites);
+  // Persist to LocalStorage
   useEffect(() => {
-    favoritesRef.current = favorites;
     localStorage.setItem('favorites', JSON.stringify(Array.from(favorites)));
   }, [favorites]);
 
-  // Sync favorites (Two-way: DB -> Local & Local -> DB) on login
+  // Simple Sync on Login (No Realtime, No Focus Listeners)
   useEffect(() => {
-    const syncFavorites = async () => {
-      if (!session || !supabase) return;
+    if (!session || !supabase) return;
 
-      // 1. Fetch Remote Favorites from DB
+    const initSync = async () => {
+      if (!supabase) return;
+      // 1. Upload Guest Favorites (Offline added items)
+      // Check current local favorites vs DB
+      const localArray = Array.from(favorites);
+      if (localArray.length > 0) {
+        const { data: existing } = await supabase.from('favorites').select('recipe_id').eq('user_id', session.user.id);
+        const existingIds = new Set(existing?.map((x: any) => x.recipe_id) || []);
+
+        const toAdd = localArray.filter(id => !existingIds.has(id));
+        if (toAdd.length > 0) {
+          await supabase.from('favorites').insert(toAdd.map(id => ({ user_id: session.user.id, recipe_id: id })));
+        }
+      }
+
+      // 2. Fetch Latest from DB and Set State
       const { data: dbData, error } = await supabase
         .from('favorites')
         .select('recipe_id')
         .eq('user_id', session.user.id);
 
-      if (error) {
-        console.error("Error fetching favorites:", error);
-        return;
+      if (!error && dbData) {
+        setFavorites(new Set(dbData.map((f: any) => f.recipe_id)));
       }
 
-      const dbFavIds = new Set(dbData?.map((f: any) => f.recipe_id) || []);
-      const localFavs = Array.from(favoritesRef.current);
-      // 2. Find items in Local but NOT in DB (Guest favorites to be synced up)
-      const toUpload = localFavs.filter(id => !dbFavIds.has(id));
-
-      if (toUpload.length > 0) {
-        const { error } = await supabase
-          .from('favorites')
-          .insert(toUpload.map(id => ({ user_id: session.user.id, recipe_id: id })));
-
-        if (error) console.error("Error syncing local favorites to DB:", error);
-      }
-
-      // 3. Update local state: Trust DB as source of truth (plus recent uploads)
-      const finalSet = new Set([...dbFavIds, ...toUpload]);
-      setFavorites(finalSet);
-    };
-
-    const syncInventory = async () => {
-      if (!session || !supabase) return;
-
-      // 1. Fetch Remote Inventory
-      const { data, error } = await supabase
+      // 3. Sync Inventory
+      const { data: invData } = await supabase
         .from('user_inventory')
         .select('ingredients')
         .eq('user_id', session.user.id)
         .single();
 
-      if (error && error.code !== 'PGRST116') {
-        // console.error("Error fetching inventory:", error);
-        return;
+      if (invData) {
+        setMyInventory(prev => new Set([...prev, ...(invData.ingredients || [])]));
       }
-
-      const remoteIngredients = new Set<string>(data?.ingredients || []);
-
-      setMyInventory(prev => {
-        const merged = new Set([...prev, ...remoteIngredients]);
-
-        if (merged.size > remoteIngredients.size) {
-          supabase!
-            .from('user_inventory')
-            .upsert({
-              user_id: session.user.id,
-              ingredients: Array.from(merged),
-              updated_at: new Date().toISOString()
-            })
-            .then(() => { });
-        }
-
-        return merged;
-      });
     };
 
-    if (session?.user) {
-      syncFavorites();
-      syncInventory();
-
-      const handleResume = () => {
-        if (document.visibilityState === 'visible') {
-          syncFavorites();
-          syncInventory();
-        }
-      };
-
-      window.addEventListener('focus', handleResume);
-      window.addEventListener('visibilitychange', handleResume);
-
-      return () => {
-        window.removeEventListener('focus', handleResume);
-        window.removeEventListener('visibilitychange', handleResume);
-      };
-    }
+    initSync();
+    // Intentionally empty cleanup - no listeners to remove
   }, [session]);
 
   const saveInventory = async (currentInventory: Set<string>) => {
@@ -479,13 +432,17 @@ function App() {
     };
   }, [session]);
 
+
+
   const toggleFavorite = async (id: string, e?: React.MouseEvent) => {
     e?.stopPropagation();
+
+    const isFavorited = favorites.has(id);
 
     // Optimistic UI update
     setFavorites(prev => {
       const newFavs = new Set(prev);
-      if (newFavs.has(id)) {
+      if (isFavorited) {
         newFavs.delete(id);
       } else {
         newFavs.add(id);
@@ -495,14 +452,14 @@ function App() {
 
     // Sync to DB if logged in
     if (session && supabase) {
-      if (favoritesRef.current.has(id)) {
+      if (isFavorited) {
         // Remove from DB
         const { error } = await supabase.from('favorites').delete().eq('user_id', session.user.id).eq('recipe_id', id);
-        if (error) console.error("Toggle Delete Error:", error);
+        if (error) console.error("Remove Fav Error:", error);
       } else {
         // Add to DB
         const { error } = await supabase.from('favorites').insert({ user_id: session.user.id, recipe_id: id });
-        if (error) console.error("Toggle Insert Error:", error);
+        if (error) console.error("Add Fav Error:", error);
       }
     }
   };
@@ -600,7 +557,6 @@ function App() {
     // Force clear state
     setSession(null);
     setFavorites(new Set());
-    favoritesRef.current = new Set();
     localStorage.removeItem('favorites');
 
     setShowLogoutConfirm(false);
