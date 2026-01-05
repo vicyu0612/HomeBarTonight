@@ -373,11 +373,23 @@ function App() {
 
       const matchesSpirit = activeSpirit === 'all' || recipe.baseSpirit.includes(activeSpirit);
 
-      const name = recipe.name[lang].toLowerCase();
-      const ingredients = recipe.ingredients[lang].map(i => i.name.toLowerCase()).join(' ');
-      const searchLower = searchQuery.toLowerCase();
+      const searchLower = searchQuery.toLowerCase().trim();
 
-      const matchesSearch = name.includes(searchLower) || ingredients.includes(searchLower);
+      // Cross-lingual Search Logic
+      // Check Name in EN and ZH
+      const nameEn = recipe.name['en'].toLowerCase();
+      const nameZh = recipe.name['zh'].toLowerCase();
+
+      // Check Ingredients in EN and ZH
+      const ingEn = recipe.ingredients['en'].map(i => i.name.toLowerCase()).join(' ');
+      const ingZh = recipe.ingredients['zh'].map(i => i.name.toLowerCase()).join(' ');
+
+      const matchesSearch =
+        nameEn.includes(searchLower) ||
+        nameZh.includes(searchLower) ||
+        ingEn.includes(searchLower) ||
+        ingZh.includes(searchLower);
+
       return matchesSpirit && matchesSearch;
     });
   }, [activeTab, activeSpirit, searchQuery, lang, favorites, allRecipes, myInventory]);
