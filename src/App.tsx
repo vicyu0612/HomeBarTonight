@@ -430,7 +430,7 @@ function App() {
     return () => {
       subscription.unsubscribe();
     };
-  }, [session]);
+  }, []);
 
 
 
@@ -452,24 +452,30 @@ function App() {
 
     // Sync to DB if logged in
     if (session && supabase) {
-      if (isFavorited) {
-        // Remove from DB
-        const { error } = await supabase.from('favorites').delete().eq('user_id', session.user.id).eq('recipe_id', id);
-        if (error) {
-          console.error("Remove Fav Error:", error);
-          // Revert UI if failed
-          setFavorites(prev => { const n = new Set(prev); n.add(id); return n; });
-          alert(`Failed to remove favorite: ${error.message}`);
+      try {
+        // Try RPC first (Atomic, Safer)
+        const { error: rpcError } = await supabase.rpc('toggle_favorite', { p_recipe_id: id });
+
+        if (rpcError) {
+          console.warn("RPC failed, falling back to direct DB Op:", rpcError);
+          // Fallback to legacy behavior if RPC doesn't exist or fails
+          if (isFavorited) {
+            const { error } = await supabase.from('favorites').delete().eq('user_id', session.user.id).eq('recipe_id', id);
+            if (error) throw error;
+          } else {
+            const { error } = await supabase.from('favorites').insert({ user_id: session.user.id, recipe_id: id });
+            if (error) throw error;
+          }
         }
-      } else {
-        // Add to DB
-        const { error } = await supabase.from('favorites').insert({ user_id: session.user.id, recipe_id: id });
-        if (error) {
-          console.error("Add Fav Error:", error);
-          // Revert UI if failed
-          setFavorites(prev => { const n = new Set(prev); n.delete(id); return n; });
-          alert(`Failed to add favorite: ${error.message}`);
-        }
+      } catch (error: any) {
+        console.error("Toggle Error:", error);
+        // Revert UI if failed
+        setFavorites(prev => {
+          const n = new Set(prev);
+          if (isFavorited) n.add(id); else n.delete(id);
+          return n;
+        });
+        alert(`Failed to sync favorite: ${error.message || "Network Error"}`);
       }
     }
   };
