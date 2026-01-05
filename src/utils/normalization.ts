@@ -47,7 +47,7 @@ export const INGREDIENT_DB: Record<string, { en: string; zh: string }> = {
     'cranberry_juice': { en: 'Cranberry Juice', zh: '蔓越莓汁' }, // Added
     'tomato_juice': { en: 'Tomato Juice', zh: '番茄汁' },
     'guava_juice': { en: 'Guava Juice', zh: '芭樂汁' },
-    'tea': { en: 'Tea', zh: '奶茶' },
+    'tea': { en: 'Black Tea', zh: '紅茶' },
     'oolong_tea': { en: 'Green Tea', zh: '綠茶' },
     'coffee': { en: 'Coffee', zh: '咖啡' },
     'espresso': { en: 'Espresso', zh: '濃縮咖啡' },
