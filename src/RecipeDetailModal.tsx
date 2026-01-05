@@ -41,7 +41,7 @@ export const RecipeDetailModal = ({ recipe, onClose, isFavorite, onToggleFavorit
 
             <motion.div
                 layoutId={`card-${recipe.id}`}
-                className="bg-zinc-900 w-full max-w-md h-full sm:h-[90vh] sm:rounded-[2rem] overflow-hidden relative border border-white/10 shadow-2xl flex flex-col"
+                className="bg-zinc-900 w-full max-w-2xl h-full sm:h-[90vh] sm:rounded-[2rem] overflow-hidden relative border border-white/10 shadow-2xl flex flex-col"
             >
                 {/* Dynamic Background Image */}
                 <motion.div className="absolute inset-0 z-0 h-[60vh]">

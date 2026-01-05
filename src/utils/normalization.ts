@@ -59,6 +59,10 @@ export const INGREDIENT_DB: Record<string, { en: string; zh: string }> = {
     'orgeat': { en: 'Orgeat', zh: '杏仁糖漿' }, // Added
     'lime_cordial': { en: 'Lime Cordial', zh: '莱姆汁 (Cordial)' }, // Added
     'melon_popsicle': { en: 'Melon Popsicle', zh: '哈密瓜冰棒' },
+    'kaoliang': { en: 'Kaoliang Liquor', zh: '高粱酒' }, // Added
+    'sarsaparilla': { en: 'Sarsaparilla', zh: '沙士' }, // Added
+    'grape_juice': { en: 'Grape Juice', zh: '葡萄汁' }, // Added
+    'aloe': { en: 'Aloe Drink', zh: '蘆薈飲' }, // Added
     'water': { en: 'Water', zh: '水' },
 
     // Essentials
@@ -370,18 +374,19 @@ export function normalizeIngredient(name: string, lang: 'en' | 'zh'): string[] {
                 else if (p.includes('琴酒')) id = 'gin';
                 else if (p.includes('蘭姆酒')) id = 'rum';
                 else if (p.includes('龍舌蘭')) id = 'tequila';
+                else if (p.includes('高粱')) id = 'kaoliang'; // Added
                 else if (p.includes('白蘭地')) id = 'brandy';
                 else if (p.includes('香艾酒')) id = 'vermouth';
-                else if (p.includes('燒酒')) id = 'soju'; // Added
-                else if (p.includes('可可')) id = 'cocoa_liqueur';
+                else if (p.includes('燒酒')) id = 'soju';
                 else if (p.includes('可可')) id = 'cocoa_liqueur';
                 else if (p.includes('麥香') || p.includes('奶茶') || p.includes('紅茶') || p.includes('茶')) id = 'tea';
                 else if (p.includes('綠茶') || p.includes('烏龍')) id = 'oolong_tea';
                 else if (p.includes('可爾必思')) id = 'calpis';
                 else if (p.includes('養樂多')) id = 'yakult';
+                else if (p.includes('沙士')) id = 'sarsaparilla'; // Added
                 else if (p.includes('雪碧')) id = 'sprite';
-                else if (p.includes('七喜')) id = 'sprite'; // 7-up
-                else if (p.includes('拉格啤酒')) id = 'beer'; // Updated
+                else if (p.includes('七喜')) id = 'sprite';
+                else if (p.includes('拉格啤酒')) id = 'beer';
                 else if (p.includes('啤酒')) id = 'beer';
                 else if (p.includes('氣泡水')) id = 'soda';
                 else if (p.includes('糖水') || p.includes('糖漿')) id = 'sugar';
@@ -392,6 +397,8 @@ export function normalizeIngredient(name: string, lang: 'en' | 'zh'): string[] {
                 if (p.includes('哈密瓜') || p.toLowerCase().includes('melona')) id = 'melon_popsicle';
                 if (p.includes('番茄汁')) id = 'tomato_juice';
                 if (p.includes('芭樂汁')) id = 'guava_juice';
+                if (p.includes('葡萄汁')) id = 'grape_juice'; // Added
+                if (p.includes('蘆薈')) id = 'aloe'; // Added
                 if (p.includes('蘋果西打') || p.includes('西打')) id = 'apple_soda';
                 if (p.includes('橄欖')) id = 'olive';
                 if (p.includes('豆蔻')) id = 'nutmeg';
@@ -409,16 +416,18 @@ export function normalizeIngredient(name: string, lang: 'en' | 'zh'): string[] {
                 else if (lowerP.includes('gin')) id = 'gin';
                 else if (lowerP.includes('rum')) id = 'rum';
                 else if (lowerP.includes('tequila')) id = 'tequila';
+                else if (lowerP.includes('kaoliang') || lowerP.includes('sorghum')) id = 'kaoliang'; // Added
                 else if (lowerP.includes('brandy') || lowerP.includes('cognac')) id = 'brandy';
                 else if (lowerP.includes('lemon') && (lowerP.includes('sparkling') || lowerP.includes('soda'))) id = 'lemon_soda';
                 else if ((lowerP.includes('sparkling') || lowerP.includes('soda')) && !lowerP.includes('apple')) id = 'soda';
                 else if (lowerP.includes('sugar') || lowerP.includes('syrup')) id = 'sugar';
                 else if (lowerP.includes('calpis')) id = 'calpis';
                 else if (lowerP.includes('yakult')) id = 'yakult';
+                else if (lowerP.includes('sarsaparilla') || lowerP.includes('root beer')) id = 'sarsaparilla'; // Added
                 else if (lowerP.includes('sprite') || lowerP.includes('7-up')) id = 'sprite';
-                else if (lowerP.includes('lager')) id = 'beer'; // Updated
+                else if (lowerP.includes('lager')) id = 'beer';
                 else if (lowerP.includes('beer')) id = 'beer';
-                else if (lowerP.includes('shochu') || lowerP.includes('soju')) id = 'soju'; // Updated
+                else if (lowerP.includes('shochu') || lowerP.includes('soju')) id = 'soju';
                 else if (lowerP.includes('black tea') || lowerP.includes('tea')) id = 'tea';
                 else if (lowerP.includes('oolong') || lowerP.includes('green tea')) id = 'oolong_tea';
                 else if (lowerP.includes('cider')) id = 'hard_cider';
@@ -430,6 +439,8 @@ export function normalizeIngredient(name: string, lang: 'en' | 'zh'): string[] {
                 if (lowerP.includes('peel')) id = 'lemon_peel';
                 if (lowerP.includes('assam') || lowerP.includes('black tea')) id = 'tea';
                 if (lowerP.includes('concentrate')) id = 'calpis';
+                if (lowerP.includes('grape juice')) id = 'grape_juice'; // Added
+                if (lowerP.includes('aloe')) id = 'aloe'; // Added
                 if (lowerP.includes('olive')) id = 'olive';
                 if (lowerP.includes('nutmeg')) id = 'nutmeg';
             }

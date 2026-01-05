@@ -64,7 +64,7 @@ export function MyBarModal({
                     else if (
                         id === 'beer' || id === 'wine' ||
                         id === 'soju' || id === 'sake' || id === 'champagne' ||
-                        id === 'hard_cider' || id === 'cider'
+                        id === 'hard_cider' || id === 'cider' || id === 'kaoliang'
                     ) {
                         cats.other_alc.add(id);
                     }
@@ -87,7 +87,8 @@ export function MyBarModal({
                         id === 'melon_popsicle' || id === 'apple_soda' ||
                         id === 'espresso' || id === 'tomato_juice' || id === 'guava_juice' ||
                         id === 'grapefruit_soda' || id === 'oolong_tea' ||
-                        id === 'cranberry_juice' || id === 'orgeat' || id === 'lime_cordial'
+                        id === 'cranberry_juice' || id === 'orgeat' || id === 'lime_cordial' ||
+                        id === 'sarsaparilla' || id === 'grape_juice' || id === 'aloe'
                     ) {
                         cats.mixer.add(id);
                     }

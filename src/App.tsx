@@ -303,13 +303,17 @@ function App() {
           // We only check if it belongs to a REQUIRED group. 
           // If it's not in a required group, it's considered a Garnish (Ignored).
 
-          const isRequired = canonicals.some(id => {
-            // 1. Essentials (Ignored since Step 1801 request was to keep common drinks/essentials, 
-            // but Step 1811 request says "ignore essentials group also")
-            // So we skip this block. 
-            // const essentials = new Set([...]); 
-            // if (essentials.has(id)) return true; // REMOVED
+          // 0. Explicitly IGNORED ingredients (Assume user has them)
+          const ignored = new Set(['ice', 'sugar', 'water']);
+          if (canonicals.some(id => ignored.has(id))) return true;
 
+          const isRequired = canonicals.some(id => {
+            // 1. Essentials (Now REQUIRED, except ignored ones above)
+            const essentials = new Set([
+              'salt', 'bitters', 'lemon', 'lime',
+              'cream', 'egg', 'honey', 'worcestershire', 'hot_sauce'
+            ]);
+            if (essentials.has(id)) return true;
 
             // 2. Mixers (Must have)
             const mixers = new Set([
@@ -318,7 +322,8 @@ function App() {
               'juice', 'orange_juice', 'cranberry_juice', 'tomato_juice', 'guava_juice',
               'tea', 'oolong_tea', 'coffee', 'espresso', 'milk',
               'calpis', 'yakult', 'cider', 'grenadine',
-              'orgeat', 'lime_cordial', 'melon_popsicle', 'water'
+              'orgeat', 'lime_cordial', 'melon_popsicle',
+              'sarsaparilla', 'grape_juice', 'aloe'
             ]);
             if (mixers.has(id)) return true;
 
@@ -331,11 +336,11 @@ function App() {
               'liqueur', 'cointreau', 'grand_marnier', 'amaretto',
               'coffee_liqueur', 'cocoa_liqueur', 'baileys', 'malibu',
               'campari', 'aperol', 'vermouth', 'dry_vermouth',
-              'beer', 'wine', 'soju', 'sake', 'champagne', 'hard_cider'
+              'beer', 'wine', 'soju', 'sake', 'champagne', 'hard_cider', 'kaoliang'
             ]);
             if (alcohol.has(id)) return true;
 
-            return false; // Not in a required group -> Garnish
+            return false; // Not in a required group -> Garnish (Ignored)
           });
 
           // If NOT required (Garnish), skip check
