@@ -888,6 +888,20 @@ function App() {
               onToggleFavorite={toggleFavorite}
               t={t}
               lang={lang}
+              hasPrev={filteredRecipes.findIndex(r => r.id === selectedRecipe.id) > 0}
+              hasNext={filteredRecipes.findIndex(r => r.id === selectedRecipe.id) < filteredRecipes.length - 1}
+              onPrev={() => {
+                const currentIndex = filteredRecipes.findIndex(r => r.id === selectedRecipe.id);
+                if (currentIndex > 0) {
+                  setSelectedRecipe(filteredRecipes[currentIndex - 1]);
+                }
+              }}
+              onNext={() => {
+                const currentIndex = filteredRecipes.findIndex(r => r.id === selectedRecipe.id);
+                if (currentIndex < filteredRecipes.length - 1) {
+                  setSelectedRecipe(filteredRecipes[currentIndex + 1]);
+                }
+              }}
             />
           )
         }

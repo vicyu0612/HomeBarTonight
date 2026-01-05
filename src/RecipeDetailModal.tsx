@@ -1,6 +1,6 @@
 import { useRef } from 'react';
 import { motion, useScroll, useTransform, useMotionTemplate } from 'framer-motion';
-import { Heart, X, Flame, GlassWater, Smile, Wine } from 'lucide-react';
+import { Heart, X, Flame, GlassWater, Smile, Wine, ChevronLeft, ChevronRight } from 'lucide-react';
 import clsx from 'clsx';
 
 const SpecBar = ({ value, label, subLabel, icon: Icon, colorClass, barColorClass }: { value: number; label: string; subLabel: string; icon: any; colorClass: string; barColorClass: string }) => (
@@ -23,7 +23,7 @@ const SpecBar = ({ value, label, subLabel, icon: Icon, colorClass, barColorClass
     </div>
 );
 
-export const RecipeDetailModal = ({ recipe, onClose, isFavorite, onToggleFavorite, t, lang }: any) => {
+export const RecipeDetailModal = ({ recipe, onClose, isFavorite, onToggleFavorite, t, lang, onPrev, onNext, hasPrev, hasNext }: any) => {
     const scrollRef = useRef(null);
     const { scrollY } = useScroll({ container: scrollRef });
     const imageBlur = useTransform(scrollY, [0, 300], [0, 12]);
@@ -79,6 +79,27 @@ export const RecipeDetailModal = ({ recipe, onClose, isFavorite, onToggleFavorit
                             <X size={24} />
                         </button>
                     </div>
+                </div>
+
+                {/* Floating Navigation Buttons (Bottom) */}
+                <div className="absolute bottom-8 left-6 right-6 z-30 flex justify-between pointer-events-none">
+                    {hasPrev ? (
+                        <button
+                            onClick={(e) => { e.stopPropagation(); onPrev(); }}
+                            className="p-4 rounded-full bg-zinc-800/80 backdrop-blur-xl text-white border border-white/10 shadow-xl hover:bg-zinc-700 active:scale-95 transition-all pointer-events-auto"
+                        >
+                            <ChevronLeft size={24} />
+                        </button>
+                    ) : <div />} {/* Spacer */}
+
+                    {hasNext && (
+                        <button
+                            onClick={(e) => { e.stopPropagation(); onNext(); }}
+                            className="p-4 rounded-full bg-zinc-800/80 backdrop-blur-xl text-white border border-white/10 shadow-xl hover:bg-zinc-700 active:scale-95 transition-all pointer-events-auto"
+                        >
+                            <ChevronRight size={24} />
+                        </button>
+                    )}
                 </div>
 
                 {/* Scroll Container */}
@@ -165,7 +186,7 @@ export const RecipeDetailModal = ({ recipe, onClose, isFavorite, onToggleFavorit
                             </div>
                         </div>
 
-                        <div className="pt-4">
+                        <div className="pt-4 pb-16">
                             <button
                                 onClick={onClose}
                                 className="w-full py-4 rounded-2xl bg-gradient-to-r from-primary to-accent text-zinc-950 font-black text-xl hover:opacity-90 active:scale-[0.98] transition-all shadow-[0_0_30px_rgba(34,211,238,0.3)]"
