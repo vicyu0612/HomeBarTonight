@@ -435,6 +435,9 @@ function App() {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
+      if (session) {
+        setShowLoginModal(false);
+      }
     });
 
     // Fetch Recipes from DB
@@ -498,7 +501,7 @@ function App() {
   // Handle Deep Links for OAuth (iOS)
   useEffect(() => {
     import('@capacitor/app').then(({ App: CapacitorApp }) => {
-      CapacitorApp.addListener('appUrlOpen', async (event) => {
+      CapacitorApp.addListener('appUrlOpen', async (event: any) => {
         // Parse the URL to get the access_token and refresh_token
         // Example URL: homebartonight://login-callback#access_token=...&refresh_token=...&...
 
