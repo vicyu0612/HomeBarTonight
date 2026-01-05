@@ -467,9 +467,41 @@ function App() {
       }
     };
     fetchRecipes();
+    // Realtime Favorites Sync
+    let channel: any = null;
 
-    return () => subscription.unsubscribe();
-  }, []);
+    if (session?.user && supabase) {
+      channel = supabase.channel('favorites_change')
+        .on(
+          'postgres_changes',
+          {
+            event: '*',
+            schema: 'public',
+            table: 'favorites',
+            filter: `user_id=eq.${session.user.id}`,
+          },
+          async (_payload) => {
+            if (!supabase) return;
+            // On any change (Insert/Delete), we re-fetch the authoritative list from DB
+            const { data, error } = await supabase
+              .from('favorites')
+              .select('recipe_id')
+              .eq('user_id', session.user.id);
+
+            if (!error && data) {
+              const newFavs = new Set(data.map((r: any) => r.recipe_id));
+              setFavorites(newFavs);
+            }
+          }
+        )
+        .subscribe();
+    }
+
+    return () => {
+      subscription.unsubscribe();
+      if (channel && supabase) supabase.removeChannel(channel);
+    };
+  }, [session]);
 
   const toggleFavorite = async (id: string, e?: React.MouseEvent) => {
     e?.stopPropagation();
