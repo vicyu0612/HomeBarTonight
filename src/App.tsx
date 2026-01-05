@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   GlassWater,
@@ -234,8 +234,10 @@ function App() {
     }
   });
 
-  // Save to localStorage whenever favorites change
+  // Ref to hold latest favorites for Sync Effect without triggering it
+  const favoritesRef = useRef(favorites);
   useEffect(() => {
+    favoritesRef.current = favorites;
     localStorage.setItem('favorites', JSON.stringify(Array.from(favorites)));
   }, [favorites]);
 
@@ -256,24 +258,21 @@ function App() {
       }
 
       const dbFavIds = new Set(dbData?.map((f: any) => f.recipe_id) || []);
-      const localFavs = Array.from(favorites);
-
+      const localFavs = Array.from(favoritesRef.current);
       // 2. Find items in Local but NOT in DB (Guest favorites to be synced up)
       const toUpload = localFavs.filter(id => !dbFavIds.has(id));
 
       if (toUpload.length > 0) {
-        const { error: insertError } = await supabase
+        const { error } = await supabase
           .from('favorites')
           .insert(toUpload.map(id => ({ user_id: session.user.id, recipe_id: id })));
 
-        if (insertError) console.error("Error syncing local favorites to DB:", insertError);
+        if (error) console.error("Error syncing local favorites to DB:", error);
       }
 
-      // 3. Update local state to reflect the Union (DB + Local)
-      setFavorites(prev => {
-        const merged = new Set<string>([...prev, ...dbFavIds]);
-        return merged;
-      });
+      // 3. Update local state: Trust DB as source of truth (plus recent uploads)
+      const finalSet = new Set([...dbFavIds, ...toUpload]);
+      setFavorites(finalSet);
     };
 
     const syncInventory = async () => {
@@ -286,21 +285,16 @@ function App() {
         .eq('user_id', session.user.id)
         .single();
 
-      if (error && error.code !== 'PGRST116') { // Ignore "Row not found"
-        console.error("Error fetching inventory:", error);
+      if (error && error.code !== 'PGRST116') {
+        // console.error("Error fetching inventory:", error);
         return;
       }
 
       const remoteIngredients = new Set<string>(data?.ingredients || []);
 
-      // 2. Merge Strategies
-      // If Remote is Empty but Local has data -> Upload Local (First sync case)
-      // If Remote has data -> Merge Local into Remote (Union)
-
       setMyInventory(prev => {
         const merged = new Set([...prev, ...remoteIngredients]);
 
-        // If the merged result is different from remote (meaning we had local additions), sync back up
         if (merged.size > remoteIngredients.size) {
           supabase!
             .from('user_inventory')
@@ -309,9 +303,7 @@ function App() {
               ingredients: Array.from(merged),
               updated_at: new Date().toISOString()
             })
-            .then(({ error }) => {
-              if (error) console.error("Error pushing merged inventory:", error);
-            });
+            .then(() => { });
         }
 
         return merged;
@@ -322,8 +314,6 @@ function App() {
       syncFavorites();
       syncInventory();
 
-      // Add Focus Listener for "Resume Sync"
-      // This ensures if user modified data on another device, when they come back to this app, it updates.
       const handleResume = () => {
         if (document.visibilityState === 'visible') {
           syncFavorites();
@@ -505,8 +495,7 @@ function App() {
 
     // Sync to DB if logged in
     if (session && supabase) {
-      const isFavorited = favorites.has(id); // Check current state before toggle
-      if (isFavorited) {
+      if (favorites.has(id)) {
         // Remove from DB (We are checking previous state, so if it WAS faved, we remove)
         await supabase.from('favorites').delete().eq('user_id', session.user.id).eq('recipe_id', id);
       } else {
@@ -539,13 +528,13 @@ function App() {
 
             if (error) {
               console.error("Set session error:", error);
-              alert(`Login Error: ${error.message}`);
+              alert(`Login Error: ${error.message} `);
             }
           } else {
             // Handle error case passed in URL
             const errorDescription = params.get('error_description');
             if (errorDescription) {
-              alert(`Login Failed: ${decodeURIComponent(errorDescription)}`);
+              alert(`Login Failed: ${decodeURIComponent(errorDescription)} `);
             }
           }
         }
@@ -580,7 +569,7 @@ function App() {
     });
     if (error) {
       console.error('Error logging in:', error.message);
-      alert(`Login Initiation Error: ${error.message}`);
+      alert(`Login Initiation Error: ${error.message} `);
     }
   };
 
@@ -592,7 +581,7 @@ function App() {
     const { error } = await supabase.auth.signInAnonymously();
     if (error) {
       console.error('Error logging in anonymously:', error.message);
-      alert(`Guest login failed: ${error.message}\n(Make sure 'Anonymous Sign-ins' are enabled in your Supabase Auth settings)`);
+      alert(`Guest login failed: ${error.message} \n(Make sure 'Anonymous Sign-ins' are enabled in your Supabase Auth settings)`);
     } else {
       setShowLoginModal(false);
     }
@@ -785,7 +774,7 @@ function App() {
                 onClick={() => setSelectedRecipe(recipe)}
                 whileTap={{ scale: 0.98 }}
                 className="glass-card p-3 flex items-center gap-4 cursor-pointer group hover:bg-white/10 transition-colors overflow-hidden relative"
-                style={{ borderColor: `${recipe.color}30` }}
+                style={{ borderColor: `${recipe.color} 30` }}
               >
                 {/* Favorite Button on Card */}
                 <button
@@ -998,7 +987,7 @@ function App() {
                 }}
                 className="absolute w-4 h-4 bg-white/20 border border-white/40 rounded-sm backdrop-blur-sm"
                 style={{
-                  left: `calc(50% + ${(Math.random() - 0.5) * 50}px)`,
+                  left: `calc(50 % + ${(Math.random() - 0.5) * 50}px)`,
                   top: '45%'
                 }}
               />
