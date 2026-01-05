@@ -501,32 +501,31 @@ function App() {
       CapacitorApp.addListener('appUrlOpen', async (event) => {
         // Parse the URL to get the access_token and refresh_token
         // Example URL: homebartonight://login-callback#access_token=...&refresh_token=...&...
-        // Supabase often puts tokens in the hash.
 
         if (event.url.startsWith('homebartonight://')) {
-          // Let Supabase client handle the URL session exchange if possible, 
-          // OR standardly we just need to confirm we are back in the app.
-
-          // Actually, supabase.auth.getSession() might automatically pick it up if the URL was passed to it?
-          // No, we typically extract the hash.
-
           const url = new URL(event.url);
-          // Handle hash fragment manually if needed, or extract params.
-          // However, standard flow: redirect user to <project>.supabase.co, which redirects to <custom-scheme>.
-          // The hash contains tokens.
-
-          const hash = url.hash.substring(1); // remove #
+          const hash = url.hash.substring(1);
           const params = new URLSearchParams(hash || url.search);
 
           const accessToken = params.get('access_token');
           const refreshToken = params.get('refresh_token');
 
           if (accessToken && refreshToken && supabase) {
-            await supabase.auth.setSession({
+            const { error } = await supabase.auth.setSession({
               access_token: accessToken,
               refresh_token: refreshToken,
             });
-            // Session state listener will pick this change up automatically
+
+            if (error) {
+              console.error("Set session error:", error);
+              alert(`Login Error: ${error.message}`);
+            }
+          } else {
+            // Handle error case passed in URL
+            const errorDescription = params.get('error_description');
+            if (errorDescription) {
+              alert(`Login Failed: ${decodeURIComponent(errorDescription)}`);
+            }
           }
         }
       });
@@ -539,19 +538,14 @@ function App() {
       return;
     }
 
-    // Determine Redirect URL based on platform
-    // Web: window.location.origin
-    // Native: homebartonight://login-callback
+    // Dynamically import Capacitor to check platform
+    const { Capacitor } = await import('@capacitor/core');
 
-    const isNative = window.location.protocol === 'capacitor:';
-    // Actually, checking if Capacitor is available is safer? 
-    // Usually 'capacitor:' or 'file:' means native.
-    // Or we can just use the custom scheme always if we are confident, 
-    // but on localhost web dev, 'homebartonight://' won't work.
+    const redirectUrl = Capacitor.isNativePlatform()
+      ? 'homebartonight://login-callback'
+      : window.location.origin;
 
-    const redirectUrl = import.meta.env.PROD
-      ? 'homebartonight://login-callback' // Production (App)
-      : window.location.origin; // Development (Web)
+    console.log("Using Redirect URL:", redirectUrl);
 
     const { error } = await supabase.auth.signInWithOAuth({
       provider: provider,
@@ -565,6 +559,7 @@ function App() {
     });
     if (error) {
       console.error('Error logging in:', error.message);
+      alert(`Login Initiation Error: ${error.message}`);
     }
   };
 
