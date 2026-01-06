@@ -1,4 +1,4 @@
-import { HelpCircle, ChevronRight, X, FileText } from 'lucide-react';
+import { HelpCircle, ChevronRight, X, FileText, Globe } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState } from 'react';
 import type { Session } from '@supabase/supabase-js';
@@ -96,7 +96,10 @@ export function SettingsPage({ session, lang, setLang, onLogin, onLogout }: Sett
                         onClick={() => setShowLanguageSheet(true)}
                         className="w-full bg-zinc-900/50 backdrop-blur-md border border-white/10 rounded-2xl p-4 flex items-center justify-between hover:bg-white/5 transition-colors"
                     >
-                        <span className="text-white font-medium">{t.language.current}</span>
+                        <div className="flex items-center gap-3">
+                            <Globe size={20} className="text-zinc-400" />
+                            <span className="text-white font-medium">{t.language.current}</span>
+                        </div>
                         <ChevronRight size={20} className="text-zinc-500" />
                     </button>
                 </section>

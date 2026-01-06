@@ -229,9 +229,10 @@ export function CocktailsPage({ allRecipes, favorites, toggleFavorite, onSelectR
                         <AnimatePresence mode='popLayout'>
                             {filteredRecipes.map((recipe) => (
                                 <motion.div
-                                    initial={{ opacity: 0, scale: 0.9 }}
-                                    animate={{ opacity: 1, scale: 1 }}
-                                    exit={{ opacity: 0, scale: 0.9 }}
+                                    initial={{ opacity: 0 }}
+                                    animate={{ opacity: 1 }}
+                                    exit={{ opacity: 0 }}
+                                    transition={{ duration: 0.5 }}
                                     key={recipe.id}
                                     onClick={() => onSelectRecipe(recipe)}
                                     className="bg-zinc-800/30 backdrop-blur-md border border-white/10 shadow-lg rounded-2xl overflow-hidden active:scale-[0.98] transition-all"
