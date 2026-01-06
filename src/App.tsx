@@ -1,165 +1,25 @@
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import {
-  GlassWater,
-  Shuffle,
-  Search,
-  Martini,
-  Store,
-  Heart,
-  User,
-  Wine
-} from 'lucide-react';
 import { recipes as localRecipes, type Recipe } from './data/recipes';
-import clsx from 'clsx';
 import { supabase } from './supabaseClient';
 import type { Session } from '@supabase/supabase-js';
-import { MyBarModal, type IngredientItem } from './components/MyBarModal';
 import { RecipeDetailModal } from './RecipeDetailModal';
-import { RecipeManager } from './admin/RecipeManager';
-import { normalizeIngredient } from './utils/normalization';
+import { TabBar, type TabId } from './components/TabBar';
+import { type IngredientItem } from './components/MyBarModal';
+import { Capacitor } from '@capacitor/core';
+import { App as CapApp } from '@capacitor/app';
+import { Browser } from '@capacitor/browser';
 
-// UI Translations
-const translations = {
-  en: {
-    subtitle: "Tonight's Menu",
-    searchPlaceholder: "Search cocktails or ingredients...",
-    tabs: {
-      all: "All",
-      classic: "Classic",
-      cvs: "Convenience Store",
-      cvs_mobile: "CVS",
-      favorites: "Favorites",
-      favorites_mobile: "Favs",
-      my_bar: "My Bar",
-      my_bar_mobile: "MyBar"
-    },
-    spirits: {
-      all: "All Spirits",
-      gin: "Gin",
-      vodka: "Vodka",
-      rum: "Rum",
-      tequila: "Tequila",
-      whiskey: "Whiskey",
-      brandy: "Brandy",
-      wine: "Wine",
-      liqueur: "Liqueur",
-      beer: "Beer"
-    },
-    noResults: "No drinks found.",
-    clear: "Clear filters",
-    ingredients: "Ingredients",
-    steps: "Steps",
-    done: "Done Making It",
-    login: {
-      title: "Sign In",
-      subtitle: "Save your favorites and sync across devices.",
-      google: "Continue with Google",
-      apple: "Continue with Apple",
-      guest: "Continue as Guest"
-    },
-    specs: {
-      alcohol: "Alcohol",
-      sweetness: "Sweetness",
-      ease: "Friendliness",
-      alcoholDesc: "Low - High",
-      sweetnessDesc: "Dry - Sweet",
-      easeDesc: "Expert - Easy"
-    },
-    logout: {
-      title: "Sign Out",
-      message: "Are you sure you want to sign out?",
-      confirm: "Sign Out",
-      cancel: "Cancel"
-    }
-  },
-  zh: {
-    subtitle: "今晚的酒單",
-    searchPlaceholder: "搜尋調酒或材料...",
-    tabs: {
-      all: "全部",
-      classic: "經典",
-      cvs: "超商模式",
-      cvs_mobile: "超商",
-      favorites: "我的最愛",
-      favorites_mobile: "最愛",
-      my_bar: "我的吧台",
-      my_bar_mobile: "吧台"
-    },
-    spirits: {
-      all: "所有基酒",
-      gin: "琴酒",
-      vodka: "伏特加",
-      rum: "蘭姆酒",
-      tequila: "龍舌蘭",
-      whiskey: "威士忌",
-      brandy: "白蘭地",
-      wine: "紅/白酒",
-      liqueur: "香甜酒/奶酒",
-      beer: "啤酒"
-    },
-    noResults: "找不到這款酒。",
-    clear: "清除篩選",
-    ingredients: "材料",
-    steps: "步驟",
-    done: "調好了！",
-    login: {
-      title: "登入帳號",
-      subtitle: "儲存您的最愛清單並跨裝置同步。",
-      google: "使用 Google 繼續",
-      apple: "使用 Apple 繼續",
-      guest: "以訪客身份繼續"
-    },
-    specs: {
-      alcohol: "酒精強度",
-      sweetness: "甜度",
-      ease: "易飲度",
-      alcoholDesc: "無酒精 - 高酒精",
-      sweetnessDesc: "清爽不甜 - 甜蜜蜜",
-      easeDesc: "有個性 - 輕鬆喝"
-    },
-    logout: {
-      title: "登出",
-      message: "確定要登出帳號嗎？",
-      confirm: "登出",
-      cancel: "取消"
-    }
-  }
-};
+import { MixingShaker } from './components/MixingShaker';
 
-const spiritsList = ['all', 'gin', 'vodka', 'rum', 'tequila', 'whiskey', 'brandy', 'wine', 'liqueur', 'beer'];
+// Pages
+import { CocktailsPage } from './pages/CocktailsPage';
+import { MyBarPage } from './pages/MyBarPage';
+import { FavoritesPage } from './pages/FavoritesPage';
+import { ExplorePage } from './pages/ExplorePage';
+import { SettingsPage } from './pages/SettingsPage';
 
 
-
-// Simple Google Icon SVG
-const GoogleIcon = () => (
-  <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M23.52 12.29c0-.85-.08-1.68-.21-2.48H12v4.7h6.45c-.28 1.48-1.12 2.74-2.39 3.59v2.98h3.87c2.26-2.08 3.56-5.15 3.56-8.79z" fill="#4285F4" />
-    <path d="M12 24c3.24 0 5.96-1.07 7.95-2.9l-3.87-2.98c-1.08.72-2.45 1.15-4.08 1.15-3.13 0-5.78-2.11-6.73-4.96H1.36v3.12C3.33 21.36 7.37 24 12 24z" fill="#34A853" />
-    <path d="M5.27 14.29c-.25-.74-.38-1.53-.38-2.34s.13-1.6.38-2.34V6.49H1.36C.49 8.21 0 10.05 0 12c0 1.95.49 3.79 1.36 5.51l3.91-3.22z" fill="#FBBC05" />
-    <path d="M12 4.75c1.76 0 3.34.6 4.58 1.79l3.44-3.44C17.96 1.18 15.24 0 12 0 7.37 0 3.33 2.64 1.36 6.49l3.91 3.22c.95-2.85 3.6-4.96 6.73-4.96z" fill="#EA4335" />
-  </svg>
-);
-
-// Custom Shaker Icon for Animation
-const ShakerIcon = () => (
-  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
-    {/* Bottom Tin - Significant Taper for that "Cobbler" look */}
-    <path d="M5.5 9.5 C5.5 16 7.5 22 10 22.5H14C16.5 22 18.5 16 18.5 9.5H5.5Z" fill="#e4e4e7" stroke="#52525b" strokeWidth="1.5" strokeLinejoin="round" />
-
-    {/* Middle Strainer - Bell Curve Shape */}
-    <path d="M5.5 9.5 C5.5 6.5 8 5.5 8.5 4.5H15.5 C16 5.5 18.5 6.5 18.5 9.5H5.5Z" fill="#d4d4d8" stroke="#52525b" strokeWidth="1.5" strokeLinejoin="round" />
-
-    {/* Top Cap - Rounded Dome */}
-    <path d="M9 4.5 V3.5 C9 2 15 2 15 3.5 V4.5 H9Z" fill="#e4e4e7" stroke="#52525b" strokeWidth="1.5" strokeLinejoin="round" />
-
-    {/* Metallic Center Reflection Line */}
-    <path d="M12 2.5 V22" stroke="#ffffff" strokeWidth="2" strokeLinecap="round" opacity="0.4" />
-
-    {/* Side Shadows for 3D effect */}
-    <path d="M17 10 C17 15 16 20 14 22" stroke="#52525b" strokeWidth="1" strokeLinecap="round" opacity="0.1" />
-  </svg>
-);
 
 // Language Detection Helper
 const getSystemLang = (): 'en' | 'zh' => {
@@ -167,792 +27,270 @@ const getSystemLang = (): 'en' | 'zh' => {
     const lang = navigator.language.toLowerCase();
     return lang.startsWith('zh') ? 'zh' : 'en';
   } catch (e) {
-    return 'en'; // Default fallback
+    return 'en';
   }
 };
 
 function App() {
+  // Global State
   const [lang, setLang] = useState<'en' | 'zh'>(getSystemLang());
-  const [activeTab, setActiveTab] = useState<'all' | 'classic' | 'cvs' | 'favorites' | 'my_bar'>('all');
-  const [activeSpirit, setActiveSpirit] = useState<string>('all');
-  const [searchQuery, setSearchQuery] = useState('');
+  const [activeTab, setActiveTab] = useState<TabId>('cocktails');
   const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(null);
   const [isShaking, setIsShaking] = useState(false);
 
-  // Auth & User State
-  const [showLoginModal, setShowLoginModal] = useState(false);
-  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
+  // Auth State
   const [session, setSession] = useState<Session | null>(null);
 
-  // My Bar State
-  const [showMyBarModal, setShowMyBarModal] = useState(false);
+  // Data State
+  const [allRecipes, setAllRecipes] = useState<Recipe[]>(localRecipes);
+  const [allIngredients, setAllIngredients] = useState<IngredientItem[]>([]);
+
+  // Inventory State
   const [myInventory, setMyInventory] = useState<Set<string>>(() => {
     try {
       const saved = localStorage.getItem('myInventory');
       return saved ? new Set(JSON.parse(saved)) : new Set();
-    } catch (e) {
-      return new Set();
-    }
+    } catch (e) { return new Set(); }
   });
 
-  // Persist My Inventory
   useEffect(() => {
     localStorage.setItem('myInventory', JSON.stringify(Array.from(myInventory)));
   }, [myInventory]);
-
-  // Clean up inventory on load to remove obsolete aliases (Migration)
-  useEffect(() => {
-    setMyInventory(prev => {
-      const next = new Set<string>();
-
-      prev.forEach(item => {
-        // Attempt to normalize potentially raw names to canonical IDs
-        // We try both EN and ZH since we don't know the source lang of the raw string
-        const enIds = normalizeIngredient(item, 'en');
-        const zhIds = normalizeIngredient(item, 'zh');
-
-        // If normalization changed the item (e.g. 'Green Tea (Bottled)' -> 'oolong_tea')
-        // We want to use the new ID. 
-        // Note: normalizeIngredient returns array.
-
-        const allIds = new Set([...enIds, ...zhIds]);
-
-        if (allIds.size === 0) {
-          // Should not happen with fallback, but safe to keep original if nothing returned
-          next.add(item);
-        } else {
-          allIds.forEach(id => next.add(id));
-        }
-
-      });
-
-      // Only update if we actually migrated something to avoid infinite loops if this was dependent on myInventory
-      // But this effect has [] dependency so it runs once. 
-      // Actually, we want to update the state with the cleaned version.
-      return next;
-    });
-  }, []); // Run once on mount to migrate data
 
   // Favorites State
   const [favorites, setFavorites] = useState<Set<string>>(() => {
     try {
       const saved = localStorage.getItem('favorites');
       return saved ? new Set(JSON.parse(saved)) : new Set();
-    } catch (e) {
-      return new Set();
-    }
+    } catch (e) { return new Set(); }
   });
 
-  // Persist to LocalStorage
   useEffect(() => {
     localStorage.setItem('favorites', JSON.stringify(Array.from(favorites)));
   }, [favorites]);
 
-  // Simple Sync on Login (No Realtime, No Focus Listeners)
+  // --- Auth & Sync Logic ---
+  useEffect(() => {
+    if (!supabase) return;
+    supabase.auth.getSession().then(({ data: { session } }) => setSession(session));
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => setSession(session));
+
+    // Fetch Data
+    const fetchData = async () => {
+      if (!supabase) return;
+      const { data: recipeData } = await supabase.from('recipes').select('*');
+      if (recipeData && recipeData.length > 0) {
+        setAllRecipes(recipeData.map((r: any) => ({
+          id: r.id, name: r.name, type: r.type, baseSpirit: r.base_spirit,
+          ingredients: r.ingredients, steps: r.steps, tags: r.tags,
+          description: r.description, specs: r.specs, color: r.color, image: r.image
+        })));
+      }
+      if (supabase) {
+        const { data: ingData } = await supabase.from('ingredients').select('*');
+        if (ingData) setAllIngredients(ingData as IngredientItem[]);
+      }
+    };
+    fetchData();
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  // Listen for Deep Links (Auth Callback)
+  useEffect(() => {
+    if (!Capacitor.isNativePlatform()) return;
+
+    CapApp.addListener('appUrlOpen', async ({ url }) => {
+      console.log('App opened with URL:', url);
+      if (url.includes('access_token') || url.includes('refresh_token')) {
+        // Supabase V2: Extract tokens from URL fragment
+        // But simpler: pass the full URL to supabase helpers if available, or parse manual.
+        // Actually, Supabase JS usually handles `getSession` correctly if the URL is visited? 
+        // No, in native app, we must feed it.
+
+        // Extract fragment
+        const hashMap = new URLSearchParams(new URL(url).hash.substring(1));
+        const accessToken = hashMap.get('access_token');
+        const refreshToken = hashMap.get('refresh_token');
+
+        if (accessToken && refreshToken && supabase) {
+          const { error } = await supabase.auth.setSession({ access_token: accessToken, refresh_token: refreshToken });
+          if (error) console.error('Set Session Error:', error);
+          // Close Browser/WebView if opened (iOS sometimes keeps SFSafariViewController open)
+          // Browser.close(); // Not always needed but good practice
+          try { await Browser.close(); } catch (e) { }
+        }
+      }
+    });
+  }, []);
+
+  // Sync favorites/inventory on login
   useEffect(() => {
     if (!session || !supabase) return;
-
-    const initSync = async () => {
+    const sync = async () => {
       if (!supabase) return;
-      // 1. Upload Guest Favorites (Offline added items)
-      // Check current local favorites vs DB
+      // 1. Favorites
       const localArray = Array.from(favorites);
       if (localArray.length > 0) {
         const { data: existing } = await supabase.from('favorites').select('recipe_id').eq('user_id', session.user.id);
         const existingIds = new Set(existing?.map((x: any) => x.recipe_id) || []);
-
         const toAdd = localArray.filter(id => !existingIds.has(id));
-        if (toAdd.length > 0) {
-          await supabase.from('favorites').insert(toAdd.map(id => ({ user_id: session.user.id, recipe_id: id })));
-        }
+        if (toAdd.length > 0) await supabase.from('favorites').insert(toAdd.map(id => ({ user_id: session.user.id, recipe_id: id })));
       }
+      const { data: dbFavs } = await supabase.from('favorites').select('recipe_id').eq('user_id', session.user.id);
+      if (dbFavs) setFavorites(new Set(dbFavs.map((f: any) => f.recipe_id)));
 
-      // 2. Fetch Latest from DB and Set State
-      const { data: dbData, error } = await supabase
-        .from('favorites')
-        .select('recipe_id')
-        .eq('user_id', session.user.id);
-
-      if (!error && dbData) {
-        setFavorites(new Set(dbData.map((f: any) => f.recipe_id)));
-      }
-
-      // 3. Sync Inventory
-      const { data: invData } = await supabase
-        .from('user_inventory')
-        .select('ingredients')
-        .eq('user_id', session.user.id)
-        .single();
-
-      if (invData) {
-        setMyInventory(prev => new Set([...prev, ...(invData.ingredients || [])]));
-      }
+      // 2. Inventory
+      const { data: invData } = await supabase.from('user_inventory').select('ingredients').eq('user_id', session.user.id).single();
+      if (invData) setMyInventory(prev => new Set([...prev, ...(invData.ingredients || [])]));
     };
-
-    initSync();
-    // Intentionally empty cleanup - no listeners to remove
+    sync();
   }, [session]);
 
-  const saveInventory = async (currentInventory: Set<string>) => {
+  const saveInventory = async (inv: Set<string>) => {
+    setMyInventory(inv); // Optimistic Update
     if (!session?.user || !supabase) return;
-
-    const { error } = await supabase
-      .from('user_inventory')
-      .upsert({
-        user_id: session.user.id,
-        ingredients: Array.from(currentInventory),
-        updated_at: new Date().toISOString()
-      });
-
-    if (error) console.error("Error saving inventory:", error);
+    await supabase.from('user_inventory').upsert({
+      user_id: session.user.id,
+      ingredients: Array.from(inv),
+      updated_at: new Date().toISOString()
+    });
   };
-
-  // Data State
-  const [allRecipes, setAllRecipes] = useState<Recipe[]>(localRecipes);
-  const [allIngredients, setAllIngredients] = useState<IngredientItem[]>([]);
-
-  const filteredRecipes = useMemo(() => {
-    return allRecipes.filter(recipe => {
-      // Tab Logic
-      if (activeTab === 'favorites') {
-        if (!favorites.has(recipe.id)) return false;
-      } else if (activeTab === 'my_bar') {
-        // Smart match: Must have ALL ingredients, EXCEPT garnishes/ice/water
-        // CRITICAL: Always use English definition for logic to ensure consistency across languages.
-        // Chinese translations might vary in "Amount" description (e.g., "Garnish" vs "Slice"), 
-        // causing logic divergence. English is the source of truth for structure.
-        const needed = recipe.ingredients['en'];
-
-        const hasAll = needed.every(ing => {
-          const canonicals = normalizeIngredient(ing.name, 'en');
-
-          // Definition of Groups (Sync with MyBarModal logic)
-          // We only check if it belongs to a REQUIRED group. 
-          // If it's not in a required group, it's considered a Garnish (Ignored).
-
-          // 0. Explicitly IGNORED ingredients (Assume user has them)
-          const ignored = new Set(['ice', 'sugar', 'water']);
-          if (canonicals.some(id => ignored.has(id))) return true;
-
-          const isRequired = canonicals.some(id => {
-            // 1. Essentials (Now REQUIRED, except ignored ones above)
-            const essentials = new Set([
-              'salt', 'bitters', 'lemon', 'lime',
-              'cream', 'egg', 'honey', 'worcestershire', 'hot_sauce'
-            ]);
-            if (essentials.has(id)) return true;
-
-            // 2. Mixers (Must have)
-            const mixers = new Set([
-              'soda', 'tonic', 'ginger_ale', 'coke', 'sprite',
-              'lemon_soda', 'grapefruit_soda', 'apple_soda',
-              'juice', 'orange_juice', 'cranberry_juice', 'tomato_juice', 'guava_juice',
-              'tea', 'oolong_tea', 'coffee', 'espresso', 'milk',
-              'calpis', 'yakult', 'cider', 'grenadine',
-              'orgeat', 'lime_cordial', 'melon_popsicle',
-              'sarsaparilla', 'grape_juice', 'aloe'
-            ]);
-            if (mixers.has(id)) return true;
-
-            // 3. Base Spirits (Must have)
-            const base = new Set(['whiskey', 'gin', 'vodka', 'rum', 'tequila', 'brandy']);
-            if (base.has(id)) return true;
-
-            // 4. Liqueurs & Other Alc (Must have)
-            const alcohol = new Set([
-              'liqueur', 'cointreau', 'grand_marnier', 'amaretto',
-              'coffee_liqueur', 'cocoa_liqueur', 'baileys', 'malibu',
-              'campari', 'aperol', 'vermouth', 'dry_vermouth',
-              'beer', 'wine', 'soju', 'sake', 'champagne', 'hard_cider', 'kaoliang'
-            ]);
-            if (alcohol.has(id)) return true;
-
-            return false; // Not in a required group -> Garnish (Ignored)
-          });
-
-          // If NOT required (Garnish), skip check
-          if (!isRequired) return true;
-
-          // If required, check inventory
-          return canonicals.some(c => myInventory.has(c));
-        });
-        if (!hasAll) return false;
-      } else if (activeTab !== 'all' && recipe.type !== activeTab) {
-        return false;
-      }
-
-      const matchesSpirit = activeSpirit === 'all' || recipe.baseSpirit.includes(activeSpirit);
-
-      const searchLower = searchQuery.toLowerCase().trim();
-
-      // Cross-lingual Search Logic
-      // Check Name in EN and ZH
-      const nameEn = recipe.name['en'].toLowerCase();
-      const nameZh = recipe.name['zh'].toLowerCase();
-
-      // Check Ingredients in EN and ZH
-      const ingEn = recipe.ingredients['en'].map(i => i.name.toLowerCase()).join(' ');
-      const ingZh = recipe.ingredients['zh'].map(i => i.name.toLowerCase()).join(' ');
-
-      const matchesSearch =
-        nameEn.includes(searchLower) ||
-        nameZh.includes(searchLower) ||
-        ingEn.includes(searchLower) ||
-        ingZh.includes(searchLower);
-
-      return matchesSpirit && matchesSearch;
-    });
-  }, [activeTab, activeSpirit, searchQuery, lang, favorites, allRecipes, myInventory]);
-
-
-
-  useEffect(() => {
-    if (!supabase) return;
-
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-    });
-
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
-      if (session) {
-        setShowLoginModal(false);
-      }
-    });
-
-    // Fetch Data from DB
-    const fetchData = async () => {
-      if (!supabase) return;
-
-      // 1. Fetch Recipes
-      const { data: recipeData, error: recipeError } = await supabase
-        .from('recipes')
-        .select('*');
-
-      if (recipeError) {
-        console.error('Error fetching recipes:', recipeError);
-      } else if (recipeData && recipeData.length > 0) {
-        const mappedRecipes: Recipe[] = recipeData.map((r: any) => ({
-          id: r.id,
-          name: r.name,
-          type: r.type,
-          baseSpirit: r.base_spirit,
-          ingredients: r.ingredients,
-          steps: r.steps,
-          tags: r.tags,
-          description: r.description,
-          specs: r.specs,
-          color: r.color,
-          image: r.image
-        }));
-        setAllRecipes(mappedRecipes);
-      }
-
-      // 2. Fetch Ingredients
-      const { data: ingData, error: ingError } = await supabase
-        .from('ingredients')
-        .select('*');
-
-      if (ingError) {
-        console.error("Error fetching ingredients:", ingError);
-      } else if (ingData) {
-        setAllIngredients(ingData as IngredientItem[]);
-      }
-    };
-    fetchData();
-    return () => {
-      subscription.unsubscribe();
-    };
-  }, []);
-
-
 
   const toggleFavorite = async (id: string, e?: React.MouseEvent) => {
     e?.stopPropagation();
+    const newFavs = new Set(favorites);
+    const isAdding = !newFavs.has(id);
+    if (isAdding) newFavs.add(id); else newFavs.delete(id);
+    setFavorites(newFavs);
 
-    const isFavorited = favorites.has(id);
-
-    // Optimistic UI update
-    setFavorites(prev => {
-      const newFavs = new Set(prev);
-      if (isFavorited) {
-        newFavs.delete(id);
-      } else {
-        newFavs.add(id);
-      }
-      return newFavs;
-    });
-
-    // Sync to DB if logged in
     if (session && supabase) {
-      try {
-        // Try RPC first (Atomic, Safer)
-        const { error: rpcError } = await supabase.rpc('toggle_favorite', { p_recipe_id: id });
-
-        if (rpcError) {
-          console.warn("RPC failed, falling back to direct DB Op:", rpcError);
-          // Fallback to legacy behavior if RPC doesn't exist or fails
-          if (isFavorited) {
-            const { error } = await supabase.from('favorites').delete().eq('user_id', session.user.id).eq('recipe_id', id);
-            if (error) throw error;
-          } else {
-            const { error } = await supabase.from('favorites').insert({ user_id: session.user.id, recipe_id: id });
-            if (error) throw error;
-          }
-        }
-      } catch (error: any) {
-        console.error("Toggle Error:", error);
-        // Revert UI if failed
-        setFavorites(prev => {
-          const n = new Set(prev);
-          if (isFavorited) n.add(id); else n.delete(id);
-          return n;
-        });
-        alert(`Failed to sync favorite: ${error.message || "Network Error"}`);
+      if (isAdding) {
+        await supabase.from('favorites').insert({ user_id: session.user.id, recipe_id: id });
+      } else {
+        await supabase.from('favorites').delete().eq('user_id', session.user.id).eq('recipe_id', id);
       }
     }
   };
 
-  // Handle Deep Links for OAuth (iOS)
-  useEffect(() => {
-    import('@capacitor/app').then(({ App: CapacitorApp }) => {
-      CapacitorApp.addListener('appUrlOpen', async (event: any) => {
-        // Parse the URL to get the access_token and refresh_token
-        // Example URL: homebartonight://login-callback#access_token=...&refresh_token=...&...
+  const handleShake = () => {
+    setIsShaking(true);
+    // Vibrate if allowed
+    if ('vibrate' in navigator) navigator.vibrate([100, 50, 100]);
+    setTimeout(() => {
+      setIsShaking(false);
+      // Random Pick logic
+      const validRecipes = allRecipes.filter(r => r.type === 'cvs' || r.type === 'classic'); // Filter appropriately
+      if (validRecipes.length > 0) {
+        const random = validRecipes[Math.floor(Math.random() * validRecipes.length)];
+        setSelectedRecipe(random);
+      }
+    }, 1500);
+  };
 
-        if (event.url.startsWith('homebartonight://')) {
-          const url = new URL(event.url);
-          const hash = url.hash.substring(1);
-          const params = new URLSearchParams(hash || url.search);
+  const handleLogin = async () => {
+    if (!supabase) return;
 
-          const accessToken = params.get('access_token');
-          const refreshToken = params.get('refresh_token');
-
-          if (accessToken && refreshToken && supabase) {
-            const { error } = await supabase.auth.setSession({
-              access_token: accessToken,
-              refresh_token: refreshToken,
-            });
-
-            if (error) {
-              console.error("Set session error:", error);
-              alert(`Login Error: ${error.message} `);
-            }
-          } else {
-            // Handle error case passed in URL
-            const errorDescription = params.get('error_description');
-            if (errorDescription) {
-              alert(`Login Failed: ${decodeURIComponent(errorDescription)} `);
-            }
-          }
+    if (Capacitor.isNativePlatform()) {
+      // Native: Use Browser Plugin
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: 'homebartonight://auth/callback',
+          skipBrowserRedirect: true
         }
       });
-    });
-  }, []);
-
-  const handleLogin = async (provider: 'google') => {
-    if (!supabase) {
-      alert("Please configure Supabase credentials in .env.local to enable login.");
-      return;
-    }
-
-    // Dynamically import Capacitor to check platform
-    const { Capacitor } = await import('@capacitor/core');
-
-    const redirectUrl = Capacitor.isNativePlatform()
-      ? 'homebartonight://login-callback'
-      : window.location.origin;
-
-    console.log("Using Redirect URL:", redirectUrl);
-
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: provider,
-      options: {
-        redirectTo: redirectUrl,
-        queryParams: {
-          access_type: 'offline',
-          prompt: 'consent',
-        },
+      if (error) console.error('Login Error:', error);
+      if (data?.url) {
+        await Browser.open({ url: data.url });
       }
-    });
-    if (error) {
-      console.error('Error logging in:', error.message);
-      alert(`Login Initiation Error: ${error.message} `);
-    }
-  };
-
-  const handleGuestLogin = async () => {
-    if (!supabase) {
-      alert("Please configure Supabase credentials in .env.local to enable login.");
-      return;
-    }
-    const { error } = await supabase.auth.signInAnonymously();
-    if (error) {
-      console.error('Error logging in anonymously:', error.message);
-      alert(`Guest login failed: ${error.message} \n(Make sure 'Anonymous Sign-ins' are enabled in your Supabase Auth settings)`);
     } else {
-      setShowLoginModal(false);
+      // Web: Standard Redirect
+      await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: { redirectTo: window.location.origin }
+      });
     }
   };
 
   const handleLogout = async () => {
     if (!supabase) return;
-    try {
-      await supabase.auth.signOut();
-    } catch (e) {
-      console.error("Logout error (ignored):", e);
-    }
-
-    // Force clear state and storage
-    setSession(null);
+    await supabase.auth.signOut();
     setFavorites(new Set());
-    localStorage.clear(); // Clear all local storage to be safe
-    setShowLogoutConfirm(false);
-
-    // Reload page to ensure clean state
-    window.location.reload();
+    setMyInventory(new Set());
   };
-
-  const t = translations[lang];
-
-
-
-  const handleRandom = () => {
-    if (filteredRecipes.length === 0) return;
-    setIsShaking(true);
-
-    // Simulate Shaking Time
-    setTimeout(() => {
-      const random = filteredRecipes[Math.floor(Math.random() * filteredRecipes.length)];
-      setIsShaking(false);
-      if (random) setSelectedRecipe(random);
-    }, 1800);
-  };
-
-  const toggleLang = () => {
-    setLang(prev => prev === 'en' ? 'zh' : 'en');
-  }
 
   return (
-    <div className="min-h-screen pb-20 bg-zinc-950 text-zinc-100 font-sans">
-      <RecipeManager />
-      {/* Background Image with Fallback */}
-      <div
-        className="fixed inset-0 z-0 opacity-40 bg-cover bg-center"
-        style={{ backgroundImage: "url('https://images.unsplash.com/photo-1514362545857-3bc16549766b?q=80&w=2670&auto=format&fit=crop')" }}
-      />
+    <div
+      className="fixed inset-0 w-full h-full overflow-hidden bg-black text-white font-sans selection:bg-indigo-500/30 select-none flex flex-col"
+      style={{
+        paddingTop: 'env(safe-area-inset-top)',
+        paddingBottom: 'env(safe-area-inset-bottom)'
+      }}
+    >
 
-      {/* Dark Overlay */}
-      <div className="fixed inset-0 bg-background/80 backdrop-blur-sm z-0" />
+      {/* Main Content Area */}
+      {/* Main Content Area */}
+      <main className="flex-1 overflow-hidden relative max-w-5xl mx-auto w-full">
 
-      <div className="relative z-10 w-full max-w-[1024px] mx-auto min-h-screen flex flex-col md:px-4">
-
-        {/* Header */}
-        <header className="p-6 pt-12 flex justify-between items-center bg-gradient-to-b from-background to-transparent sticky top-0 z-20">
-          <div>
-            <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent tracking-tighter">
-              HomeBar
-            </h1>
-            <p className="text-zinc-400 text-sm">{t.subtitle}</p>
-          </div>
-          <div className="flex gap-2">
-            <button
-              onClick={() => session ? setShowLogoutConfirm(true) : setShowLoginModal(true)}
-              className={clsx(
-                "rounded-full hover:bg-white/20 active:scale-95 transition-all backdrop-blur-md border border-white/5 overflow-hidden",
-                session?.user?.user_metadata?.avatar_url ? "p-0" : "p-1", // Remove padding for avatar
-                session ? "border-primary/50" : "bg-white/10 text-zinc-300"
-              )}
-            >
-              {session?.user?.user_metadata?.avatar_url ? (
-                <img src={session.user.user_metadata.avatar_url} alt="User" className="w-10 h-10 rounded-full" />
-              ) : session ? (
-                <div className="w-8 h-8 bg-primary/20 flex items-center justify-center rounded-full text-primary">
-                  <User size={18} />
-                </div>
-              ) : (
-                <div className="w-8 h-8 flex items-center justify-center">
-                  <User size={20} />
-                </div>
-              )}
-            </button>
-            <button
-              onClick={toggleLang}
-              className="p-1 rounded-full bg-white/10 hover:bg-white/20 active:scale-95 transition-all text-zinc-300 backdrop-blur-md border border-white/5 overflow-hidden"
-            >
-              <div className="w-8 h-8 flex items-center justify-center">
-                <span className="font-bold text-xs">{lang === 'en' ? '中' : 'EN'}</span>
-              </div>
-            </button>
-            <button
-              onClick={handleRandom}
-              className="p-1 rounded-full bg-white/10 hover:bg-white/20 active:scale-95 transition-all text-accent backdrop-blur-md border border-white/5 overflow-hidden"
-            >
-              <div className="w-8 h-8 flex items-center justify-center">
-                <Shuffle size={20} />
-              </div>
-            </button>
-          </div>
-        </header>
-
-        {/* Search & Filter - Constrained width on desktop */}
-        <div className="px-6 space-y-4 w-full">
-          <div className="relative group">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500 group-focus-within:text-white transition-colors" size={18} />
-            <input
-              type="text"
-              placeholder={t.searchPlaceholder}
-              className="w-full bg-surface/80 border border-white/10 rounded-xl py-3 pl-10 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all placeholder:text-zinc-600 font-medium text-white"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-          </div>
-
-          <div className="flex p-1 bg-surface/80 backdrop-blur-xl rounded-xl border border-white/5">
-            {[
-              { id: 'all', label: t.tabs.all, icon: GlassWater },
-              { id: 'classic', label: t.tabs.classic, icon: Martini },
-              { id: 'cvs', label: t.tabs.cvs, mobileLabel: (t.tabs as any).cvs_mobile, icon: Store },
-              { id: 'favorites', label: t.tabs.favorites, mobileLabel: (t.tabs as any).favorites_mobile, icon: Heart },
-              { id: 'my_bar', label: t.tabs.my_bar, mobileLabel: (t.tabs as any).my_bar_mobile, icon: Wine }
-            ].map((tab) => (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id as any)}
-                className={clsx(
-                  "flex-1 flex items-center justify-center gap-1 md:gap-1.5 py-2 md:py-2.5 rounded-lg text-[10px] md:text-xs font-bold transition-all duration-300 min-w-0",
-                  activeTab === tab.id
-                    ? "bg-white/10 text-white shadow-lg"
-                    : "text-zinc-500 hover:text-zinc-300 hover:bg-white/5"
-                )}
-              >
-                <tab.icon size={14} fill={tab.id === 'favorites' && activeTab === 'favorites' ? "currentColor" : "none"} className="flex-shrink-0" />
-                <span className="truncate hidden md:inline">{tab.label}</span>
-                <span className="truncate md:hidden">{tab.mobileLabel || tab.label}</span>
-              </button>
-            ))}
-          </div>
-
-          {/* Scrollable Spirit Filter */}
-          <div className="flex gap-2 overflow-x-auto pb-4 no-scrollbar mask-linear-fade justify-start">
-            {spiritsList.map((spirit) => (
-              <button
-                key={spirit}
-                onClick={() => setActiveSpirit(spirit)}
-                className={clsx(
-                  "whitespace-nowrap px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider transition-all border",
-                  activeSpirit === spirit
-                    ? "bg-primary text-white border-primary shadow-[0_0_15px_rgba(139,92,246,0.5)]"
-                    : "bg-surface/50 text-zinc-400 border-white/5 hover:border-white/20 hover:text-zinc-200"
-                )}
-              >
-                {t.spirits[spirit as keyof typeof t.spirits]}
-              </button>
-            ))}
-          </div>
+        {/* Explore Page (Hidden Toggle) */}
+        <div className={activeTab === 'explore' ? 'h-full overflow-y-auto no-scrollbar pb-24' : 'hidden'}>
+          <ExplorePage lang={lang} />
         </div>
 
-        {/* My Bar Edit Button */}
-        <AnimatePresence>
-          {activeTab === 'my_bar' && (
-            <motion.div
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: 'auto', opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
-              className="px-6 mb-4 overflow-hidden w-full"
-            >
-              <button
-                onClick={() => setShowMyBarModal(true)}
-                className="w-full py-3 rounded-xl bg-gradient-to-r from-zinc-800 to-zinc-900 border border-amber-500/30 text-amber-500 font-bold text-sm flex items-center justify-center gap-2 hover:bg-zinc-800/80 transition-all shadow-lg shadow-amber-900/10 active:scale-[0.99]"
-              >
-                <Wine size={16} />
-                {lang === 'zh' ? '管理我的吧台庫存' : 'Manage My Bar Inventory'}
-                <span className="bg-amber-500/20 text-amber-500 text-[10px] px-2 py-0.5 rounded-full ml-1">
-                  {myInventory.size}
-                </span>
-              </button>
-            </motion.div>
-          )}
-        </AnimatePresence>
+        {/* Cocktails Page (Persistent) */}
+        <div className={activeTab === 'cocktails' ? 'h-full overflow-y-auto no-scrollbar pb-24' : 'hidden'}>
+          <CocktailsPage
+            allRecipes={allRecipes}
+            favorites={favorites}
+            toggleFavorite={toggleFavorite}
+            onSelectRecipe={setSelectedRecipe}
+            lang={lang}
+            onShake={handleShake}
+          />
+        </div>
 
-        {/* Recipe Grid */}
-        <main className="flex-1 px-6 grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 pb-24">
-          <AnimatePresence mode="popLayout">
-            {filteredRecipes.map((recipe) => (
-              <motion.div
-                layout
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.9 }}
-                key={recipe.id}
-                onClick={() => setSelectedRecipe(recipe)}
-                whileTap={{ scale: 0.98 }}
-                className="glass-card p-3 flex items-center gap-4 cursor-pointer group hover:bg-white/10 transition-colors overflow-hidden relative"
-                style={{ borderColor: `${recipe.color} 30` }}
-              >
-                {/* Favorite Button on Card */}
-                <button
-                  onClick={(e) => toggleFavorite(recipe.id, e)}
-                  className="absolute top-2 right-2 p-2 rounded-full z-10 text-white/50 hover:text-red-500 hover:bg-white/10 transition-all active:scale-90"
-                >
-                  <Heart size={18} fill={favorites.has(recipe.id) ? "#ef4444" : "none"} className={clsx(favorites.has(recipe.id) && "text-red-500")} />
-                </button>
+        {/* My Bar Page */}
+        <div className={activeTab === 'my_bar' ? 'h-full overflow-y-auto no-scrollbar pb-24' : 'hidden'}>
+          <MyBarPage
+            allRecipes={allRecipes}
+            myInventory={myInventory}
+            setMyInventory={saveInventory}
+            allIngredients={allIngredients}
+            lang={lang}
+            onSelectRecipe={setSelectedRecipe}
+            favorites={favorites}
+            toggleFavorite={toggleFavorite}
+          />
+        </div>
 
-                <div className="w-20 h-20 rounded-xl overflow-hidden shrink-0 bg-zinc-800 border border-white/10 relative">
-                  <img
-                    src={recipe.image}
-                    alt={recipe.name[lang]}
-                    onError={(e) => {
-                      e.currentTarget.src = "/placeholder.png";
-                      e.currentTarget.onerror = null; // prevent loop
-                    }}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                  />
-                  {/* Icon overlay just in case image fails or for style */}
-                  <div className="absolute inset-0 bg-black/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                    {recipe.type === 'cvs' ? <Store size={20} className="text-white drop-shadow-lg" /> : <Martini size={20} className="text-white drop-shadow-lg" />}
-                  </div>
-                </div>
+        {/* Favorites Page */}
+        <div className={activeTab === 'favorites' ? 'h-full overflow-y-auto no-scrollbar pb-24' : 'hidden'}>
+          <FavoritesPage
+            recipes={allRecipes}
+            favorites={favorites}
+            toggleFavorite={toggleFavorite}
+            onSelectRecipe={setSelectedRecipe}
+            lang={lang}
+          />
+        </div>
 
-                <div className="flex-1 min-w-0 py-1 pr-8">
-                  <div className="flex justify-between items-start">
-                    <h3 className="font-bold text-lg leading-tight truncate text-white">{recipe.name[lang]}</h3>
-                  </div>
-                  <p className="text-zinc-400 text-xs mt-1 truncate">{recipe.description[lang]}</p>
-                  <div className="flex gap-2 mt-2">
-                    {recipe.tags[lang].slice(0, 3).map(tag => (
-                      <span key={tag} className="text-[10px] uppercase tracking-wider px-2 py-1 rounded-full bg-white/5 text-zinc-300 border border-white/5">
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                </div>
+        {/* Settings Page */}
+        <div className={activeTab === 'settings' ? 'h-full overflow-y-auto no-scrollbar pb-24' : 'hidden'}>
+          <SettingsPage
+            session={session}
+            lang={lang}
+            setLang={setLang}
+            onLogin={handleLogin}
+            onLogout={handleLogout}
+          />
+        </div>
+      </main>
 
-              </motion.div>
-            ))}
-          </AnimatePresence>
+      {/* Tab Bar */}
+      <TabBar activeTab={activeTab} onTabChange={setActiveTab} lang={lang} />
 
-          {filteredRecipes.length === 0 && (
-            <div className="col-span-full text-center py-20 text-zinc-500">
-              <p>{activeTab === 'my_bar' && myInventory.size === 0
-                ? (lang === 'zh' ? '您的吧台空空如也，快去添加材料吧！' : 'Your bar is empty. Add some ingredients!')
-                : t.noResults}
-              </p>
-              <button
-                onClick={() => {
-                  if (activeTab === 'my_bar') {
-                    setShowMyBarModal(true);
-                  } else {
-                    setSearchQuery('');
-                    setActiveTab('all');
-                    setActiveSpirit('all');
-                  }
-                }}
-                className="mt-4 text-primary underline"
-              >
-                {activeTab === 'my_bar' ? (lang === 'zh' ? '添加材料' : 'Add Ingredients') : t.clear}
-              </button>
-            </div>
-          )}
-        </main>
-
-      </div >
-
-      {/* Login Modal */}
-      <AnimatePresence>
-        {
-          showLoginModal && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="fixed inset-0 z-50 flex items-center justify-center p-4"
-            >
-              <div className="absolute inset-0 bg-black/90 backdrop-blur-md" onClick={() => setShowLoginModal(false)} />
-
-              <motion.div
-                initial={{ scale: 0.9, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                exit={{ scale: 0.9, opacity: 0 }}
-                className="bg-zinc-900 w-full max-w-sm rounded-[2rem] overflow-hidden relative border border-white/10 p-8 shadow-2xl"
-              >
-                <div className="text-center mb-8">
-                  <div className="w-16 h-16 rounded-full bg-primary/20 flex items-center justify-center mx-auto mb-4 border border-primary/20 shadow-[0_0_20px_rgba(139,92,246,0.3)]">
-                    <User size={32} className="text-primary" />
-                  </div>
-                  <h2 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent">
-                    {t.login.title}
-                  </h2>
-                  <p className="text-zinc-400 text-sm mt-2">{t.login.subtitle}</p>
-                </div>
-
-                <div className="space-y-3">
-                  <button
-                    onClick={() => handleLogin('google')}
-                    className="w-full py-3.5 rounded-xl bg-white text-zinc-900 font-bold flex items-center justify-center gap-3 hover:bg-zinc-200 transition-colors"
-                  >
-                    <GoogleIcon />
-                    {t.login.google}
-                  </button>
-                </div>
-
-                <div className="mt-6 text-center">
-                  <button
-                    onClick={handleGuestLogin}
-                    className="text-zinc-500 text-sm hover:text-white transition-colors"
-                  >
-                    {t.login.guest}
-                  </button>
-                </div>
-              </motion.div>
-            </motion.div>
-          )
-        }
-      </AnimatePresence>
-
-      {/* Logout Confirmation Modal */}
-      <AnimatePresence>
-        {showLogoutConfirm && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4"
-          >
-            <div className="absolute inset-0 bg-black/90 backdrop-blur-md" onClick={() => setShowLogoutConfirm(false)} />
-
-            <motion.div
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
-              className="bg-zinc-900 w-full max-w-xs rounded-3xl overflow-hidden relative border border-white/10 p-6 shadow-2xl text-center"
-            >
-              <h3 className="text-xl font-bold text-white mb-2">{t.logout.title}</h3>
-              <p className="text-zinc-400 text-sm mb-6">{t.logout.message}</p>
-
-              <div className="flex gap-3">
-                <button
-                  onClick={() => setShowLogoutConfirm(false)}
-                  className="flex-1 py-3 rounded-xl bg-zinc-800 text-zinc-300 font-bold hover:bg-zinc-700 transition-colors"
-                >
-                  {t.logout.cancel}
-                </button>
-                <button
-                  onClick={handleLogout}
-                  className="flex-1 py-3 rounded-xl bg-red-500/10 text-red-500 border border-red-500/20 font-bold hover:bg-red-500/20 transition-colors"
-                >
-                  {t.logout.confirm}
-                </button>
-              </div>
-            </motion.div>
-          </motion.div>
-
-        )}
-      </AnimatePresence>
-
-      {/* Shaker Animation Overlay */}
+      {/* Overlays: Shaker & Detail Modal */}
       <AnimatePresence>
         {isShaking && (
           <motion.div
@@ -962,98 +300,47 @@ function App() {
             className="fixed inset-0 z-[60] flex flex-col items-center justify-center bg-black/80 backdrop-blur-md"
           >
             <motion.div
-              animate={{
-                rotate: [0, -15, 15, -15, 15, 0],
-                y: [0, -10, 5, -10, 5, 0],
-                scale: [1, 1.1, 1.1, 1.1, 1]
-              }}
-              transition={{
-                duration: 0.5,
-                repeat: 3,
-                ease: "easeInOut"
-              }}
-              className="w-32 h-32 text-indigo-400 drop-shadow-[0_0_15px_rgba(129,140,248,0.5)]"
+              animate={{ rotate: [0, -15, 15, -15, 15, 0], y: [0, -10, 5, -10, 5, 0], scale: [1, 1.1, 1.1, 1.1, 1] }}
+              transition={{ duration: 0.5, repeat: 3, ease: "easeInOut" }}
             >
-              <ShakerIcon />
+              <MixingShaker size={320} />
             </motion.div>
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5 }}
-              className="mt-8 text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-300 to-purple-300 tracking-widest uppercase"
-            >
+            <p className="mt-8 text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-300 to-purple-300 tracking-widest uppercase">
               Mixing...
-            </motion.p>
-
-            {/* Ice Cubes Particles */}
-            {[...Array(5)].map((_, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 0, x: 0 }}
-                animate={{
-                  opacity: [0, 1, 0],
-                  y: [0, Math.random() * -100 - 50],
-                  x: [(Math.random() - 0.5) * 100],
-                  rotate: Math.random() * 360
-                }}
-                transition={{
-                  duration: 1.2,
-                  delay: Math.random() * 0.5,
-                  repeat: Infinity
-                }}
-                className="absolute w-4 h-4 bg-white/20 border border-white/40 rounded-sm backdrop-blur-sm"
-                style={{
-                  left: `calc(50 % + ${(Math.random() - 0.5) * 50}px)`,
-                  top: '45%'
-                }}
-              />
-            ))}
-
+            </p>
           </motion.div>
         )}
       </AnimatePresence>
 
-      {/* Detail Modal */}
       <AnimatePresence>
-        {
-          selectedRecipe && (
-            <RecipeDetailModal
-              recipe={selectedRecipe}
-              onClose={() => setSelectedRecipe(null)}
-              isFavorite={favorites.has(selectedRecipe.id)}
-              onToggleFavorite={toggleFavorite}
-              t={t}
-              lang={lang}
-              hasPrev={filteredRecipes.findIndex(r => r.id === selectedRecipe.id) > 0}
-              hasNext={filteredRecipes.findIndex(r => r.id === selectedRecipe.id) < filteredRecipes.length - 1}
-              onPrev={() => {
-                const currentIndex = filteredRecipes.findIndex(r => r.id === selectedRecipe.id);
-                if (currentIndex > 0) {
-                  setSelectedRecipe(filteredRecipes[currentIndex - 1]);
-                }
-              }}
-              onNext={() => {
-                const currentIndex = filteredRecipes.findIndex(r => r.id === selectedRecipe.id);
-                if (currentIndex < filteredRecipes.length - 1) {
-                  setSelectedRecipe(filteredRecipes[currentIndex + 1]);
-                }
-              }}
-            />
-          )
-        }
-      </AnimatePresence >
-      <MyBarModal
-        isOpen={showMyBarModal}
-        onClose={() => {
-          setShowMyBarModal(false);
-          saveInventory(myInventory);
-        }}
-        myInventory={myInventory}
-        setMyInventory={setMyInventory}
-        lang={lang}
-        allIngredients={allIngredients}
-      />
-    </div >
+        {selectedRecipe && (
+          <RecipeDetailModal
+            recipe={selectedRecipe}
+            onClose={() => setSelectedRecipe(null)}
+            isFavorite={favorites.has(selectedRecipe.id)}
+            onToggleFavorite={toggleFavorite}
+            t={{
+              done: lang === 'zh' ? '完成' : 'Done Making It',
+              ingredients: lang === 'zh' ? '材料' : 'Ingredients',
+              steps: lang === 'zh' ? '步驟' : 'Steps',
+              specs: {
+                alcohol: lang === 'zh' ? '酒精濃度' : 'Alcohol',
+                alcoholDesc: lang === 'zh' ? '低 - 高' : 'LOW - HIGH',
+                sweetness: lang === 'zh' ? '甜度' : 'Sweetness',
+                sweetnessDesc: lang === 'zh' ? '不甜 - 甜' : 'DRY - SWEET',
+                ease: lang === 'zh' ? '易飲度' : 'Easy to drink',
+                easeDesc: lang === 'zh' ? '挑戰 - 輕鬆' : 'CHALLENGING - EASY'
+              }
+            }}
+            lang={lang}
+            hasPrev={false} // Disable prev/next for now in new IA as list context is variable
+            hasNext={false}
+            onPrev={() => { }}
+            onNext={() => { }}
+          />
+        )}
+      </AnimatePresence>
+    </div>
   );
 }
 

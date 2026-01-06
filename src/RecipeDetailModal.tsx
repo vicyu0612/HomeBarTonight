@@ -69,7 +69,7 @@ export const RecipeDetailModal = ({ recipe, onClose, isFavorite, onToggleFavorit
                             style={{ backdropFilter: "blur(12px)" }}
                             className="p-3 rounded-full bg-black/40 hover:bg-black/60 text-white border border-white/10 transition-all active:scale-95 shadow-lg"
                         >
-                            <Heart size={24} fill={isFavorite ? "#ef4444" : "none"} className={isFavorite ? "text-red-500" : ""} />
+                            <Heart size={24} fill={isFavorite ? "currentColor" : "none"} className={isFavorite ? "text-red-500" : ""} />
                         </button>
                         <button
                             onClick={onClose}
