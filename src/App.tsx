@@ -161,8 +161,18 @@ const ShakerIcon = () => (
   </svg>
 );
 
+// Language Detection Helper
+const getSystemLang = (): 'en' | 'zh' => {
+  try {
+    const lang = navigator.language.toLowerCase();
+    return lang.startsWith('zh') ? 'zh' : 'en';
+  } catch (e) {
+    return 'en'; // Default fallback
+  }
+};
+
 function App() {
-  const [lang, setLang] = useState<'en' | 'zh'>('zh');
+  const [lang, setLang] = useState<'en' | 'zh'>(getSystemLang());
   const [activeTab, setActiveTab] = useState<'all' | 'classic' | 'cvs' | 'favorites' | 'my_bar'>('all');
   const [activeSpirit, setActiveSpirit] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState('');
