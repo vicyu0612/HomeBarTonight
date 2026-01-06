@@ -5,7 +5,6 @@ import {
   Shuffle,
   Search,
   Martini,
-  ChevronRight,
   Store,
   Heart,
   User,
@@ -807,11 +806,11 @@ function App() {
                   </div>
                 </div>
 
-                <div className="flex-1 min-w-0 py-1">
-                  <div className="flex justify-between items-start pr-8">
+                <div className="flex-1 min-w-0 py-1 pr-8">
+                  <div className="flex justify-between items-start">
                     <h3 className="font-bold text-lg leading-tight truncate text-white">{recipe.name[lang]}</h3>
                   </div>
-                  <p className="text-zinc-400 text-xs mt-1 line-clamp-2">{recipe.description[lang]}</p>
+                  <p className="text-zinc-400 text-xs mt-1 truncate">{recipe.description[lang]}</p>
                   <div className="flex gap-2 mt-2">
                     {recipe.tags[lang].slice(0, 3).map(tag => (
                       <span key={tag} className="text-[10px] uppercase tracking-wider px-2 py-1 rounded-full bg-white/5 text-zinc-300 border border-white/5">
@@ -820,7 +819,7 @@ function App() {
                     ))}
                   </div>
                 </div>
-                <ChevronRight className="text-zinc-600 group-hover:text-white transition-colors mr-2" size={20} />
+
               </motion.div>
             ))}
           </AnimatePresence>
