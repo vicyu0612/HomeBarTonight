@@ -2102,5 +2102,115 @@ export const recipes: Recipe[] = [
         },
         color: '#3f2c22', // Chocolate
         image: '/cocktails/baileys-hot-chocolate.png'
+    },
+    {
+        id: 'whiskey-oolong',
+        name: { en: 'Whiskey Oolong', zh: '威士忌烏龍' },
+        type: 'cvs',
+        baseSpirit: ['whiskey'],
+        ingredients: {
+            en: [{ name: 'Whiskey', amount: '45ml' }, { name: 'Oolong Tea', amount: 'Top up' }],
+            zh: [{ name: '威士忌', amount: '45ml' }, { name: '烏龍茶', amount: '加滿' }]
+        },
+        steps: {
+            en: ['Fill a highball glass with ice.', 'Add whiskey.', 'Top with Oolong tea and stir.'],
+            zh: ['在海波杯中裝滿冰塊。', '倒入威士忌。', '加滿烏龍茶並攪拌均勻。']
+        },
+        tags: { en: ['cvs', 'easy', 'tea'], zh: ['超商', '簡單', '茶'] },
+        description: {
+            en: 'A classic Taiwanese favorite. The roasted notes of Oolong tea perfectly complement the whiskey.',
+            zh: '台灣經典喝法。烏龍茶的焙火香氣與威士忌完美契合，清爽解膩。'
+        },
+        specs: { alcohol: 5, sweetness: 3, ease: 10 },
+        color: '#d97706', // amber-600
+        image: '/cocktails/whiskey-oolong.png'
+    },
+    {
+        id: 'sake-calpis',
+        name: { en: 'Sake Calpis', zh: '可爾必思清酒' },
+        type: 'cvs',
+        baseSpirit: ['other'], // 'sake' not standard type yet? Using 'other' or 'sake' depends on types.ts. Assuming string.
+        ingredients: {
+            en: [{ name: 'Sake', amount: '60ml' }, { name: 'Calpis Water', amount: '60ml' }, { name: 'Soda Water', amount: 'Top up' }],
+            zh: [{ name: '清酒', amount: '60ml' }, { name: '可爾必思', amount: '60ml' }, { name: '氣泡水', amount: '適量' }]
+        },
+        steps: {
+            en: ['Fill glass with ice.', 'Pour sake and Calpis.', 'Top with soda water and stir gently.'],
+            zh: ['杯中加入冰塊。', '倒入清酒和可爾必思。', '加入氣泡水輕輕攪拌。']
+        },
+        tags: { en: ['cvs', 'sweet', 'refreshing'], zh: ['超商', '甜', '清爽'] },
+        description: {
+            en: 'A gentle and milky cocktail. The acidity of Calpis balances the rice flavor of Sake.',
+            zh: '溫柔的乳酸系調酒。可爾必思的酸甜平衡了清酒的米香，非常好入口。'
+        },
+        specs: { alcohol: 3, sweetness: 7, ease: 10 },
+        color: '#f8fafc', // slate-50
+        image: '/cocktails/sake-calpis.png'
+    },
+    {
+        id: 'vodka-energy',
+        name: { en: 'Vodka Energy', zh: '能量伏特加' },
+        type: 'cvs',
+        baseSpirit: ['vodka'],
+        ingredients: {
+            en: [{ name: 'Vodka', amount: '45ml' }, { name: 'Energy Drink', amount: 'Top up' }],
+            zh: [{ name: '伏特加', amount: '45ml' }, { name: '能量飲料', amount: '加滿' }]
+        },
+        steps: {
+            en: ['Fill a tall glass with ice.', 'Add vodka.', 'Top with energy drink.'],
+            zh: ['高球杯裝滿冰塊。', '加入伏特加。', '倒滿能量飲料。']
+        },
+        tags: { en: ['cvs', 'party', 'energy'], zh: ['超商', '派對', '能量'] },
+        description: {
+            en: 'The fuel for your night out. Electrifying and sweet.',
+            zh: '夜晚的燃料。充滿電力的口感，讓你精神百倍。'
+        },
+        specs: { alcohol: 5, sweetness: 8, ease: 10 },
+        color: '#bef264', // lime-300
+        image: '/cocktails/vodka-energy.png'
+    },
+    {
+        id: 'gin-sports',
+        name: { en: 'Gin Sports', zh: '運動琴人' },
+        type: 'cvs',
+        baseSpirit: ['gin'],
+        ingredients: {
+            en: [{ name: 'Gin', amount: '45ml' }, { name: 'Sports Drink (Pocari)', amount: 'Top up' }, { name: 'Lemon', amount: '1 slice' }],
+            zh: [{ name: '琴酒', amount: '45ml' }, { name: '運動飲料 (寶礦力)', amount: '加滿' }, { name: '檸檬', amount: '1片' }]
+        },
+        steps: {
+            en: ['Build in a highball glass with ice.', 'Add gin and top with sports drink.', 'Garnish with lemon.'],
+            zh: ['在海波杯中加入冰塊。', '加入琴酒並倒滿運動飲料。', '擠入檸檬汁並裝飾。']
+        },
+        tags: { en: ['cvs', 'refreshing', 'hydration'], zh: ['超商', '清爽', '補水'] },
+        description: {
+            en: 'Unexpectedly hydrating. The botanicals of gin mix surprisingly well with the grapefruit notes of sports drinks.',
+            zh: '意外的清爽補水組合。琴酒的杜松子香氣與運動飲料的柚子味非常搭。'
+        },
+        specs: { alcohol: 4, sweetness: 5, ease: 10 },
+        color: '#e0f2fe', // sky-100
+        image: '/cocktails/gin-sports.png'
+    },
+    {
+        id: 'lemon-tea-whiskey',
+        name: { en: 'Lemon Tea Whiskey', zh: '檸檬茶威士忌' },
+        type: 'cvs',
+        baseSpirit: ['whiskey'],
+        ingredients: {
+            en: [{ name: 'Whiskey', amount: '45ml' }, { name: 'Lemon Tea', amount: 'Top up' }],
+            zh: [{ name: '威士忌', amount: '45ml' }, { name: '檸檬紅茶', amount: '加滿' }]
+        },
+        steps: {
+            en: ['Fill glass with ice.', 'Pour whiskey.', 'Top with sweet lemon tea.'],
+            zh: ['杯中加入冰塊。', '倒入威士忌。', '加滿檸檬紅茶。']
+        },
+        tags: { en: ['cvs', 'sweet', 'easy'], zh: ['超商', '甜', '簡單'] },
+        description: {
+            en: 'Like a boozy iced tea. Sweet, tart, and dangerously drinkable.',
+            zh: '就像是成人的檸檬紅茶。酸甜順口，小心喝太多。'
+        },
+        specs: { alcohol: 5, sweetness: 7, ease: 10 },
+        color: '#a16207', // yellow-700
+        image: '/cocktails/lemon-tea-whiskey.png'
     }
 ];
