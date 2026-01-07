@@ -192,7 +192,10 @@ export function ExplorePage({
                             </div>
 
                             {/* Horizontal Scroll List */}
-                            <div className="overflow-x-auto no-scrollbar pb-4 flex gap-4 snap-x snap-mandatory">
+                            <div
+                                className="overflow-x-auto no-scrollbar pb-4 flex gap-4 snap-x snap-mandatory"
+                                style={{ WebkitOverflowScrolling: 'touch' }}
+                            >
                                 <div className="snap-start shrink-0 w-0" /> {/* Leading Spacer (w-0 + gap-4 = 1rem offset) */}
                                 {getPreviewRecipes(collection).map(recipe => (
                                     <div key={recipe.id} className="snap-start shrink-0 w-[160px]">

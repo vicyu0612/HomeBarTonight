@@ -130,14 +130,16 @@ export function CocktailsPage({ allRecipes, favorites, toggleFavorite, onSelectR
             )}>
                 <div
                     className={clsx(
-                        "absolute inset-0 bg-gradient-to-b from-black via-black/80 to-transparent -z-10 transition-opacity duration-300",
-                        isSticky ? "opacity-100" : "opacity-0"
+                        "absolute inset-0 bg-gradient-to-b from-black/90 via-black/60 to-transparent -z-10 transition-opacity duration-300",
+                        isSticky ? "opacity-100 visible" : "opacity-0 invisible"
                     )}
                     style={{
-                        backdropFilter: 'blur(60px)',
-                        WebkitBackdropFilter: 'blur(60px)',
-                        maskImage: 'linear-gradient(to bottom, black 0%, transparent 100%)',
-                        WebkitMaskImage: 'linear-gradient(to bottom, black 0%, transparent 100%)'
+                        backdropFilter: 'blur(20px)',
+                        WebkitBackdropFilter: 'blur(20px)',
+                        maskImage: 'linear-gradient(to bottom, black 50%, transparent 100%)',
+                        WebkitMaskImage: 'linear-gradient(to bottom, black 50%, transparent 100%)',
+                        maskRepeat: 'no-repeat',
+                        WebkitMaskRepeat: 'no-repeat'
                     }}
                 />
 
