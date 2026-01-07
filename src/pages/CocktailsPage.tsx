@@ -128,10 +128,18 @@ export function CocktailsPage({ allRecipes, favorites, toggleFavorite, onSelectR
                 // Container is always transparent now, enabling the inner gradient div to handle the look
                 "bg-transparent"
             )}>
-                <div className={clsx(
-                    "absolute inset-0 bg-gradient-to-b from-black via-black/80 to-transparent -z-10 transition-opacity duration-300",
-                    isSticky ? "opacity-100" : "opacity-0"
-                )} />
+                <div
+                    className={clsx(
+                        "absolute inset-0 bg-gradient-to-b from-black via-black/80 to-transparent -z-10 transition-opacity duration-300",
+                        isSticky ? "opacity-100" : "opacity-0"
+                    )}
+                    style={{
+                        backdropFilter: 'blur(60px)',
+                        WebkitBackdropFilter: 'blur(60px)',
+                        maskImage: 'linear-gradient(to bottom, black 0%, transparent 100%)',
+                        WebkitMaskImage: 'linear-gradient(to bottom, black 0%, transparent 100%)'
+                    }}
+                />
 
                 {/* Search Bar & Filter Button */}
                 <div className="flex gap-3 mb-4 pointer-events-auto">

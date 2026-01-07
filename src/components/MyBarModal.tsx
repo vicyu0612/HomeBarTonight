@@ -116,9 +116,22 @@ export function MyBarModal({
                     >
                         <div className={clsx(
                             "absolute top-0 left-0 right-0 z-20 flex justify-between items-center transition-all duration-300",
-                            "px-4 pb-3 pt-[calc(0.75rem+env(safe-area-inset-top))] md:p-6",
-                            isScrolled ? "bg-gradient-to-b from-zinc-900 to-zinc-900/0" : "bg-transparent"
+                            "px-4 pb-3 pt-[calc(0.75rem+env(safe-area-inset-top))] md:p-6"
                         )}>
+                            {/* Gradient Blur Background */}
+                            <div
+                                className={clsx(
+                                    "absolute inset-0 -z-10 transition-opacity duration-300",
+                                    isScrolled ? "opacity-100" : "opacity-0",
+                                    "bg-gradient-to-b from-zinc-900 to-transparent"
+                                )}
+                                style={{
+                                    backdropFilter: 'blur(60px)',
+                                    WebkitBackdropFilter: 'blur(60px)',
+                                    maskImage: 'linear-gradient(to bottom, black 0%, transparent 100%)',
+                                    WebkitMaskImage: 'linear-gradient(to bottom, black 0%, transparent 100%)'
+                                }}
+                            />
                             {/* Inline Title (Initially Hidden) */}
                             <div className={clsx(
                                 "absolute left-1/2 -translate-x-1/2 font-bold text-white transition-opacity duration-300",

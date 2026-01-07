@@ -27,9 +27,22 @@ export function FavoritesPage({ recipes, favorites, toggleFavorite, onSelectReci
             {/* Sticky Header */}
             <div className={clsx(
                 "absolute top-0 left-0 right-0 z-20 flex justify-center items-center transition-all duration-300",
-                "h-[calc(3rem+env(safe-area-inset-top))] px-4 pb-2 pt-[calc(0.5rem+env(safe-area-inset-top))]",
-                isScrolled ? "bg-gradient-to-b from-black to-black/0" : "bg-transparent"
+                "h-[calc(3rem+env(safe-area-inset-top))] px-4 pb-2 pt-[calc(0.5rem+env(safe-area-inset-top))]"
             )}>
+                {/* Gradient Blur Background */}
+                <div
+                    className={clsx(
+                        "absolute inset-0 -z-10 transition-opacity duration-300",
+                        isScrolled ? "opacity-100" : "opacity-0",
+                        "bg-gradient-to-b from-black to-transparent"
+                    )}
+                    style={{
+                        backdropFilter: 'blur(60px)',
+                        WebkitBackdropFilter: 'blur(60px)',
+                        maskImage: 'linear-gradient(to bottom, black 0%, transparent 100%)',
+                        WebkitMaskImage: 'linear-gradient(to bottom, black 0%, transparent 100%)'
+                    }}
+                />
                 <span className={clsx(
                     "font-bold text-white transition-opacity duration-300",
                     isScrolled ? "opacity-100" : "opacity-0"
