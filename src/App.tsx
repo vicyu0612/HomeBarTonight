@@ -17,6 +17,7 @@ import { CocktailsPage } from './pages/CocktailsPage';
 import { MyBarPage } from './pages/MyBarPage';
 import { FavoritesPage } from './pages/FavoritesPage';
 import { ExplorePage } from './pages/ExplorePage';
+import { CollectionDetailPage } from './pages/CollectionDetailPage';
 import { SettingsPage } from './pages/SettingsPage';
 
 
@@ -34,9 +35,10 @@ const getSystemLang = (): 'en' | 'zh' => {
 function App() {
   // Global State
   const [lang, setLang] = useState<'en' | 'zh'>(getSystemLang());
-  const [activeTab, setActiveTab] = useState<TabId>('cocktails');
+  const [activeTab, setActiveTab] = useState<TabId>('explore');
   const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(null);
   const [currentList, setCurrentList] = useState<Recipe[]>([]);
+  const [activeCollectionId, setActiveCollectionId] = useState<string | null>(null);
   const [isShaking, setIsShaking] = useState(false);
 
   // Auth State
@@ -247,9 +249,28 @@ function App() {
       {/* Main Content Area */}
       <main className="flex-1 overflow-hidden relative max-w-5xl mx-auto w-full">
 
-        {/* Explore Page (Hidden Toggle) */}
-        <div className={activeTab === 'explore' ? 'h-full overflow-y-auto no-scrollbar pb-24' : 'hidden'}>
-          <ExplorePage lang={lang} />
+        {/* Explore Page */}
+        <div className={activeTab === 'explore' ? 'h-full overflow-hidden pb-24' : 'hidden'}>
+          {activeCollectionId ? (
+            <CollectionDetailPage
+              collectionId={activeCollectionId}
+              onBack={() => setActiveCollectionId(null)}
+              allRecipes={allRecipes}
+              onSelectRecipe={handleSelectRecipe}
+              toggleFavorite={toggleFavorite}
+              favorites={favorites}
+              lang={lang}
+            />
+          ) : (
+            <ExplorePage
+              lang={lang}
+              onSelectCollection={setActiveCollectionId}
+              allRecipes={allRecipes}
+              onSelectRecipe={handleSelectRecipe}
+              toggleFavorite={toggleFavorite}
+              favorites={favorites}
+            />
+          )}
         </div>
 
         {/* Cocktails Page (Persistent) */}
