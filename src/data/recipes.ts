@@ -1951,5 +1951,156 @@ export const recipes: Recipe[] = [
         },
         color: '#451a03', // Amber-950
         image: '/cocktails/irish-coffee.png'
+    },
+    {
+        id: 'hot-buttered-rum',
+        name: { en: 'Hot Buttered Rum', zh: '熱奶油蘭姆酒' },
+        type: 'classic',
+        baseSpirit: ['rum'],
+        ingredients: {
+            en: [
+                { name: 'Aged Rum', amount: '60ml' },
+                { name: 'Butter', amount: '1 tbsp' },
+                { name: 'Brown Sugar', amount: '1 tsp' },
+                { name: 'Hot Water', amount: 'Top up' },
+                { name: 'Spices (Cinnamon, Nutmeg)', amount: 'Pinch' }
+            ],
+            zh: [
+                { name: '陳年蘭姆酒', amount: '60ml' },
+                { name: '奶油', amount: '1大匙' },
+                { name: '紅糖', amount: '1茶匙' },
+                { name: '熱水', amount: '加滿' },
+                { name: '香料 (肉桂, 豆蔻)', amount: '少許' }
+            ]
+        },
+        steps: {
+            en: [
+                'Muddle butter, sugar, and spices in a mug.',
+                'Add rum and top with hot water.',
+                'Stir until butter is melted and incorporated.',
+                'Garnish with a cinnamon stick.'
+            ],
+            zh: [
+                '在馬克杯中混合奶油、糖和香料。',
+                '加入蘭姆酒並注入熱水。',
+                '攪拌至奶油融化並融合。',
+                '用肉桂棒裝飾。'
+            ]
+        },
+        tags: {
+            en: ['hot', 'creamy', 'winter', 'savory'],
+            zh: ['熱', '綿密', '冬天', '鹹甜']
+        },
+        description: {
+            en: 'Rich, buttery, and comforting. A hug in a mug.',
+            zh: '濃郁奶油香，喝一口就像被擁抱的溫暖。'
+        },
+        specs: {
+            alcohol: 5,
+            sweetness: 7,
+            ease: 8
+        },
+        color: '#d97706', // Amber-600
+        image: '/cocktails/hot-buttered-rum.png'
+    },
+    {
+        id: 'eggnog',
+        name: { en: 'Eggnog', zh: '蛋酒' },
+        type: 'classic',
+        baseSpirit: ['brandy', 'rum'],
+        ingredients: {
+            en: [
+                { name: 'Brandy/Rum', amount: '60ml' },
+                { name: 'Milk', amount: '60ml' },
+                { name: 'Heavy Cream', amount: '30ml' },
+                { name: 'Egg Yolk', amount: '1' },
+                { name: 'Sugar', amount: '1 tbsp' }
+            ],
+            zh: [
+                { name: '白蘭地/蘭姆酒', amount: '60ml' },
+                { name: '牛奶', amount: '60ml' },
+                { name: '鮮奶油', amount: '30ml' },
+                { name: '蛋黃', amount: '1顆' },
+                { name: '糖', amount: '1大匙' }
+            ]
+        },
+        steps: {
+            en: [
+                'Shake egg yolk, sugar, milk, and cream with ice.',
+                'Add spirit and shake again.',
+                'Strain into a glass.',
+                'Dust with freshly grated nutmeg.'
+            ],
+            zh: [
+                '將蛋黃、糖、牛奶和鮮奶油加冰搖盪。',
+                '加入烈酒再次搖盪。',
+                '濾入杯中。',
+                '撒上現磨豆蔻粉。'
+            ]
+        },
+        tags: {
+            en: ['creamy', 'christmas', 'rich'],
+            zh: ['濃郁', '聖誕', '奶香']
+        },
+        description: {
+            en: 'The quintessential Christmas drink.',
+            zh: '聖誕節的代名詞，濃郁香甜。'
+        },
+        specs: {
+            alcohol: 6,
+            sweetness: 8,
+            ease: 6
+        },
+        color: '#fef3c7', // Amber-100
+        image: '/cocktails/eggnog.png'
+    },
+    {
+        id: 'baileys-hot-chocolate',
+        name: { en: 'Baileys Hot Chocolate', zh: '貝禮詩熱可可' },
+        type: 'classic',
+        baseSpirit: ['liqueur'],
+        ingredients: {
+            en: [
+                { name: 'Baileys Irish Cream', amount: '50ml' },
+                { name: 'Hot Chocolate', amount: '150ml' },
+                { name: 'Whipped Cream', amount: 'Top' },
+                { name: 'Marshmallows', amount: 'Optional' }
+            ],
+            zh: [
+                { name: '貝禮詩奶酒', amount: '50ml' },
+                { name: '熱可可', amount: '150ml' },
+                { name: '鮮奶油', amount: '適量' },
+                { name: '棉花糖', amount: '選用' }
+            ]
+        },
+        steps: {
+            en: [
+                'Prepare your favorite hot chocolate.',
+                'Stir in Baileys.',
+                'Top generously with whipped cream and marshmallows.',
+                'Drizzle with chocolate sauce if desired.'
+            ],
+            zh: [
+                '準備一杯熱可可。',
+                '加入貝禮詩奶酒攪拌。',
+                '擠上大量鮮奶油並放上棉花糖。',
+                '可淋上巧克力醬。'
+            ]
+        },
+        tags: {
+            en: ['hot', 'sweet', 'chocolaty', 'dessert'],
+            zh: ['熱', '甜', '巧克力', '甜點']
+        },
+        description: {
+            en: 'Indulgent, sweet, and warming. The ultimate winter treat.',
+            zh: '極致的甜蜜與溫暖，冬日最棒的享受。'
+        },
+        specs: {
+            alcohol: 3,
+            sweetness: 10,
+            ease: 10
+        },
+        color: '#3f2c22', // Chocolate
+        image: '/cocktails/baileys-hot-chocolate.png'
     }
 ];

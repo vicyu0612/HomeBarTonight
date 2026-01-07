@@ -250,7 +250,7 @@ function App() {
       <main className="flex-1 overflow-hidden relative max-w-5xl mx-auto w-full">
 
         {/* Explore Page */}
-        <div className={activeTab === 'explore' ? 'h-full overflow-hidden pb-24' : 'hidden'}>
+        <div className={activeTab === 'explore' ? 'h-full overflow-hidden' : 'hidden'}>
           {activeCollectionId ? (
             <CollectionDetailPage
               collectionId={activeCollectionId}

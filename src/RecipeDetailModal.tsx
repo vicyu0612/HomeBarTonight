@@ -59,26 +59,29 @@ export const RecipeDetailModal = ({ recipe, onClose, isFavorite, onToggleFavorit
                     <motion.div className="absolute inset-0 bg-black" style={{ opacity: overlayOpacity }} />
                 </motion.div>
 
-                {/* Buttons (Fixed top) */}
-                <div className="absolute top-0 left-0 right-0 z-30 p-6 pt-12 sm:pt-6 flex justify-between items-start pointer-events-none">
-                    {/* Invisible spacer */}
-                    <div />
-                    <div className="flex gap-3 pointer-events-auto">
+                {/* Header Actions */}
+                <div className="absolute top-0 left-0 right-0 z-30 p-6 pt-12 sm:pt-6 flex justify-end gap-3 items-start pointer-events-none">
+                    {onToggleFavorite && (
                         <button
-                            onClick={(e) => onToggleFavorite(recipe.id, e)}
-                            style={{ backdropFilter: "blur(12px)" }}
-                            className="p-3 rounded-full bg-black/40 hover:bg-black/60 text-white border border-white/10 transition-all active:scale-95 shadow-lg"
+                            onClick={() => onToggleFavorite(recipe.id)}
+                            className={clsx(
+                                "pointer-events-auto p-3 rounded-full transition-all active:scale-95 shadow-lg",
+                                "bg-black/30 backdrop-blur-md text-white border border-white/10 hover:bg-black/50" // Unified Style
+                            )}
                         >
-                            <Heart size={24} fill={isFavorite ? "currentColor" : "none"} className={isFavorite ? "text-red-500" : ""} />
+                            <Heart
+                                size={24}
+                                className={clsx("transition-colors", isFavorite ? "fill-red-500 text-red-500" : "text-white")}
+                            />
                         </button>
-                        <button
-                            onClick={onClose}
-                            style={{ backdropFilter: "blur(12px)" }}
-                            className="p-3 rounded-full bg-black/40 hover:bg-black/60 text-white border border-white/10 transition-all active:scale-95 shadow-lg"
-                        >
-                            <X size={24} />
-                        </button>
-                    </div>
+                    )}
+
+                    <button
+                        onClick={onClose}
+                        className="pointer-events-auto p-3 rounded-full bg-black/30 backdrop-blur-md text-white border border-white/10 transition-all active:scale-95 shadow-lg hover:bg-black/50"
+                    >
+                        <X size={24} />
+                    </button>
                 </div>
 
                 {/* Floating Navigation Buttons (Bottom) */}

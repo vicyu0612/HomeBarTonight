@@ -18,7 +18,7 @@ export const collections: Collection[] = [
         title: { en: 'Winter Warmers', zh: '過年暖心特輯' },
         subtitle: { en: 'Cozy up with these hot cocktails', zh: '寒流來襲？來杯熱酒暖暖身' },
         type: 'curated',
-        recipeIds: ['hot-toddy', 'mulled-wine', 'irish-coffee'], // IDs we just added
+        recipeIds: ['hot-toddy', 'mulled-wine', 'irish-coffee', 'hot-buttered-rum', 'eggnog', 'baileys-hot-chocolate'], // IDs we just added
         themeColor: 'from-orange-600 via-red-600 to-rose-900',
         coverImage: '/cocktails/cny_mahjong.png',
         description: {
@@ -28,13 +28,14 @@ export const collections: Collection[] = [
     },
     {
         id: 'cvs-hacks',
-        title: { en: 'CVS Mixology', zh: '超商創意特調' },
-        subtitle: { en: 'No fancy bar needed', zh: '便利商店就能買齊材料' },
+        title: { en: 'Convenience Store Mixology', zh: '超商創意特調' },
+        subtitle: { en: 'Creative drinks from the corner store', zh: '便利商店就能買齊材料' },
         type: 'filter',
         filter: (r) => r.type === 'cvs',
         themeColor: 'from-blue-600 to-indigo-900',
+        coverImage: '/cocktails/cvs_party.png',
         description: {
-            en: 'Simple, accessible recipes using ingredients you can find at your local convenience store.',
+            en: 'Quickly grab ingredients from your local store and craft creative cocktails. No professional bar gear needed.',
             zh: '不需專業酒吧設備，用巷口超商買得到的材料，也能輕鬆調出好喝的酒。'
         }
     },
@@ -45,6 +46,7 @@ export const collections: Collection[] = [
         type: 'filter',
         filter: (r) => r.tags.en.includes('party') || r.specs.ease >= 8,
         themeColor: 'from-purple-600 to-pink-900',
+        coverImage: '/cocktails/party_starters.png',
         description: {
             en: 'Fun, fruity, and easy to make in batches.',
             zh: '好喝、易飲，而且適合大量製作分享的派對酒譜。'

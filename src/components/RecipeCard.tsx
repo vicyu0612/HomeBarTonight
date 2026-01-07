@@ -22,7 +22,7 @@ export function RecipeCard({
     variant = 'horizontal',
     ...motionProps
 }: RecipeCardProps) {
-    // Shared Heart Button
+    // Unified Heart Button Style
     const HeartButton = (
         <button
             onClick={(e) => {
@@ -30,15 +30,17 @@ export function RecipeCard({
                 toggleFavorite(recipe.id, e);
             }}
             className={clsx(
-                "p-2 rounded-full transition-colors",
-                variant === 'vertical'
-                    ? "bg-black/40 backdrop-blur-md text-white hover:bg-black/60"
-                    : "text-zinc-500 hover:text-zinc-300 hover:bg-white/5 -mt-1 -mr-1",
-                isFavorite && variant === 'horizontal' ? "text-red-500 bg-red-500/10" : "",
-                isFavorite && variant === 'vertical' ? "text-red-500 bg-black/40" : ""
+                "p-2 rounded-full transition-all active:scale-95",
+                "bg-black/30 backdrop-blur-md text-white hover:bg-black/50 border border-white/10" // Constant Glass Style
             )}
         >
-            <Heart size={20} className={clsx(isFavorite && "fill-red-500")} />
+            <Heart
+                size={18}
+                className={clsx(
+                    "transition-colors",
+                    isFavorite ? "fill-red-500 text-red-500" : "text-white" // Red Fill + Red Stroke (No White Border)
+                )}
+            />
         </button>
     );
 
@@ -90,7 +92,7 @@ export function RecipeCard({
 
                     {/* Tags */}
                     <div className="flex flex-wrap gap-1.5 mt-auto">
-                        {recipe.tags[lang].slice(0, 2).map((tag) => (
+                        {recipe.tags[lang].slice(0, 3).map((tag) => (
                             <span
                                 key={tag}
                                 className="text-[10px] uppercase font-bold tracking-wider text-zinc-400 bg-white/5 px-2 py-0.5 rounded-md border border-white/5"
@@ -125,9 +127,11 @@ export function RecipeCard({
                             <h3 className="text-white font-bold text-lg leading-tight truncate pr-2">
                                 {recipe.name[lang]}
                             </h3>
-                            {HeartButton}
+                            <div className="-mr-1 -mt-1">
+                                {HeartButton}
+                            </div>
                         </div>
-                        <p className="text-zinc-400 text-xs line-clamp-2 leading-tight pr-7 h-8">
+                        <p className="text-zinc-400 text-xs line-clamp-2 leading-tight pr-0 h-8">
                             {recipe.description[lang]}
                         </p>
                     </div>
