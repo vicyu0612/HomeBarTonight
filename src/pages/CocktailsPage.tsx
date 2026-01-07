@@ -112,7 +112,7 @@ export function CocktailsPage({ allRecipes, favorites, toggleFavorite, onSelectR
                 <h1 className="text-3xl font-bold text-white">{t.title}</h1>
                 <button
                     onClick={onShake}
-                    className="w-10 h-10 rounded-full bg-indigo-500/20 flex items-center justify-center border border-indigo-500/30 text-indigo-400 active:scale-95 transition-transform"
+                    className="w-[50px] h-[50px] rounded-full bg-indigo-500/20 flex items-center justify-center border border-indigo-500/30 text-indigo-400 active:scale-95 transition-transform"
                 >
                     <ShakerIcon />
                 </button>
