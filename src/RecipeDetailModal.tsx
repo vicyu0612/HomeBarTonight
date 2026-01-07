@@ -116,7 +116,7 @@ export const RecipeDetailModal = ({ recipe, onClose, isFavorite, onToggleFavorit
                             <h2 className="text-4xl font-bold text-white mb-3 leading-tight tracking-tight">{recipe.name[lang]}</h2>
                             <div className="flex gap-2 flex-wrap mb-4">
                                 {recipe.tags[lang].map((tag: string) => (
-                                    <span key={tag} className="text-xs uppercase font-bold tracking-wider text-zinc-400 bg-white/5 px-2 py-1 rounded-md border border-white/5">#{tag}</span>
+                                    <span key={tag} className="text-xs uppercase font-bold tracking-wider text-zinc-400 bg-white/5 px-2 py-1 rounded-md border border-white/5">{tag}</span>
                                 ))}
                             </div>
                             <p className="text-zinc-300 leading-relaxed text-lg font-light">

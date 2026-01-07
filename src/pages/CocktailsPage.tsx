@@ -1,17 +1,18 @@
 import { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, X, Martini, Store, Heart, LayoutGrid, SlidersHorizontal } from 'lucide-react';
+import { Search, X, Martini, Store, LayoutGrid, SlidersHorizontal } from 'lucide-react';
 import type { Recipe } from '../data/recipes';
 import clsx from 'clsx';
 
 // Shaker Icon Component
 import { ShakerIcon } from '../components/ShakerIcon';
+import { RecipeCard } from '../components/RecipeCard';
 
 interface CocktailsPageProps {
     allRecipes: Recipe[];
     favorites: Set<string>;
     toggleFavorite: (id: string, e?: React.MouseEvent) => void;
-    onSelectRecipe: (recipe: Recipe) => void;
+    onSelectRecipe: (recipe: Recipe, list?: Recipe[]) => void;
     lang: 'en' | 'zh';
     onShake: () => void;
 }
@@ -22,13 +23,46 @@ export function CocktailsPage({ allRecipes, favorites, toggleFavorite, onSelectR
     const [searchQuery, setSearchQuery] = useState('');
     const [showFilter, setShowFilter] = useState(false);
 
+    // Swipe Logic
+    const [touchStart, setTouchStart] = useState<number | null>(null);
+    const [touchEnd, setTouchEnd] = useState<number | null>(null);
+
+    const minSwipeDistance = 50;
+    const tabs: ('all' | 'cvs' | 'classic')[] = ['all', 'cvs', 'classic'];
+
+    const onTouchStart = (e: React.TouchEvent) => {
+        setTouchEnd(null);
+        setTouchStart(e.targetTouches[0].clientX);
+    };
+
+    const onTouchMove = (e: React.TouchEvent) => {
+        setTouchEnd(e.targetTouches[0].clientX);
+    };
+
+    const onTouchEnd = () => {
+        if (!touchStart || !touchEnd) return;
+        const distance = touchStart - touchEnd;
+        const isLeftSwipe = distance > minSwipeDistance;
+        const isRightSwipe = distance < -minSwipeDistance;
+
+        if (isLeftSwipe || isRightSwipe) {
+            const currentIndex = tabs.indexOf(activeSubTab);
+            if (isLeftSwipe && currentIndex < tabs.length - 1) {
+                setActiveSubTab(tabs[currentIndex + 1]);
+            }
+            if (isRightSwipe && currentIndex > 0) {
+                setActiveSubTab(tabs[currentIndex - 1]);
+            }
+        }
+    };
+
     const t = {
         title: lang === 'zh' ? '酒譜' : 'Cocktails',
         searchPlaceholder: lang === 'zh' ? '搜尋調酒或材料...' : 'Search cocktails or ingredients...',
         tabs: {
             all: lang === 'zh' ? '全部' : 'All',
             classic: lang === 'zh' ? '經典' : 'Classic',
-            cvs: lang === 'zh' ? '超商' : 'CVS'
+            cvs: lang === 'zh' ? '超商速調' : 'Easy Mixes'
         },
         spirits: {
             all: lang === 'zh' ? '所有基酒' : 'All Spirits',
@@ -67,7 +101,12 @@ export function CocktailsPage({ allRecipes, favorites, toggleFavorite, onSelectR
     }, [allRecipes, activeSubTab, activeSpirit, searchQuery]);
 
     return (
-        <div className="min-h-full flex flex-col pt-12">
+        <div
+            className="min-h-full flex flex-col pt-12"
+            onTouchStart={onTouchStart}
+            onTouchMove={onTouchMove}
+            onTouchEnd={onTouchEnd}
+        >
             {/* Header (Scrolls away) */}
             <div className="px-6 pb-4 flex justify-between items-center bg-transparent">
                 <h1 className="text-3xl font-bold text-white">{t.title}</h1>
@@ -122,7 +161,7 @@ export function CocktailsPage({ allRecipes, favorites, toggleFavorite, onSelectR
                         onClick={() => setActiveSubTab('all')}
                         className={clsx(
                             "flex-1 py-2.5 rounded-full text-sm font-medium transition-all flex items-center justify-center gap-2",
-                            activeSubTab === 'all' ? "bg-white/10 backdrop-blur-md text-white shadow-lg border border-white/10" : "text-zinc-500 hover:text-zinc-300"
+                            activeSubTab === 'all' ? "bg-white/5 backdrop-blur-md text-white shadow-lg border border-white/5" : "text-zinc-500 hover:text-zinc-200 hover:bg-white/5"
                         )}
                     >
                         <LayoutGrid size={16} />
@@ -132,7 +171,7 @@ export function CocktailsPage({ allRecipes, favorites, toggleFavorite, onSelectR
                         onClick={() => setActiveSubTab('cvs')}
                         className={clsx(
                             "flex-1 py-2.5 rounded-full text-sm font-medium transition-all flex items-center justify-center gap-2",
-                            activeSubTab === 'cvs' ? "bg-white/10 backdrop-blur-md text-white shadow-lg border border-white/10" : "text-zinc-500 hover:text-zinc-300"
+                            activeSubTab === 'cvs' ? "bg-white/5 backdrop-blur-md text-white shadow-lg border border-white/5" : "text-zinc-500 hover:text-zinc-200 hover:bg-white/5"
                         )}
                     >
                         <Store size={16} />
@@ -142,7 +181,7 @@ export function CocktailsPage({ allRecipes, favorites, toggleFavorite, onSelectR
                         onClick={() => setActiveSubTab('classic')}
                         className={clsx(
                             "flex-1 py-2.5 rounded-full text-sm font-medium transition-all flex items-center justify-center gap-2",
-                            activeSubTab === 'classic' ? "bg-white/10 backdrop-blur-md text-white shadow-lg border border-white/10" : "text-zinc-500 hover:text-zinc-300"
+                            activeSubTab === 'classic' ? "bg-white/5 backdrop-blur-md text-white shadow-lg border border-white/5" : "text-zinc-500 hover:text-zinc-200 hover:bg-white/5"
                         )}
                     >
                         <Martini size={16} />
@@ -226,58 +265,16 @@ export function CocktailsPage({ allRecipes, favorites, toggleFavorite, onSelectR
             <div className="px-6 flex-1 pt-4">
                 {filteredRecipes.length > 0 ? (
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pb-12">
-                        <AnimatePresence mode='popLayout'>
-                            {filteredRecipes.map((recipe) => (
-                                <motion.div
-                                    initial={{ opacity: 0 }}
-                                    animate={{ opacity: 1 }}
-                                    exit={{ opacity: 0 }}
-                                    transition={{ duration: 0.5 }}
-                                    key={recipe.id}
-                                    onClick={() => onSelectRecipe(recipe)}
-                                    className="bg-zinc-800/30 backdrop-blur-md border border-white/10 shadow-lg rounded-2xl overflow-hidden active:scale-[0.98] transition-all"
-                                >
-                                    <div className="flex p-3 gap-4">
-                                        <div className="w-[120px] h-[120px] rounded-xl bg-zinc-800 shrink-0 overflow-hidden relative">
-                                            {recipe.image ? (
-                                                <img src={recipe.image} alt={recipe.name.en} className="w-full h-full object-cover" loading="lazy" />
-                                            ) : (
-                                                <div className="w-full h-full flex items-center justify-center text-zinc-700">
-                                                    <Martini size={24} />
-                                                </div>
-                                            )}
-                                        </div>
-                                        <div className="flex-1 min-w-0 flex flex-col h-[120px] justify-between">
-                                            <div>
-                                                <div className="flex justify-between items-start mb-0.5">
-                                                    <h3 className="text-white font-bold text-lg leading-tight truncate pr-2">{lang === 'zh' ? recipe.name.zh : recipe.name.en}</h3>
-                                                    <motion.button
-                                                        whileTap={{ scale: 0.8 }}
-                                                        onClick={(e) => toggleFavorite(recipe.id, e)}
-                                                        className={clsx(
-                                                            "p-2 rounded-full transition-colors -mt-1 -mr-1",
-                                                            favorites.has(recipe.id) ? "text-red-500 bg-red-500/10" : "text-zinc-500 hover:text-zinc-300"
-                                                        )}
-                                                    >
-                                                        <Heart size={20} className={clsx(favorites.has(recipe.id) && "fill-red-500")} />
-                                                    </motion.button>
-                                                </div>
-                                                <p className="text-zinc-400 text-xs line-clamp-2 leading-tight pr-7 h-8">
-                                                    {recipe.description[lang]}
-                                                </p>
-                                            </div>
-                                            <div className="flex flex-wrap gap-1.5 content-end">
-                                                {recipe.tags[lang].slice(0, 3).map((tag: string) => (
-                                                    <span key={tag} className="text-[10px] uppercase font-bold tracking-wider text-zinc-400 bg-white/5 px-2 py-0.5 rounded-md border border-white/5">
-                                                        #{tag}
-                                                    </span>
-                                                ))}
-                                            </div>
-                                        </div>
-                                    </div>
-                                </motion.div>
-                            ))}
-                        </AnimatePresence>
+                        {filteredRecipes.map((recipe) => (
+                            <RecipeCard
+                                key={recipe.id}
+                                recipe={recipe}
+                                lang={lang}
+                                isFavorite={favorites.has(recipe.id)}
+                                toggleFavorite={toggleFavorite}
+                                onClick={() => onSelectRecipe(recipe, filteredRecipes)}
+                            />
+                        ))}
                     </div >
                 ) : (
                     <div className="flex flex-col items-center justify-center py-20 text-zinc-500">

@@ -39,7 +39,7 @@ export function TabBar({ activeTab, onTabChange, lang }: TabBarProps) {
                             {isActive && (
                                 <motion.div
                                     layoutId="tab-pill"
-                                    className="absolute inset-0 bg-zinc-800/60 rounded-full"
+                                    className="absolute inset-0 bg-zinc-800/40 rounded-full"
                                     transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
                                 />
                             )}

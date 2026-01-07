@@ -36,6 +36,7 @@ function App() {
   const [lang, setLang] = useState<'en' | 'zh'>(getSystemLang());
   const [activeTab, setActiveTab] = useState<TabId>('cocktails');
   const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(null);
+  const [currentList, setCurrentList] = useState<Recipe[]>([]);
   const [isShaking, setIsShaking] = useState(false);
 
   // Auth State
@@ -78,7 +79,7 @@ function App() {
     // Fetch Data
     const fetchData = async () => {
       if (!supabase) return;
-      const { data: recipeData } = await supabase.from('recipes').select('*');
+      const { data: recipeData } = await supabase.from('recipes').select('*').order('id', { ascending: true });
       if (recipeData && recipeData.length > 0) {
         setAllRecipes(recipeData.map((r: any) => ({
           id: r.id, name: r.name, type: r.type, baseSpirit: r.base_spirit,
@@ -188,6 +189,23 @@ function App() {
     }, 1500);
   };
 
+  const handleSelectRecipe = (recipe: Recipe, list?: Recipe[]) => {
+    setSelectedRecipe(recipe);
+    setCurrentList(list || allRecipes);
+  };
+
+  const handlePrevRecipe = () => {
+    if (!selectedRecipe || currentList.length === 0) return;
+    const idx = currentList.findIndex(r => r.id === selectedRecipe.id);
+    if (idx > 0) setSelectedRecipe(currentList[idx - 1]);
+  };
+
+  const handleNextRecipe = () => {
+    if (!selectedRecipe || currentList.length === 0) return;
+    const idx = currentList.findIndex(r => r.id === selectedRecipe.id);
+    if (idx < currentList.length - 1) setSelectedRecipe(currentList[idx + 1]);
+  };
+
   const handleLogin = async () => {
     if (!supabase) return;
 
@@ -244,7 +262,7 @@ function App() {
             allRecipes={allRecipes}
             favorites={favorites}
             toggleFavorite={toggleFavorite}
-            onSelectRecipe={setSelectedRecipe}
+            onSelectRecipe={handleSelectRecipe}
             lang={lang}
             onShake={handleShake}
           />
@@ -258,7 +276,7 @@ function App() {
             setMyInventory={saveInventory}
             allIngredients={allIngredients}
             lang={lang}
-            onSelectRecipe={setSelectedRecipe}
+            onSelectRecipe={handleSelectRecipe}
             favorites={favorites}
             toggleFavorite={toggleFavorite}
           />
@@ -270,7 +288,7 @@ function App() {
             recipes={allRecipes}
             favorites={favorites}
             toggleFavorite={toggleFavorite}
-            onSelectRecipe={setSelectedRecipe}
+            onSelectRecipe={handleSelectRecipe}
             lang={lang}
           />
         </div>
@@ -333,10 +351,11 @@ function App() {
               }
             }}
             lang={lang}
-            hasPrev={false} // Disable prev/next for now in new IA as list context is variable
-            hasNext={false}
-            onPrev={() => { }}
-            onNext={() => { }}
+
+            hasPrev={selectedRecipe && currentList.findIndex(r => r.id === selectedRecipe.id) > 0}
+            hasNext={selectedRecipe && currentList.findIndex(r => r.id === selectedRecipe.id) < currentList.length - 1}
+            onPrev={handlePrevRecipe}
+            onNext={handleNextRecipe}
           />
         )}
       </AnimatePresence>
