@@ -2,6 +2,7 @@ import { useRef } from 'react';
 import { motion, useScroll, useTransform, useMotionTemplate } from 'framer-motion';
 import { Heart, X, Flame, GlassWater, Smile, Wine, ChevronLeft, ChevronRight } from 'lucide-react';
 import clsx from 'clsx';
+import { useSwipeBack } from './hooks/useSwipeBack';
 
 const SpecBar = ({ value, label, subLabel, icon: Icon, colorClass, barColorClass }: { value: number; label: string; subLabel: string; icon: any; colorClass: string; barColorClass: string }) => (
     <div className="space-y-1.5">
@@ -24,6 +25,7 @@ const SpecBar = ({ value, label, subLabel, icon: Icon, colorClass, barColorClass
 );
 
 export const RecipeDetailModal = ({ recipe, onClose, isFavorite, onToggleFavorite, t, lang, onPrev, onNext, hasPrev, hasNext }: any) => {
+    useSwipeBack(onClose);
     const scrollRef = useRef(null);
     const { scrollY } = useScroll({ container: scrollRef });
     const imageBlur = useTransform(scrollY, [0, 300], [0, 12]);
@@ -31,17 +33,10 @@ export const RecipeDetailModal = ({ recipe, onClose, isFavorite, onToggleFavorit
     const overlayOpacity = useTransform(scrollY, [0, 300], [0, 0.6]);
 
     return (
-        <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center sm:p-4"
-        >
-            <div className="absolute inset-0 bg-black/90 backdrop-blur-md" onClick={onClose} />
+        <div className="w-full h-full bg-zinc-900 relative flex flex-col">
 
-            <motion.div
-                layoutId={`card-${recipe.id}`}
-                className="bg-zinc-900 w-full max-w-2xl h-full sm:h-[90vh] sm:rounded-[2rem] overflow-hidden relative border border-white/10 shadow-2xl flex flex-col"
+            <div
+                className="w-full h-full overflow-hidden relative flex flex-col"
             >
                 {/* Dynamic Background Image */}
                 <motion.div className="absolute inset-0 z-0 h-[60vh]">
@@ -199,7 +194,7 @@ export const RecipeDetailModal = ({ recipe, onClose, isFavorite, onToggleFavorit
                         </div>
                     </div>
                 </div>
-            </motion.div>
-        </motion.div>
+            </div>
+        </div>
     );
 };

@@ -1,0 +1,94 @@
+# Task: iOS App Migration
+
+- [x] **Phase 1: Setup & Integration** <!-- id: 0 -->
+    - [x] Install Capacitor dependencies (`core`, `cli`, `ios`) <!-- id: 1 -->
+    - [x] Initialize Capacitor (`npx cap init`) <!-- id: 2 -->
+    - [x] Add iOS platform (`npx cap add ios`) <!-- id: 3 -->
+- [x] **Phase 2: Configuration & Adaptation** <!-- id: 4 -->
+    - [x] Configure `viewport-fit=cover` in `index.html` <!-- id: 5 -->
+    - [x] Add Safe Area CSS utilities <!-- id: 6 -->
+    - [x] Disable text selection/zoom for native feel <!-- id: 7 -->
+- [x] **Phase 3: Build & Launch** <!-- id: 8 -->
+    - [x] Build project and sync (`npm run build && npx cap sync`) <!-- id: 9 -->
+    - [x] Open in Xcode and run in Simulator <!-- id: 10 -->
+    - [x] Generate App Icons and Splash Screens <!-- id: 11 -->
+    - [x] **Prepare App Store Submission Assets**
+    - [x] Capture screenshots for 4 tabs/views (using simulated views).
+    - [x] Draft App Description (En & Zh).
+    - [x] Create comprehensive `app_store_submission.md` guide.
+    - [x] Optimize Search Logic (Cross-lingual fuzzy search).
+- [x] **UI Refinements & Bug Fixes**
+    - [x] Desktop Layout Fix (max-w-5xl, Two Column).
+    - [x] TabBar Style (Rounded Full, Bigger Active).
+    - [x] TabBar Icons (Active Padded & Updated Icons).
+    - [x] Restore Sub-tab Icons (All/Classic/CVS).
+    - [x] Fix Auth Redirect (Deep Link & URL Whitelist).
+    - [x] Fix Scroll Issue (Remove touch-none).
+    - [x] Settings Page: Refined Google Button (No double container), Confirm Logout.
+    - [x] Extract `CocktailsPage` from `App.tsx`.
+    - [x] Implement `MyBarPage` (convert from Modal).
+    - [x] Implement `FavoritesPage`.
+    - [x] Implement `SettingsPage` (Auth, Lang, Links).
+    - [x] Implement Language Action Sheet. (Part of SettingsPage)
+    - [x] **Recipe Cards 2.0**: Unified Glass Style, Larger Images (120px), 2-line Description.
+    - [x] **TabBar 2.0**: Full-width Rounded Active Pill, "Magic Move" style.
+    - [x] **Global Recipe Component**: Standardized `RecipeCard` component across all pages.
+    - [x] **UX Enhancements**:
+        - [x] Added Swipe Gestures for Category Switching (Left/Right).
+        - [x] Refined Segmented Control Animation (LayoutId smooth slide).
+        - [x] Unified Button Sizes (Filter & Random buttons).
+    - [x] **App Icon**: Updated to user-provided cleaner design.
+    - [x] **iOS Large Title Scroll Effect**: Implemented scroll-driven navigation bar transition for My Bar, Favorites, and Settings pages.
+- [x] **Dynamic Ingredients Migration**
+    - [x] Create `ingredients` table in Supabase.
+    - [x] Performance: Fix "Large clusters" warning in build
+    - [x] Refactor App to fetch ingredients dynamically.
+    - [x] Verify "My Bar" dynamic updates.
+- [ ] **IA & Navigation Refactor**
+    - [x] Create `feature/new-ia` branch.
+    - [x] Create `TabBar` component (Liquid Glass style).
+    - [x] Extract `CocktailsPage` from `App.tsx`.
+    - [x] Implement `MyBarPage` (convert from Modal).
+    - [x] Implement `FavoritesPage`.
+    - [x] Implement `SettingsPage` (Auth, Lang, Links).
+    - [/] Implement Language Action Sheet. (Part of SettingsPage)
+    - [/] Assemble new `App.tsx` layout. (Debugging)
+    - [x] Refine App Icon (Original style, Larger graphic) <!-- id: 12 -->
+    - [x] Replace App Icon with User Image <!-- id: 13 -->
+    - [x] Fix Xcode 'Unassigned Children' Error <!-- id: 14 -->
+    - [x] Fix Xcode 'App Icon Missing' Error <!-- id: 15 -->
+- [x] **Phase 4: Authentication & Deep Linking** <!-- id: 16 -->
+    - [x] Configure URL Scheme `homebartonight` in `Info.plist` <!-- id: 17 -->
+    - [x] Implement Deep Link Listener (`@capacitor/app`) in `App.tsx` <!-- id: 18 -->
+    - [x] Configure Redirect URLs (Site URL, Redirect URLs)
+- [x] Implement Deep Link Listener (App.tsx)
+- [x] Platform Detection for Redirect (Web vs Native)
+- [x] Fix Login Modal Auto-Close
+- [x] Fix Web Logout Issue
+- [x] Fix Delete Favorites Sync
+- [x] Rename App to "HomeBarTonight" in Xcode
+- [x] Test OAuth Flow on Device
+- [x] **REVERTED** Real-time Sync (Stability Rollback)
+- [x] **FIXED** Favorites Deletion Network Error (Implemented RPC `toggle_favorite`)
+- [x] **FIXED** Infinite Auth Loop (useEffect Dependency Fix)
+- [x] **Phase 5: Dynamic Content & Refinements**
+    - [x] **Explore Page**: Default Landing, 16px Offset, Featured Banner.
+    - [x] **Favorite Button v3**: Standardized Black Glass, Red Fill (No Stroke), Overlay Position.
+    - [x] **Collection Page**: Grid Layout (2-col), Hero Header, Dynamic Cover Images.
+    - [x] **Dynamic Images System**: `collection_images` Bucket, `collections_meta` Table, Sync Script.
+    - [x] **Layout Fixes**: Increased Header Spacing, Solved Tab Bar Truncation, Desktop Header Alignment.
+    - [x] **Content Expansion**:
+        - [x] **Winter Warmers**: Added `Hot Toddy`, `Mulled Wine`, `Irish Coffee`, `Hot Buttered Rum`, `Eggnog`, `Baileys Hot Chocolate`.
+        - [x] **Copywriting Refinements**: Updated "CVS Mixology" to "Convenience Store Mixology" (Removed 'CVS').
+        - [x] **New Visuals**: Generated new covers for CVS (Taiwan Vibe) and Party Starters (Home Party).
+    - [x] **Explore Page Refinements**:
+        - [x] **Mobile Banner**: Increased height (1.5x, `aspect-[3/2]`) for mobile only.
+        - [x] **Headline (v3)**:
+            - **ZH**: "今晚，你想調點什麼？"
+            - **EN**: "What’s the vibe tonight?" (Sub: "For every mood and moment, we’ve got you.")
+    - [x] **Gestures & Transitions**:
+        - [x] **Swipe to Go Back**: Implemented native-like left-edge swipe gesture for Detail Pages.
+        - [x] **Page Transitions**: Implemented "Push/Pop" slide animations (Slide Right/Left) for Collection Detail View.
+
+## Next Steps
+- [ ] Prepare for App Store Submission (Screenshots, Description)

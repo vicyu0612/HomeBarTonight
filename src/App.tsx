@@ -250,27 +250,37 @@ function App() {
       <main className="flex-1 overflow-hidden relative max-w-5xl mx-auto w-full">
 
         {/* Explore Page */}
-        <div className={activeTab === 'explore' ? 'h-full overflow-hidden' : 'hidden'}>
-          {activeCollectionId ? (
-            <CollectionDetailPage
-              collectionId={activeCollectionId}
-              onBack={() => setActiveCollectionId(null)}
-              allRecipes={allRecipes}
-              onSelectRecipe={handleSelectRecipe}
-              toggleFavorite={toggleFavorite}
-              favorites={favorites}
-              lang={lang}
-            />
-          ) : (
-            <ExplorePage
-              lang={lang}
-              onSelectCollection={setActiveCollectionId}
-              allRecipes={allRecipes}
-              onSelectRecipe={handleSelectRecipe}
-              toggleFavorite={toggleFavorite}
-              favorites={favorites}
-            />
-          )}
+        <div className={activeTab === 'explore' ? 'h-full relative overflow-hidden' : 'hidden'}>
+          <ExplorePage
+            lang={lang}
+            onSelectCollection={setActiveCollectionId}
+            allRecipes={allRecipes}
+            onSelectRecipe={handleSelectRecipe}
+            toggleFavorite={toggleFavorite}
+            favorites={favorites}
+          />
+
+          <AnimatePresence>
+            {activeCollectionId && (
+              <motion.div
+                initial={{ x: '100%' }}
+                animate={{ x: 0 }}
+                exit={{ x: '100%' }}
+                transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+                className="absolute inset-0 z-50 bg-black h-full w-full overflow-hidden"
+              >
+                <CollectionDetailPage
+                  collectionId={activeCollectionId}
+                  onBack={() => setActiveCollectionId(null)}
+                  allRecipes={allRecipes}
+                  onSelectRecipe={handleSelectRecipe}
+                  toggleFavorite={toggleFavorite}
+                  favorites={favorites}
+                  lang={lang}
+                />
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
 
         {/* Cocktails Page (Persistent) */}
@@ -349,31 +359,42 @@ function App() {
 
       <AnimatePresence>
         {selectedRecipe && (
-          <RecipeDetailModal
-            recipe={selectedRecipe}
-            onClose={() => setSelectedRecipe(null)}
-            isFavorite={favorites.has(selectedRecipe.id)}
-            onToggleFavorite={toggleFavorite}
-            t={{
-              done: lang === 'zh' ? '完成' : 'Done Making It',
-              ingredients: lang === 'zh' ? '材料' : 'Ingredients',
-              steps: lang === 'zh' ? '步驟' : 'Steps',
-              specs: {
-                alcohol: lang === 'zh' ? '酒精濃度' : 'Alcohol',
-                alcoholDesc: lang === 'zh' ? '低 - 高' : 'LOW - HIGH',
-                sweetness: lang === 'zh' ? '甜度' : 'Sweetness',
-                sweetnessDesc: lang === 'zh' ? '不甜 - 甜' : 'DRY - SWEET',
-                ease: lang === 'zh' ? '易飲度' : 'Easy to drink',
-                easeDesc: lang === 'zh' ? '挑戰 - 輕鬆' : 'CHALLENGING - EASY'
-              }
-            }}
-            lang={lang}
+          <motion.div
+            initial={{ x: '100%' }}
+            animate={{ x: 0 }}
+            exit={{ x: '100%' }}
+            transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+            className="fixed inset-0 z-[60] bg-black h-full w-full overflow-hidden"
+            drag="x"
+            dragConstraints={{ left: 0, right: 0 }}
+            dragElastic={false}
+          >
+            <RecipeDetailModal
+              recipe={selectedRecipe}
+              onClose={() => setSelectedRecipe(null)}
+              isFavorite={favorites.has(selectedRecipe.id)}
+              onToggleFavorite={toggleFavorite}
+              t={{
+                done: lang === 'zh' ? '完成' : 'Done Making It',
+                ingredients: lang === 'zh' ? '材料' : 'Ingredients',
+                steps: lang === 'zh' ? '步驟' : 'Steps',
+                specs: {
+                  alcohol: lang === 'zh' ? '酒精濃度' : 'Alcohol',
+                  alcoholDesc: lang === 'zh' ? '低 - 高' : 'LOW - HIGH',
+                  sweetness: lang === 'zh' ? '甜度' : 'Sweetness',
+                  sweetnessDesc: lang === 'zh' ? '不甜 - 甜' : 'DRY - SWEET',
+                  ease: lang === 'zh' ? '易飲度' : 'Easy to drink',
+                  easeDesc: lang === 'zh' ? '挑戰 - 輕鬆' : 'CHALLENGING - EASY'
+                }
+              }}
+              lang={lang}
 
-            hasPrev={selectedRecipe && currentList.findIndex(r => r.id === selectedRecipe.id) > 0}
-            hasNext={selectedRecipe && currentList.findIndex(r => r.id === selectedRecipe.id) < currentList.length - 1}
-            onPrev={handlePrevRecipe}
-            onNext={handleNextRecipe}
-          />
+              hasPrev={selectedRecipe && currentList.findIndex(r => r.id === selectedRecipe.id) > 0}
+              hasNext={selectedRecipe && currentList.findIndex(r => r.id === selectedRecipe.id) < currentList.length - 1}
+              onPrev={handlePrevRecipe}
+              onNext={handleNextRecipe}
+            />
+          </motion.div>
         )}
       </AnimatePresence>
     </div>

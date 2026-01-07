@@ -6,6 +6,7 @@ import type { Recipe } from '../data/recipes';
 import { RecipeCard } from '../components/RecipeCard';
 import clsx from 'clsx';
 import { useState } from 'react';
+import { useSwipeBack } from '../hooks/useSwipeBack';
 
 interface CollectionDetailPageProps {
     collectionId: string;
@@ -26,6 +27,8 @@ export function CollectionDetailPage({
     favorites,
     lang
 }: CollectionDetailPageProps) {
+    useSwipeBack(onBack);
+
     const collection = collections.find(c => c.id === collectionId);
     const [isScrolled, setIsScrolled] = useState(false);
     const [dynamicCover, setDynamicCover] = useState<string | null>(null);
