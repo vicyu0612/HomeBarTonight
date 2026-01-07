@@ -156,37 +156,43 @@ export function CocktailsPage({ allRecipes, favorites, toggleFavorite, onSelectR
                 </div>
 
                 {/* Category Tabs (Restored here) */}
-                <div className="bg-zinc-800/40 backdrop-blur-xl border border-white/10 p-1 rounded-full flex items-center">
-                    <button
-                        onClick={() => setActiveSubTab('all')}
-                        className={clsx(
-                            "flex-1 py-2.5 rounded-full text-sm font-medium transition-all flex items-center justify-center gap-2",
-                            activeSubTab === 'all' ? "bg-white/5 backdrop-blur-md text-white shadow-lg border border-white/5" : "text-zinc-500 hover:text-zinc-200 hover:bg-white/5"
-                        )}
-                    >
-                        <LayoutGrid size={16} />
-                        {t.tabs.all}
-                    </button>
-                    <button
-                        onClick={() => setActiveSubTab('cvs')}
-                        className={clsx(
-                            "flex-1 py-2.5 rounded-full text-sm font-medium transition-all flex items-center justify-center gap-2",
-                            activeSubTab === 'cvs' ? "bg-white/5 backdrop-blur-md text-white shadow-lg border border-white/5" : "text-zinc-500 hover:text-zinc-200 hover:bg-white/5"
-                        )}
-                    >
-                        <Store size={16} />
-                        {t.tabs.cvs}
-                    </button>
-                    <button
-                        onClick={() => setActiveSubTab('classic')}
-                        className={clsx(
-                            "flex-1 py-2.5 rounded-full text-sm font-medium transition-all flex items-center justify-center gap-2",
-                            activeSubTab === 'classic' ? "bg-white/5 backdrop-blur-md text-white shadow-lg border border-white/5" : "text-zinc-500 hover:text-zinc-200 hover:bg-white/5"
-                        )}
-                    >
-                        <Martini size={16} />
-                        {t.tabs.classic}
-                    </button>
+                {/* Category Tabs (Restored here) */}
+                <div className="bg-zinc-800/40 backdrop-blur-xl border border-white/10 p-1 rounded-full flex items-center relative">
+                    {tabs.map((tab) => {
+                        const isActive = activeSubTab === tab;
+                        const labels = {
+                            all: t.tabs.all,
+                            cvs: t.tabs.cvs,
+                            classic: t.tabs.classic
+                        };
+                        const icons = {
+                            all: LayoutGrid,
+                            cvs: Store,
+                            classic: Martini
+                        };
+                        const Icon = icons[tab];
+
+                        return (
+                            <button
+                                key={tab}
+                                onClick={() => setActiveSubTab(tab)}
+                                className={clsx(
+                                    "flex-1 py-2.5 rounded-full text-sm font-medium transition-colors relative z-10 flex items-center justify-center gap-2",
+                                    isActive ? "text-white" : "text-zinc-500 hover:text-zinc-200"
+                                )}
+                            >
+                                {isActive && (
+                                    <motion.div
+                                        layoutId="activeTab"
+                                        className="absolute inset-0 bg-white/10 backdrop-blur-md rounded-full shadow-lg border border-white/5 -z-10"
+                                        transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                                    />
+                                )}
+                                <Icon size={16} />
+                                {labels[tab]}
+                            </button>
+                        );
+                    })}
                 </div>
             </div>
 
