@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react';
 import { MyBarModal, type IngredientItem } from '../components/MyBarModal';
 import { Wine } from 'lucide-react';
+import clsx from 'clsx';
 import type { Recipe } from '../data/recipes';
 import { normalizeIngredient } from '../utils/normalization';
 import { RecipeCard } from '../components/RecipeCard';
@@ -27,6 +28,11 @@ export function MyBarPage({
     toggleFavorite
 }: MyBarPageProps) {
     const [showModal, setShowModal] = useState(false);
+    const [isScrolled, setIsScrolled] = useState(false);
+
+    const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
+        setIsScrolled(e.currentTarget.scrollTop > 40);
+    };
 
     // Filter Logic
     const availableRecipes = useMemo(() => {
@@ -98,54 +104,74 @@ export function MyBarPage({
     }, [allRecipes, myInventory, allIngredients]);
 
     return (
-        <div className="pt-6 pb-24 px-6 min-h-screen">
-            <h1 className="text-3xl font-bold text-white mb-6 sticky top-0 pt-10 pb-4 bg-black/80 backdrop-blur-md z-40 -mx-6 px-6">
-                {lang === 'zh' ? '我的吧台' : 'My Bar'}
-            </h1>
-
-            {/* Inventory Management Button */}
-            <button
-                onClick={() => setShowModal(true)}
-                className="w-full py-4 rounded-2xl bg-zinc-900 border border-amber-500/30 text-amber-500 font-bold flex items-center justify-center gap-3 hover:bg-zinc-800 transition-all shadow-lg shadow-amber-900/10 active:scale-[0.98] mb-8"
-            >
-                <Wine size={20} />
-                {lang === 'zh' ? '管理我的吧台庫存' : 'Manage My Bar Inventory'}
-                <span className="bg-amber-500/20 text-amber-500 text-xs px-2 py-0.5 rounded-full">
-                    {myInventory.size}
+        <div className="h-full relative flex flex-col">
+            {/* Sticky Header */}
+            <div className={clsx(
+                "absolute top-0 left-0 right-0 z-20 flex justify-center items-center transition-all duration-300",
+                "h-[calc(3rem+env(safe-area-inset-top))] px-4 pb-2 pt-[calc(0.5rem+env(safe-area-inset-top))]",
+                isScrolled ? "bg-gradient-to-b from-black to-black/0" : "bg-transparent"
+            )}>
+                <span className={clsx(
+                    "font-bold text-white transition-opacity duration-300",
+                    isScrolled ? "opacity-100" : "opacity-0"
+                )}>
+                    {lang === 'zh' ? '我的吧台' : 'My Bar'}
                 </span>
-            </button>
-
-            {/* Results Header */}
-            <div className="flex items-center gap-4 mb-4">
-                <div className="h-px bg-zinc-800 flex-1" />
-                <h2 className="text-zinc-400 text-sm font-medium whitespace-nowrap">
-                    {lang === 'zh' ? `根據庫存可以調的酒 (${availableRecipes.length})` : `Available cocktails based on your inventory (${availableRecipes.length})`}
-                </h2>
-                <div className="h-px bg-zinc-800 flex-1" />
             </div>
 
-            {/* Recipe Grid */}
-            {availableRecipes.length === 0 ? (
-                <div className="text-center py-20 text-zinc-600">
-                    <p>{lang === 'zh' ? '庫存不足，無法調製任何酒譜' : 'Not enough ingredients to make any cocktails.'}</p>
-                </div>
-            ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {availableRecipes.map((recipe) => (
-                        <RecipeCard
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            key={recipe.id}
-                            recipe={recipe}
-                            lang={lang}
-                            isFavorite={favorites.has(recipe.id)}
-                            toggleFavorite={toggleFavorite}
-                            onClick={() => onSelectRecipe(recipe, availableRecipes)}
-                        />
-                    ))}
+            {/* Scrollable Content */}
+            <div
+                className="flex-1 overflow-y-auto px-4 pb-24 no-scrollbar pt-[calc(3rem+env(safe-area-inset-top))]"
+                onScroll={handleScroll}
+            >
+                <h1 className="text-3xl font-bold text-white mb-6 mt-2">
+                    {lang === 'zh' ? '我的吧台' : 'My Bar'}
+                </h1>
 
+                {/* Inventory Management Button */}
+                <button
+                    onClick={() => setShowModal(true)}
+                    className="w-full py-4 rounded-2xl bg-zinc-900 border border-amber-500/30 text-amber-500 font-bold flex items-center justify-center gap-3 hover:bg-zinc-800 transition-all shadow-lg shadow-amber-900/10 active:scale-[0.98] mb-8"
+                >
+                    <Wine size={20} />
+                    {lang === 'zh' ? '管理我的吧台庫存' : 'Manage My Bar Inventory'}
+                    <span className="bg-amber-500/20 text-amber-500 text-xs px-2 py-0.5 rounded-full">
+                        {myInventory.size}
+                    </span>
+                </button>
+
+                {/* Results Header */}
+                <div className="flex items-center gap-4 mb-4">
+                    <div className="h-px bg-zinc-800 flex-1" />
+                    <h2 className="text-zinc-400 text-sm font-medium whitespace-nowrap">
+                        {lang === 'zh' ? `根據庫存可以調的酒 (${availableRecipes.length})` : `Available cocktails based on your inventory (${availableRecipes.length})`}
+                    </h2>
+                    <div className="h-px bg-zinc-800 flex-1" />
                 </div>
-            )}
+
+                {/* Recipe Grid */}
+                {availableRecipes.length === 0 ? (
+                    <div className="text-center py-20 text-zinc-600">
+                        <p>{lang === 'zh' ? '庫存不足，無法調製任何酒譜' : 'Not enough ingredients to make any cocktails.'}</p>
+                    </div>
+                ) : (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {availableRecipes.map((recipe) => (
+                            <RecipeCard
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                key={recipe.id}
+                                recipe={recipe}
+                                lang={lang}
+                                isFavorite={favorites.has(recipe.id)}
+                                toggleFavorite={toggleFavorite}
+                                onClick={() => onSelectRecipe(recipe, availableRecipes)}
+                            />
+                        ))}
+
+                    </div>
+                )}
+            </div>
 
             {/* Modal */}
             <MyBarModal

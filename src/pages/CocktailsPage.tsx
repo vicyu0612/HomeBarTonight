@@ -100,30 +100,41 @@ export function CocktailsPage({ allRecipes, favorites, toggleFavorite, onSelectR
         });
     }, [allRecipes, activeSubTab, activeSpirit, searchQuery]);
 
+    const [isSticky, setIsSticky] = useState(false);
+
+    const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
+        const scrollTop = e.currentTarget.scrollTop;
+        setIsSticky(scrollTop > 50);
+    };
+
     return (
         <div
-            className="min-h-full flex flex-col pt-12"
+            className="h-full overflow-y-auto no-scrollbar flex flex-col"
+            onScroll={handleScroll}
             onTouchStart={onTouchStart}
             onTouchMove={onTouchMove}
             onTouchEnd={onTouchEnd}
         >
+            {/* Scroll Sentinel (Removed) */}
+
             {/* Header (Scrolls away) */}
-            <div className="px-6 pb-4 flex justify-between items-center bg-transparent">
+            <div className="px-4 pb-4 pt-[calc(3rem+env(safe-area-inset-top))] flex justify-between items-center bg-transparent relative z-10 pointer-events-none">
                 <h1 className="text-3xl font-bold text-white">{t.title}</h1>
-                <button
-                    onClick={onShake}
-                    className="w-[50px] h-[50px] rounded-full bg-indigo-500/20 flex items-center justify-center border border-indigo-500/30 text-indigo-400 active:scale-95 transition-transform"
-                >
-                    <ShakerIcon />
-                </button>
             </div>
 
             {/* Sticky Header Group: Search & Tabs */}
-            <div className="sticky top-0 z-40 px-6 pb-2 pt-2 -mx-0 bg-gradient-to-b from-black via-black to-transparent">
-                <div className="absolute inset-0 bg-black/80 backdrop-blur-md -z-10 masking-effect" />
+            <div className={clsx(
+                "sticky top-0 px-4 pb-2 pt-[calc(0.5rem+env(safe-area-inset-top))] -mt-[calc(0.5rem+env(safe-area-inset-top))] transition-all duration-300 z-40 pointer-events-none",
+                // Container is always transparent now, enabling the inner gradient div to handle the look
+                "bg-transparent"
+            )}>
+                <div className={clsx(
+                    "absolute inset-0 bg-gradient-to-b from-black via-black/80 to-transparent -z-10 transition-opacity duration-300",
+                    isSticky ? "opacity-100" : "opacity-0"
+                )} />
 
                 {/* Search Bar & Filter Button */}
-                <div className="flex gap-3 mb-4">
+                <div className="flex gap-3 mb-4 pointer-events-auto">
                     <div className="relative flex-1">
                         <Search className="absolute left-4 top-3.5 text-white z-10" size={20} />
                         <input
@@ -142,6 +153,13 @@ export function CocktailsPage({ allRecipes, favorites, toggleFavorite, onSelectR
                             </button>
                         )}
                     </div>
+                    {/* Shake Button */}
+                    <button
+                        onClick={onShake}
+                        className="w-[50px] h-[50px] rounded-full bg-zinc-800/40 flex items-center justify-center border border-white/10 text-white active:scale-95 transition-all shrink-0 hover:bg-zinc-700"
+                    >
+                        <ShakerIcon />
+                    </button>
                     <button
                         onClick={() => setShowFilter(true)}
                         className={clsx(
@@ -157,7 +175,7 @@ export function CocktailsPage({ allRecipes, favorites, toggleFavorite, onSelectR
 
                 {/* Category Tabs (Restored here) */}
                 {/* Category Tabs (Restored here) */}
-                <div className="bg-zinc-800/40 backdrop-blur-xl border border-white/10 p-1 rounded-full flex items-center relative">
+                <div className="bg-zinc-800/40 backdrop-blur-xl border border-white/10 p-1 rounded-full flex items-center relative pointer-events-auto">
                     {tabs.map((tab) => {
                         const isActive = activeSubTab === tab;
                         const labels = {
@@ -268,7 +286,7 @@ export function CocktailsPage({ allRecipes, favorites, toggleFavorite, onSelectR
             </AnimatePresence>
 
             {/* Recipe Grid */}
-            <div className="px-6 flex-1 pt-4">
+            <div className="px-4 flex-1 pt-4 pb-24">
                 {filteredRecipes.length > 0 ? (
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pb-12">
                         {filteredRecipes.map((recipe) => (

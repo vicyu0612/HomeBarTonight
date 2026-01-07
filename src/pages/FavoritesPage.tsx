@@ -2,6 +2,8 @@ import { AnimatePresence } from 'framer-motion';
 import { Heart } from 'lucide-react';
 import { RecipeCard } from '../components/RecipeCard';
 import type { Recipe } from '../data/recipes';
+import { useState } from 'react';
+import clsx from 'clsx';
 
 
 interface FavoritesPageProps {
@@ -14,39 +16,64 @@ interface FavoritesPageProps {
 
 export function FavoritesPage({ recipes, favorites, toggleFavorite, onSelectRecipe, lang }: FavoritesPageProps) {
     const favoriteRecipes = recipes.filter(r => favorites.has(r.id));
+    const [isScrolled, setIsScrolled] = useState(false);
+
+    const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
+        setIsScrolled(e.currentTarget.scrollTop > 40);
+    };
 
     return (
-        <div className="pt-6 pb-24 px-6 min-h-screen flex flex-col">
-            <h1 className="text-3xl font-bold text-white mb-6 sticky top-0 pt-10 pb-4 bg-black/80 backdrop-blur-md z-40 -mx-6 px-6">
-                {lang === 'zh' ? '我的最愛' : 'Favorites'}
-            </h1>
+        <div className="h-full relative flex flex-col">
+            {/* Sticky Header */}
+            <div className={clsx(
+                "absolute top-0 left-0 right-0 z-20 flex justify-center items-center transition-all duration-300",
+                "h-[calc(3rem+env(safe-area-inset-top))] px-4 pb-2 pt-[calc(0.5rem+env(safe-area-inset-top))]",
+                isScrolled ? "bg-gradient-to-b from-black to-black/0" : "bg-transparent"
+            )}>
+                <span className={clsx(
+                    "font-bold text-white transition-opacity duration-300",
+                    isScrolled ? "opacity-100" : "opacity-0"
+                )}>
+                    {lang === 'zh' ? '我的最愛' : 'Favorites'}
+                </span>
+            </div>
 
-            {favoriteRecipes.length === 0 ? (
-                <div className="flex-1 flex flex-col items-center justify-center text-zinc-500 pb-20">
-                    <Heart size={48} className="mb-4 opacity-20" />
-                    <p>{lang === 'zh' ? '還沒有收藏任何調酒喔' : 'No favorites yet.'}</p>
-                </div>
-            ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <AnimatePresence mode="popLayout">
-                        {favoriteRecipes.map((recipe) => (
-                            <RecipeCard
-                                layout
-                                initial={{ opacity: 0, scale: 0.9 }}
-                                animate={{ opacity: 1, scale: 1 }}
-                                exit={{ opacity: 0, scale: 0.9 }}
-                                key={recipe.id}
-                                recipe={recipe}
-                                lang={lang}
-                                isFavorite={true}
-                                toggleFavorite={toggleFavorite}
-                                onClick={() => onSelectRecipe(recipe, favoriteRecipes)}
-                                whileTap={{ scale: 0.98 }}
-                            />
-                        ))}
-                    </AnimatePresence>
-                </div>
-            )}
+            {/* Scrollable Content */}
+            <div
+                className="flex-1 overflow-y-auto px-4 pb-24 no-scrollbar pt-[calc(3rem+env(safe-area-inset-top))]"
+                onScroll={handleScroll}
+            >
+                <h1 className="text-3xl font-bold text-white mb-6 mt-2">
+                    {lang === 'zh' ? '我的最愛' : 'Favorites'}
+                </h1>
+
+                {favoriteRecipes.length === 0 ? (
+                    <div className="flex-1 flex flex-col items-center justify-center text-zinc-500 pb-20 pt-20">
+                        <Heart size={48} className="mb-4 opacity-20" />
+                        <p>{lang === 'zh' ? '還沒有收藏任何調酒喔' : 'No favorites yet.'}</p>
+                    </div>
+                ) : (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <AnimatePresence mode="popLayout">
+                            {favoriteRecipes.map((recipe) => (
+                                <RecipeCard
+                                    layout
+                                    initial={{ opacity: 0, scale: 0.9 }}
+                                    animate={{ opacity: 1, scale: 1 }}
+                                    exit={{ opacity: 0, scale: 0.9 }}
+                                    key={recipe.id}
+                                    recipe={recipe}
+                                    lang={lang}
+                                    isFavorite={true}
+                                    toggleFavorite={toggleFavorite}
+                                    onClick={() => onSelectRecipe(recipe, favoriteRecipes)}
+                                    whileTap={{ scale: 0.98 }}
+                                />
+                            ))}
+                        </AnimatePresence>
+                    </div>
+                )}
+            </div>
         </div>
     );
 }

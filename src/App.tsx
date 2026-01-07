@@ -241,10 +241,6 @@ function App() {
   return (
     <div
       className="fixed inset-0 w-full h-full overflow-hidden bg-black text-white font-sans selection:bg-indigo-500/30 select-none flex flex-col"
-      style={{
-        paddingTop: 'env(safe-area-inset-top)',
-        paddingBottom: 'env(safe-area-inset-bottom)'
-      }}
     >
 
       {/* Main Content Area */}
@@ -257,7 +253,7 @@ function App() {
         </div>
 
         {/* Cocktails Page (Persistent) */}
-        <div className={activeTab === 'cocktails' ? 'h-full overflow-y-auto no-scrollbar pb-24' : 'hidden'}>
+        <div className={activeTab === 'cocktails' ? 'h-full' : 'hidden'}>
           <CocktailsPage
             allRecipes={allRecipes}
             favorites={favorites}
@@ -269,7 +265,7 @@ function App() {
         </div>
 
         {/* My Bar Page */}
-        <div className={activeTab === 'my_bar' ? 'h-full overflow-y-auto no-scrollbar pb-24' : 'hidden'}>
+        <div className={activeTab === 'my_bar' ? 'h-full' : 'hidden'}>
           <MyBarPage
             allRecipes={allRecipes}
             myInventory={myInventory}
@@ -283,7 +279,7 @@ function App() {
         </div>
 
         {/* Favorites Page */}
-        <div className={activeTab === 'favorites' ? 'h-full overflow-y-auto no-scrollbar pb-24' : 'hidden'}>
+        <div className={activeTab === 'favorites' ? 'h-full' : 'hidden'}>
           <FavoritesPage
             recipes={allRecipes}
             favorites={favorites}
@@ -294,7 +290,7 @@ function App() {
         </div>
 
         {/* Settings Page */}
-        <div className={activeTab === 'settings' ? 'h-full overflow-y-auto no-scrollbar pb-24' : 'hidden'}>
+        <div className={activeTab === 'settings' ? 'h-full' : 'hidden'}>
           <SettingsPage
             session={session}
             lang={lang}

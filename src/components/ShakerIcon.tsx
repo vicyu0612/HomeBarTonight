@@ -4,7 +4,7 @@ interface ShakerIconProps extends LucideProps {
     withGradient?: boolean;
 }
 
-export const ShakerIcon = ({ size = 24, strokeWidth = 2, className, withGradient = false, ...props }: ShakerIconProps) => {
+export const ShakerIcon = ({ size = 24, strokeWidth = 1.5, className, withGradient = false, ...props }: ShakerIconProps) => {
     const gradientId = "shaker-gradient";
     return (
         <svg

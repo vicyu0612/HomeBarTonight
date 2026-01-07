@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Check } from 'lucide-react';
 import clsx from 'clsx';
@@ -29,6 +29,11 @@ export function MyBarModal({
     lang,
     allIngredients
 }: MyBarModalProps) {
+    const [isScrolled, setIsScrolled] = useState(false);
+
+    const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
+        setIsScrolled(e.currentTarget.scrollTop > 20);
+    };
 
     // Extract and categorize ingredients from DB Data directly
     const categories = useMemo(() => {
@@ -99,29 +104,35 @@ export function MyBarModal({
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+                    className="fixed inset-0 z-[100] flex items-center justify-center p-0 md:p-4 bg-black/60 backdrop-blur-sm"
                     onClick={onClose}
                 >
                     <motion.div
                         initial={{ scale: 0.95, opacity: 0 }}
                         animate={{ scale: 1, opacity: 1 }}
                         exit={{ scale: 0.95, opacity: 0 }}
-                        className="bg-zinc-900 w-full max-w-2xl max-h-[85vh] rounded-3xl shadow-2xl overflow-hidden flex flex-col border border-zinc-800"
+                        className="bg-zinc-900 w-full h-[100dvh] md:h-auto md:max-w-2xl md:max-h-[85vh] rounded-none md:rounded-3xl shadow-2xl overflow-hidden flex flex-col border-0 md:border border-zinc-800"
                         onClick={e => e.stopPropagation()}
                     >
-                        {/* Header */}
-                        <div className="p-6 border-b border-zinc-800 flex justify-between items-center bg-zinc-900/50 backdrop-blur-xl">
-                            <div>
-                                <h2 className="text-2xl font-bold bg-gradient-to-r from-primary to-purple-400 bg-clip-text text-transparent">
-                                    {lang === 'zh' ? '我的吧台' : 'My Bar'}
-                                </h2>
-                                <p className="text-zinc-400 text-sm mt-1">
-                                    {lang === 'zh'
-                                        ? `已選擇 ${myInventory.size} 項材料`
-                                        : `${myInventory.size} ingredients selected`}
-                                </p>
+                        <div className={clsx(
+                            "absolute top-0 left-0 right-0 z-20 flex justify-between items-center transition-all duration-300",
+                            "px-4 pb-3 pt-[calc(0.75rem+env(safe-area-inset-top))] md:p-6",
+                            isScrolled ? "bg-gradient-to-b from-zinc-900 to-zinc-900/0" : "bg-transparent"
+                        )}>
+                            {/* Inline Title (Initially Hidden) */}
+                            <div className={clsx(
+                                "absolute left-1/2 -translate-x-1/2 font-bold text-white transition-opacity duration-300",
+                                "pt-[calc(env(safe-area-inset-top))] md:pt-0", // Match parent padding roughly
+                                isScrolled ? "opacity-100" : "opacity-0"
+                            )}>
+                                {lang === 'zh' ? '我的吧台' : 'My Bar'}
                             </div>
-                            <div className="flex items-center gap-2">
+
+                            {/* Left Spacer */}
+                            <div />
+
+                            {/* Right Actions */}
+                            <div className="flex items-center gap-2 relative z-10">
                                 <button
                                     onClick={() => setMyInventory(new Set())}
                                     className="px-3 py-1.5 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500/20 text-xs font-bold transition-colors border border-red-500/20"
@@ -138,7 +149,21 @@ export function MyBarModal({
                         </div>
 
                         {/* Content */}
-                        <div className="flex-1 overflow-y-auto p-6 space-y-8 custom-scrollbar">
+                        <div
+                            className="flex-1 overflow-y-auto px-4 space-y-8 custom-scrollbar pt-[calc(3rem+env(safe-area-inset-top))]"
+                            onScroll={handleScroll}
+                        >
+                            {/* Large Title */}
+                            <div>
+                                <h2 className="text-3xl font-bold bg-gradient-to-r from-primary to-purple-400 bg-clip-text text-transparent mb-1">
+                                    {lang === 'zh' ? '我的吧台' : 'My Bar'}
+                                </h2>
+                                <p className="text-zinc-400 text-sm">
+                                    {lang === 'zh'
+                                        ? `已選擇 ${myInventory.size} 項材料`
+                                        : `${myInventory.size} ingredients selected`}
+                                </p>
+                            </div>
 
                             {/* Helper to render sections */}
                             {[

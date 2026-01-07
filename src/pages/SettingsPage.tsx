@@ -24,6 +24,11 @@ const GoogleIcon = () => (
 export function SettingsPage({ session, lang, setLang, onLogin, onLogout }: SettingsPageProps) {
     const [showLanguageSheet, setShowLanguageSheet] = useState(false);
     const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
+    const [isScrolled, setIsScrolled] = useState(false);
+
+    const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
+        setIsScrolled(e.currentTarget.scrollTop > 40);
+    };
 
     const t = {
         title: lang === 'zh' ? '設定' : 'Settings',
@@ -49,87 +54,107 @@ export function SettingsPage({ session, lang, setLang, onLogin, onLogout }: Sett
     const openLink = (url: string) => window.open(url, '_blank');
 
     return (
-        <div className="pt-16 pb-32 px-6 min-h-screen">
-            <h1 className="text-3xl font-bold text-white mb-8">{t.title}</h1>
+        <div className="h-full relative flex flex-col">
+            {/* Sticky Header */}
+            <div className={clsx(
+                "absolute top-0 left-0 right-0 z-20 flex justify-center items-center transition-all duration-300",
+                "h-[calc(3rem+env(safe-area-inset-top))] px-4 pb-2 pt-[calc(0.5rem+env(safe-area-inset-top))]",
+                isScrolled ? "bg-gradient-to-b from-black to-black/0" : "bg-transparent"
+            )}>
+                <span className={clsx(
+                    "font-bold text-white transition-opacity duration-300",
+                    isScrolled ? "opacity-100" : "opacity-0"
+                )}>
+                    {t.title}
+                </span>
+            </div>
 
-            <div className="space-y-8">
-                {/* Account Section */}
-                <section>
-                    <h2 className="text-zinc-500 text-sm font-medium mb-3 ml-1">{t.account.title}</h2>
-                    {session ? (
-                        <div className="bg-zinc-900/50 backdrop-blur-md border border-white/10 rounded-2xl overflow-hidden p-4 flex items-center justify-between">
-                            <div className="flex items-center gap-4">
-                                <div className="w-12 h-12 rounded-full overflow-hidden border border-white/10 shadow-lg bg-zinc-800 flex items-center justify-center shrink-0">
-                                    {session.user.user_metadata.avatar_url ? (
-                                        <img src={session.user.user_metadata.avatar_url} alt="User" className="w-full h-full object-cover" />
-                                    ) : (
-                                        <div className="w-full h-full flex items-center justify-center bg-indigo-500 text-white font-bold text-lg">
-                                            {session.user.email?.[0].toUpperCase() || 'U'}
-                                        </div>
-                                    )}
-                                </div>
-                                <div className="overflow-hidden">
-                                    <p className="text-white font-medium truncate max-w-[200px]">{session.user.email}</p>
-                                    <button onClick={() => setShowLogoutConfirm(true)} className="text-red-400 text-sm mt-0.5 hover:text-red-300 transition-colors text-left">
-                                        {t.account.logout}
-                                    </button>
+            {/* Scrollable Content */}
+            <div
+                className="flex-1 overflow-y-auto px-4 pb-32 no-scrollbar pt-[calc(3rem+env(safe-area-inset-top))]"
+                onScroll={handleScroll}
+            >
+                <h1 className="text-3xl font-bold text-white mb-8 mt-2">{t.title}</h1>
+
+                <div className="space-y-8">
+                    {/* Account Section */}
+                    <section>
+                        <h2 className="text-zinc-500 text-sm font-medium mb-3 ml-1">{t.account.title}</h2>
+                        {session ? (
+                            <div className="bg-zinc-900/50 backdrop-blur-md border border-white/10 rounded-2xl overflow-hidden p-4 flex items-center justify-between">
+                                <div className="flex items-center gap-4">
+                                    <div className="w-12 h-12 rounded-full overflow-hidden border border-white/10 shadow-lg bg-zinc-800 flex items-center justify-center shrink-0">
+                                        {session.user.user_metadata.avatar_url ? (
+                                            <img src={session.user.user_metadata.avatar_url} alt="User" className="w-full h-full object-cover" />
+                                        ) : (
+                                            <div className="w-full h-full flex items-center justify-center bg-indigo-500 text-white font-bold text-lg">
+                                                {session.user.email?.[0].toUpperCase() || 'U'}
+                                            </div>
+                                        )}
+                                    </div>
+                                    <div className="overflow-hidden">
+                                        <p className="text-white font-medium truncate max-w-[200px]">{session.user.email}</p>
+                                        <button onClick={() => setShowLogoutConfirm(true)} className="text-red-400 text-sm mt-0.5 hover:text-red-300 transition-colors text-left">
+                                            {t.account.logout}
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    ) : (
-                        <button
-                            onClick={onLogin}
-                            className="w-full py-4 px-4 rounded-2xl bg-white text-zinc-900 font-bold text-lg flex items-center justify-center gap-3 active:scale-[0.98] transition-transform shadow-lg"
-                        >
-                            <div className="w-6 h-6 flex items-center justify-center shrink-0">
-                                <GoogleIcon />
-                            </div>
-                            <span>{lang === 'zh' ? '使用 Google 帳號登入' : 'Sign in with Google'}</span>
-                        </button>
-                    )}
-                </section>
+                        ) : (
+                            <button
+                                onClick={onLogin}
+                                className="w-full py-4 px-4 rounded-2xl bg-white text-zinc-900 font-bold text-lg flex items-center justify-center gap-3 active:scale-[0.98] transition-transform shadow-lg"
+                            >
+                                <div className="w-6 h-6 flex items-center justify-center shrink-0">
+                                    <GoogleIcon />
+                                </div>
+                                <span>{lang === 'zh' ? '使用 Google 帳號登入' : 'Sign in with Google'}</span>
+                            </button>
+                        )}
+                    </section>
 
-                {/* Language Section */}
-                <section>
-                    <h2 className="text-zinc-500 text-sm font-medium mb-3 ml-1">{t.language.title}</h2>
-                    <button
-                        onClick={() => setShowLanguageSheet(true)}
-                        className="w-full bg-zinc-900/50 backdrop-blur-md border border-white/10 rounded-2xl p-4 flex items-center justify-between hover:bg-white/5 transition-colors"
-                    >
-                        <div className="flex items-center gap-3">
-                            <Globe size={20} className="text-zinc-400" />
-                            <span className="text-white font-medium">{t.language.current}</span>
-                        </div>
-                        <ChevronRight size={20} className="text-zinc-500" />
-                    </button>
-                </section>
-
-                {/* About Section */}
-                <section>
-                    <h2 className="text-zinc-500 text-sm font-medium mb-3 ml-1">{t.about.title}</h2>
-                    <div className="bg-zinc-900/50 backdrop-blur-md border border-white/10 rounded-2xl overflow-hidden divide-y divide-white/5">
+                    {/* Language Section */}
+                    <section>
+                        <h2 className="text-zinc-500 text-sm font-medium mb-3 ml-1">{t.language.title}</h2>
                         <button
-                            onClick={() => openLink('https://docs.google.com/document/d/1O_uWSZ8r-jCsEfZE4r276m-Xb1L1kS7PS1CAi8pgaJc/view')}
-                            className="w-full p-4 flex items-center justify-between hover:bg-white/5 transition-colors"
+                            onClick={() => setShowLanguageSheet(true)}
+                            className="w-full bg-zinc-900/50 backdrop-blur-md border border-white/10 rounded-2xl p-4 flex items-center justify-between hover:bg-white/5 transition-colors"
                         >
                             <div className="flex items-center gap-3">
-                                <HelpCircle size={20} className="text-zinc-400" />
-                                <span className="text-white">{t.about.support}</span>
+                                <Globe size={20} className="text-zinc-400" />
+                                <span className="text-white font-medium">{t.language.current}</span>
                             </div>
                             <ChevronRight size={20} className="text-zinc-500" />
                         </button>
-                        <button
-                            onClick={() => openLink('https://docs.google.com/document/d/1t56AP7vWITorzdr8OI7Fz-r0VvT2n_-zWRP8Fe4n-kA/view')}
-                            className="w-full p-4 flex items-center justify-between hover:bg-white/5 transition-colors"
-                        >
-                            <div className="flex items-center gap-3">
-                                <FileText size={20} className="text-zinc-400" />
-                                <span className="text-white">{t.about.privacy}</span>
-                            </div>
-                            <ChevronRight size={20} className="text-zinc-500" />
-                        </button>
-                    </div>
-                </section>
+                    </section>
+
+                    {/* About Section */}
+                    <section>
+                        <h2 className="text-zinc-500 text-sm font-medium mb-3 ml-1">{t.about.title}</h2>
+                        <div className="bg-zinc-900/50 backdrop-blur-md border border-white/10 rounded-2xl overflow-hidden divide-y divide-white/5">
+                            <button
+                                onClick={() => openLink('https://docs.google.com/document/d/1O_uWSZ8r-jCsEfZE4r276m-Xb1L1kS7PS1CAi8pgaJc/view')}
+                                className="w-full p-4 flex items-center justify-between hover:bg-white/5 transition-colors"
+                            >
+                                <div className="flex items-center gap-3">
+                                    <HelpCircle size={20} className="text-zinc-400" />
+                                    <span className="text-white">{t.about.support}</span>
+                                </div>
+                                <ChevronRight size={20} className="text-zinc-500" />
+                            </button>
+                            <button
+                                onClick={() => openLink('https://docs.google.com/document/d/1t56AP7vWITorzdr8OI7Fz-r0VvT2n_-zWRP8Fe4n-kA/view')}
+                                className="w-full p-4 flex items-center justify-between hover:bg-white/5 transition-colors"
+                            >
+                                <div className="flex items-center gap-3">
+                                    <FileText size={20} className="text-zinc-400" />
+                                    <span className="text-white">{t.about.privacy}</span>
+                                </div>
+                                <ChevronRight size={20} className="text-zinc-500" />
+                            </button>
+                        </div>
+                    </section>
+                </div>
             </div>
 
             {/* Language Action Sheet */}
