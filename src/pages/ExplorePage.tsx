@@ -127,7 +127,7 @@ export function ExplorePage({
                 {/* Page Title */}
                 <div className="px-4 mb-6 mt-2">
                     <h1 className="text-3xl font-bold text-white mb-1">
-                        {lang === 'zh' ? '探索' : 'Explore'}
+                        {lang === 'zh' ? '今晚，你想喝點什麼？' : 'What do you feel like tonight?'}
                     </h1>
                     <p className="text-zinc-400 text-sm">
                         {lang === 'zh' ? '發現你的下一杯最愛' : 'Discover your next favorite drink'}
