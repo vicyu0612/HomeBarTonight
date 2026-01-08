@@ -28,7 +28,7 @@ export function CocktailsPage({ allRecipes, favorites, toggleFavorite, onSelectR
 
     const t = {
         title: lang === 'zh' ? '酒譜' : 'Cocktails',
-        searchPlaceholder: lang === 'zh' ? '搜尋調酒或材料...' : 'Search cocktails or ingredients...',
+        searchPlaceholder: lang === 'zh' ? '搜尋調酒或材料...' : 'Cocktails or ingredients...',
         tabs: {
             all: lang === 'zh' ? '全部' : 'All',
             classic: lang === 'zh' ? '經典調酒' : 'Classic',
