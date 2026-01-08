@@ -33,8 +33,20 @@ export const collections: Collection[] = [
         id: 'cvs-hacks',
         title: { en: 'Convenience Store Mixology', zh: '超商創意特調' },
         subtitle: { en: 'Creative drinks from the corner store', zh: '便利商店就能買齊材料' },
-        type: 'filter',
-        filter: (r) => r.type === 'cvs',
+        type: 'curated',
+        recipeIds: [
+            'kaoliang-yakult', // First
+            'soju-melona',
+            'vodka-yakult',
+            'guava-gin',
+            'rum-guava',
+            'calpis-sake',
+            'whisky-sarsaparilla',
+            'highball-cvs',
+            'kalimotxo',
+            'lemon-sour',
+            'lemon-tea-whiskey'
+        ],
         themeColor: 'from-blue-600 to-indigo-900',
         coverImage: '/cocktails/cvs_party.png',
         description: {

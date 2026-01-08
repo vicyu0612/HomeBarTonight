@@ -21,6 +21,7 @@ export interface Recipe {
     specs: Spec;
     color: string;
     image: string;
+    collections?: string[];
 }
 
 export const recipes: Recipe[] = [
@@ -70,7 +71,7 @@ export const recipes: Recipe[] = [
             ease: 3
         },
         color: '#ea580c',
-        image: '/cocktails/old-fashioned.png'
+        image: 'https://uyamflgtvqndbjpbjito.supabase.co/storage/v1/object/public/cocktails/old-fashioned.png'
     },
     {
         id: 'gin-tonic',
@@ -117,7 +118,7 @@ export const recipes: Recipe[] = [
             ease: 9
         },
         color: '#22d3ee',
-        image: '/cocktails/gin-tonic.png'
+        image: 'https://uyamflgtvqndbjpbjito.supabase.co/storage/v1/object/public/cocktails/gin-tonic.png'
     },
     {
         id: 'margarita',
@@ -164,7 +165,7 @@ export const recipes: Recipe[] = [
             ease: 6
         },
         color: '#84cc16', // Lime-500
-        image: '/cocktails/margarita.png'
+        image: 'https://uyamflgtvqndbjpbjito.supabase.co/storage/v1/object/public/cocktails/margarita.png'
     },
     {
         id: 'mojito',
@@ -215,7 +216,7 @@ export const recipes: Recipe[] = [
             ease: 9
         },
         color: '#10b981', // Emerald-500
-        image: '/cocktails/mojito.png'
+        image: 'https://uyamflgtvqndbjpbjito.supabase.co/storage/v1/object/public/cocktails/mojito.png'
     },
     {
         id: 'martini',
@@ -260,7 +261,7 @@ export const recipes: Recipe[] = [
             ease: 2
         },
         color: '#cbd5e1', // Slate-300
-        image: '/cocktails/martini.png'
+        image: 'https://uyamflgtvqndbjpbjito.supabase.co/storage/v1/object/public/cocktails/martini.png'
     },
     {
         id: 'sidecar',
@@ -305,7 +306,7 @@ export const recipes: Recipe[] = [
             ease: 5
         },
         color: '#d97706', // Amber-600
-        image: '/cocktails/sidecar.png'
+        image: 'https://uyamflgtvqndbjpbjito.supabase.co/storage/v1/object/public/cocktails/sidecar.png'
     },
     {
         id: 'paloma',
@@ -352,7 +353,7 @@ export const recipes: Recipe[] = [
             ease: 8
         },
         color: '#fca5a5', // Red-300
-        image: '/cocktails/paloma.png'
+        image: 'https://uyamflgtvqndbjpbjito.supabase.co/storage/v1/object/public/cocktails/paloma.png'
     },
     {
         id: 'tequila-sunrise',
@@ -397,7 +398,7 @@ export const recipes: Recipe[] = [
             ease: 9
         },
         color: '#fb923c', // Orange-400
-        image: '/cocktails/tequila-sunrise.png'
+        image: 'https://uyamflgtvqndbjpbjito.supabase.co/storage/v1/object/public/cocktails/tequila-sunrise.png'
     },
     {
         id: 'brandy-alexander',
@@ -444,7 +445,7 @@ export const recipes: Recipe[] = [
             ease: 6
         },
         color: '#a8a29e', // Stone-400
-        image: '/cocktails/brandy-alexander.png'
+        image: 'https://uyamflgtvqndbjpbjito.supabase.co/storage/v1/object/public/cocktails/brandy-alexander.png'
     },
     {
         id: 'daiquiri',
@@ -489,7 +490,7 @@ export const recipes: Recipe[] = [
             ease: 6
         },
         color: '#f0fdf4',
-        image: '/cocktails/daiquiri.png'
+        image: 'https://uyamflgtvqndbjpbjito.supabase.co/storage/v1/object/public/cocktails/daiquiri.png'
     },
     {
         id: 'whiskey-sour',
@@ -540,7 +541,7 @@ export const recipes: Recipe[] = [
             ease: 6
         },
         color: '#fde047',
-        image: '/cocktails/whiskey-sour.png'
+        image: 'https://uyamflgtvqndbjpbjito.supabase.co/storage/v1/object/public/cocktails/whiskey-sour.png'
     },
     {
         id: 'negroni',
@@ -585,7 +586,7 @@ export const recipes: Recipe[] = [
             ease: 9
         },
         color: '#ef4444',
-        image: '/cocktails/negroni.png'
+        image: 'https://uyamflgtvqndbjpbjito.supabase.co/storage/v1/object/public/cocktails/negroni.png'
     },
     {
         id: 'manhattan',
@@ -630,7 +631,7 @@ export const recipes: Recipe[] = [
             ease: 8
         },
         color: '#b91c1c',
-        image: '/cocktails/manhattan.png'
+        image: 'https://uyamflgtvqndbjpbjito.supabase.co/storage/v1/object/public/cocktails/manhattan.png'
     },
     {
         id: 'espresso-martini',
@@ -677,7 +678,7 @@ export const recipes: Recipe[] = [
             ease: 5
         },
         color: '#451a03',
-        image: '/cocktails/espresso-martini.png'
+        image: 'https://uyamflgtvqndbjpbjito.supabase.co/storage/v1/object/public/cocktails/espresso-martini.png'
     },
     {
         id: 'cosmopolitan',
@@ -724,7 +725,7 @@ export const recipes: Recipe[] = [
             ease: 7
         },
         color: '#db2777',
-        image: '/cocktails/cosmopolitan.png'
+        image: 'https://uyamflgtvqndbjpbjito.supabase.co/storage/v1/object/public/cocktails/cosmopolitan.png'
     },
     {
         id: 'mai-tai',
@@ -771,7 +772,7 @@ export const recipes: Recipe[] = [
             ease: 5
         },
         color: '#b45309',
-        image: '/cocktails/mai-tai.png'
+        image: 'https://uyamflgtvqndbjpbjito.supabase.co/storage/v1/object/public/cocktails/mai-tai.png'
     },
     {
         id: 'bloody-mary',
@@ -811,8 +812,8 @@ export const recipes: Recipe[] = [
             zh: ['鹹', '辣', '早午餐']
         },
         description: {
-            en: 'The world’s favorite hangover cure.',
-            zh: '世界上最受歡迎的宿醉解藥。'
+            en: 'A savory meal in a glass. The only socially acceptable way to drink vodka for breakfast.',
+            zh: '喝得飽的調酒。唯一社會公認可以當早餐喝的伏特加特調。'
         },
         specs: {
             alcohol: 4,
@@ -820,7 +821,7 @@ export const recipes: Recipe[] = [
             ease: 6
         },
         color: '#dc2626',
-        image: '/cocktails/bloody-mary.png'
+        image: 'https://uyamflgtvqndbjpbjito.supabase.co/storage/v1/object/public/cocktails/bloody-mary.png'
     },
     {
         id: 'gimlet',
@@ -854,8 +855,8 @@ export const recipes: Recipe[] = [
             zh: ['酸', '烈', '經典']
         },
         description: {
-            en: 'A sharp, refreshing classic.',
-            zh: '銳利、清爽的經典。'
+            en: 'Sharp, biting, and refreshing. A true test of balance.',
+            zh: '銳利、咬舌、清爽。考驗調酒師平衡功力的試金石。'
         },
         specs: {
             alcohol: 8,
@@ -863,7 +864,7 @@ export const recipes: Recipe[] = [
             ease: 8
         },
         color: '#bef264',
-        image: '/cocktails/gimlet.png'
+        image: 'https://uyamflgtvqndbjpbjito.supabase.co/storage/v1/object/public/cocktails/gimlet.png'
     },
     {
         id: 'tom-collins',
@@ -901,8 +902,8 @@ export const recipes: Recipe[] = [
             zh: ['清爽', '氣泡', '夏天']
         },
         description: {
-            en: 'Like a sparkling lemonade for adults.',
-            zh: '大人的氣泡檸檬水。'
+            en: 'Lemonade for grown-ups. Tall, fizzy, and dangerously easy to down.',
+            zh: '大人的檸檬氣泡水。酸甜氣泡感，危險地順口。'
         },
         specs: {
             alcohol: 5,
@@ -910,7 +911,7 @@ export const recipes: Recipe[] = [
             ease: 9
         },
         color: '#fef9c3', // Lemonade
-        image: '/cocktails/tom-collins.png'
+        image: 'https://uyamflgtvqndbjpbjito.supabase.co/storage/v1/object/public/cocktails/tom-collins.png'
     },
     // CVS / Home Hacks
     {
@@ -949,8 +950,8 @@ export const recipes: Recipe[] = [
             zh: ['簡單', '清爽', '氣泡']
         },
         description: {
-            en: 'The ultimate convenience store refresher.',
-            zh: '超商調酒的終極選擇。'
+            en: 'The absolute savior of a hot day. Cheap whisky, lots of ice, and zero judgement.',
+            zh: '夏日的救贖。便宜威士忌、大量冰塊，沒有人會評判你。'
         },
         specs: {
             alcohol: 6,
@@ -958,7 +959,8 @@ export const recipes: Recipe[] = [
             ease: 7
         },
         color: '#facc15',
-        image: '/cocktails/highball-cvs.png'
+        image: 'https://uyamflgtvqndbjpbjito.supabase.co/storage/v1/object/public/cocktails/highball-cvs.png',
+        collections: ['cvs-hacks']
     },
     {
         id: 'kalimotxo',
@@ -994,8 +996,8 @@ export const recipes: Recipe[] = [
             zh: ['甜', '簡單', '派對']
         },
         description: {
-            en: 'A Basque classic that tastes surprisingly like sangria.',
-            zh: '巴斯克經典喝法，喝起來意外像桑格利亞水果酒。'
+            en: 'Sounds illegal, tastes amazing. The Basque people knew what they were doing when they mixed red wine with Coke.',
+            zh: '聽起來很母湯，喝起來很驚艷。巴斯克人懂喝，紅酒加可樂是天才的發明。'
         },
         specs: {
             alcohol: 4,
@@ -1003,7 +1005,8 @@ export const recipes: Recipe[] = [
             ease: 10
         },
         color: '#7f1d1d',
-        image: '/cocktails/kalimotxo.png'
+        image: 'https://uyamflgtvqndbjpbjito.supabase.co/storage/v1/object/public/cocktails/kalimotxo.png',
+        collections: ['cvs-hacks']
     },
     {
         id: 'screwdriver',
@@ -1037,8 +1040,8 @@ export const recipes: Recipe[] = [
             zh: ['甜', '果味', '早午餐']
         },
         description: {
-            en: 'Vitamin C with a kick.',
-            zh: '帶勁的維他命 C。'
+            en: 'Your daily dose of Vitamin C, now with 40% more bad decisions. The easiest cocktail known to man.',
+            zh: '每日維他命C補充來源，外加40%的錯誤決定。世上最簡單的調酒。'
         },
         specs: {
             alcohol: 5,
@@ -1046,7 +1049,8 @@ export const recipes: Recipe[] = [
             ease: 9
         },
         color: '#fb923c',
-        image: '/cocktails/screwdriver.png'
+        image: 'https://uyamflgtvqndbjpbjito.supabase.co/storage/v1/object/public/cocktails/screwdriver.png',
+        collections: ['cvs-hacks']
     },
     {
         id: 'lemon-sour',
@@ -1082,8 +1086,8 @@ export const recipes: Recipe[] = [
             zh: ['酸', '清爽', '烈']
         },
         description: {
-            en: 'Japanese style lemon sour.',
-            zh: '居酒屋風格的檸檬沙瓦。'
+            en: 'The salaryman\'s fuel. Crisp, dry, and strong enough to wash away a long day of work.',
+            zh: '社畜的燃料。乾爽、清脆，烈到足夠洗去一整天的疲憊。'
         },
         specs: {
             alcohol: 8,
@@ -1091,7 +1095,8 @@ export const recipes: Recipe[] = [
             ease: 6
         },
         color: '#fef08a',
-        image: '/cocktails/lemon-sour.png'
+        image: 'https://uyamflgtvqndbjpbjito.supabase.co/storage/v1/object/public/cocktails/lemon-sour.png',
+        collections: ['cvs-hacks']
     },
     {
         id: 'rum-coke',
@@ -1127,8 +1132,8 @@ export const recipes: Recipe[] = [
             zh: ['甜', '簡單', '派對']
         },
         description: {
-            en: 'Simple, effective, caffeine included.',
-            zh: '簡單有效，還自帶咖啡因。'
+            en: 'The universal language of "I want a drink and I want it now". Sweet, fizzy, and dependable.',
+            zh: '「我現在就要喝一杯」的國際通用語言。甜、氣泡、絕對不雷。'
         },
         specs: {
             alcohol: 5,
@@ -1136,7 +1141,8 @@ export const recipes: Recipe[] = [
             ease: 9
         },
         color: '#3f2c2c', // Dark cola
-        image: '/cocktails/rum-coke.png'
+        image: 'https://uyamflgtvqndbjpbjito.supabase.co/storage/v1/object/public/cocktails/rum-coke.png',
+        collections: ['cvs-hacks']
     },
     {
         id: 'white-russian',
@@ -1172,8 +1178,8 @@ export const recipes: Recipe[] = [
             zh: ['奶香', '甜', '經典']
         },
         description: {
-            en: 'The Dude abides. A creamy coffee delight.',
-            zh: '電影《謀殺綠腳趾》主角最愛。濃郁的咖啡奶香。'
+            en: 'The Dude abides. A rich, creamy dessert that gets you drunk. Goes down like chocolate milk.',
+            zh: '針對大人的咖啡牛奶。濃郁奶香讓你忘記它其實很烈。'
         },
         specs: {
             alcohol: 6,
@@ -1181,7 +1187,7 @@ export const recipes: Recipe[] = [
             ease: 8
         },
         color: '#e7e5e4', // Warm stone/Cream
-        image: '/cocktails/white-russian.png'
+        image: 'https://uyamflgtvqndbjpbjito.supabase.co/storage/v1/object/public/cocktails/white-russian.png'
     },
     {
         id: 'mudslide',
@@ -1219,8 +1225,8 @@ export const recipes: Recipe[] = [
             zh: ['甜點', '濃郁', '甜']
         },
         description: {
-            en: 'A boozy chocolate milkshake for adults.',
-            zh: '給大人喝的酒精版巧克力奶昔。'
+            en: 'Basically a boozy chocolate milkshake. If you like dessert and getting tipsy, this is your jam.',
+            zh: '根本就是加了酒精的巧克力奶昔。甜點控的買醉首選。'
         },
         specs: {
             alcohol: 6,
@@ -1228,7 +1234,7 @@ export const recipes: Recipe[] = [
             ease: 6
         },
         color: '#78350f', // Amber-900 (Chocolatey)
-        image: '/cocktails/mudslide.png'
+        image: 'https://uyamflgtvqndbjpbjito.supabase.co/storage/v1/object/public/cocktails/mudslide.png'
     },
     {
         id: 'b52',
@@ -1264,8 +1270,8 @@ export const recipes: Recipe[] = [
             zh: ['一口酒', '分層', '派對']
         },
         description: {
-            en: 'The most famous layered shot in the world.',
-            zh: '世界上最著名的分層調酒。'
+            en: 'A tri-colored jet fuel shot. Sweet, creamy, and guaranteed to start (or end) the party.',
+            zh: '三色分層的液體燃料。甜、奶、烈，派對的開始（或結束）都靠它。'
         },
         specs: {
             alcohol: 7,
@@ -1273,7 +1279,7 @@ export const recipes: Recipe[] = [
             ease: 4
         },
         color: '#f59e0b', // Amber-500
-        image: '/cocktails/b52.png'
+        image: 'https://uyamflgtvqndbjpbjito.supabase.co/storage/v1/object/public/cocktails/b52.png'
     },
 
     // CVS Beer Series
@@ -1320,7 +1326,8 @@ export const recipes: Recipe[] = [
             ease: 10
         },
         color: '#facc15', // Yellow-400
-        image: '/cocktails/shandy.png'
+        image: 'https://uyamflgtvqndbjpbjito.supabase.co/storage/v1/object/public/cocktails/shandy.png',
+        collections: ['cvs-hacks']
     },
     {
         id: 'somaek',
@@ -1363,7 +1370,8 @@ export const recipes: Recipe[] = [
             ease: 8
         },
         color: '#fbbf24', // Amber-400
-        image: '/cocktails/somaek.png'
+        image: 'https://uyamflgtvqndbjpbjito.supabase.co/storage/v1/object/public/cocktails/somaek.png',
+        collections: ['cvs-hacks']
     },
     {
         id: 'red-eye',
@@ -1408,7 +1416,7 @@ export const recipes: Recipe[] = [
             ease: 9
         },
         color: '#ef4444', // Red-500
-        image: '/cocktails/kalimotxo.png' // Placeholder reused
+        image: 'https://uyamflgtvqndbjpbjito.supabase.co/storage/v1/object/public/cocktails/kalimotxo.png' // Placeholder reused
     },
     {
         id: 'calpis-beer',
@@ -1451,7 +1459,7 @@ export const recipes: Recipe[] = [
             ease: 10
         },
         color: '#fef9c3', // Yellow-100 (Pale creamy)
-        image: '/cocktails/shandy.png' // Placeholder reused
+        image: 'https://uyamflgtvqndbjpbjito.supabase.co/storage/v1/object/public/cocktails/shandy.png' // Placeholder reused
     }
     ,
     // CVS Gin & Tequila
@@ -1487,8 +1495,8 @@ export const recipes: Recipe[] = [
             zh: ['茶香', '清爽', '簡單']
         },
         description: {
-            en: 'Elegant, simple, and surprisingly sophisticated.',
-            zh: '優雅簡單，意外地有層次感。超商調酒的清流。'
+            en: 'Who said convenience store drinks can\'t be classy? The botanicals in gin actually love tea.',
+            zh: '誰說超商調酒不能很優雅？琴酒的草本香氣跟茶根本是天生一對。'
         },
         specs: {
             alcohol: 6,
@@ -1496,7 +1504,8 @@ export const recipes: Recipe[] = [
             ease: 10
         },
         color: '#d97706', // Amber-600
-        image: '/cocktails/gin-tea.png'
+        image: 'https://uyamflgtvqndbjpbjito.supabase.co/storage/v1/object/public/cocktails/gin-tea.png',
+        collections: ['cvs-hacks']
     },
     {
         id: 'gin-cc',
@@ -1530,8 +1539,8 @@ export const recipes: Recipe[] = [
             zh: ['酸甜', '氣泡', '維他命C']
         },
         description: {
-            en: 'Poor man\'s Gin Fizz. Tastes better than it sounds.',
-            zh: '窮人版的 Gin Fizz (琴費士)。比聽起來好喝兩百倍。'
+            en: 'Budget Gin Fizz. It shouldn\'t work this well, but it does. Sweet, citrusy, and dangerously chuggable.',
+            zh: '低配版 Gin Fizz。好喝到不科學。酸甜氣泡感，小心喝太快。'
         },
         specs: {
             alcohol: 5,
@@ -1539,7 +1548,8 @@ export const recipes: Recipe[] = [
             ease: 10
         },
         color: '#facc15', // Yellow-400
-        image: '/cocktails/gin-cc.png'
+        image: 'https://uyamflgtvqndbjpbjito.supabase.co/storage/v1/object/public/cocktails/gin-cc.png',
+        collections: ['cvs-hacks']
     },
     {
         id: 'tequila-coke',
@@ -1575,8 +1585,8 @@ export const recipes: Recipe[] = [
             zh: ['派對', '甜', '經典']
         },
         description: {
-            en: 'Mexico\'s Rum & Coke. The salt rim makes a difference.',
-            zh: '墨西哥版的蘭姆可樂。鹽口杯是靈魂所在。'
+            en: 'The Batanga. Mexico\'s answer to the Rum & Coke, but with more attitude. Stir with a knife for authenticity.',
+            zh: '墨西哥版可樂調酒 (Batanga)。比蘭姆可樂更有個性。想道地一點，請用牛排刀攪拌。'
         },
         specs: {
             alcohol: 6,
@@ -1584,7 +1594,8 @@ export const recipes: Recipe[] = [
             ease: 9
         },
         color: '#3f2c2c', // Dark cola
-        image: '/cocktails/tequila-coke.png'
+        image: 'https://uyamflgtvqndbjpbjito.supabase.co/storage/v1/object/public/cocktails/tequila-coke.png',
+        collections: ['cvs-hacks']
     },
     {
         id: 'tequila-cider',
@@ -1618,8 +1629,8 @@ export const recipes: Recipe[] = [
             zh: ['果味', '甜', '妹酒']
         },
         description: {
-            en: 'Dangerous. Tastes like juice but hits hard.',
-            zh: '危險。喝起來像果汁，但後勁很強。'
+            en: 'A fruity trap. Tastes like apple juice, hits like a truck. You have been warned.',
+            zh: '妹酒陷阱。喝起來像蘋果汁，尻下去像被卡車撞。後勁請小心。'
         },
         specs: {
             alcohol: 7,
@@ -1627,7 +1638,8 @@ export const recipes: Recipe[] = [
             ease: 10
         },
         color: '#fcd34d', // Amber-300
-        image: '/cocktails/tequila-cider.png'
+        image: 'https://uyamflgtvqndbjpbjito.supabase.co/storage/v1/object/public/cocktails/tequila-cider.png',
+        collections: ['cvs-hacks']
     }
     ,
     // CVS Brandy & Liqueur & others
@@ -1665,8 +1677,8 @@ export const recipes: Recipe[] = [
             zh: ['甜', '氣泡', '台式經典']
         },
         description: {
-            en: 'Local wisdom. The apple soda perfectly complements the brandy.',
-            zh: '在地人的智慧。蘋果西打跟白蘭地是天作之合。'
+            en: 'Taiwanese uncle style. The "Champagne of Taiwan" (Apple Sidra) makes brandy surprisingly drinkable.',
+            zh: '台式叔叔風格。「台灣香檳」(蘋果西打) 讓白蘭地變得意外順口。'
         },
         specs: {
             alcohol: 5,
@@ -1674,7 +1686,8 @@ export const recipes: Recipe[] = [
             ease: 10
         },
         color: '#ca8a04', // Yellow-600
-        image: '/cocktails/brandy-sidra.png'
+        image: 'https://uyamflgtvqndbjpbjito.supabase.co/storage/v1/object/public/cocktails/brandy-sidra.png',
+        collections: ['cvs-hacks']
     },
     {
         id: 'baileys-milktea',
@@ -1710,8 +1723,8 @@ export const recipes: Recipe[] = [
             zh: ['甜', '奶香', '療癒']
         },
         description: {
-            en: 'The adult version of bubble tea (minus the bubbles).',
-            zh: '大人的奶茶。甜上加甜，但是很幸福。'
+            en: 'Bubble tea for the broken-hearted. Or just for a cozy night in. Sweet, creamy, and comforting.',
+            zh: '給傷心人的珍珠奶茶（雖然沒有珍珠）。甜、奶、療癒，在家買醉首選。'
         },
         specs: {
             alcohol: 4,
@@ -1719,96 +1732,10 @@ export const recipes: Recipe[] = [
             ease: 10
         },
         color: '#a16207', // Brown
-        image: '/cocktails/baileys-milktea.png'
+        image: 'https://uyamflgtvqndbjpbjito.supabase.co/storage/v1/object/public/cocktails/baileys-milktea.png',
+        collections: ['cvs-hacks']
     },
-    {
-        id: 'vodka-yakult',
-        name: { en: 'Vodka Yakult', zh: '伏特加養樂多' },
-        type: 'cvs',
-        baseSpirit: ['vodka'],
-        ingredients: {
-            en: [
-                { name: 'Vodka', amount: '45ml' },
-                { name: 'Yakult (Probiotic Drink)', amount: '2 bottles' }
-            ],
-            zh: [
-                { name: '伏特加', amount: '45ml' },
-                { name: '養樂多', amount: '2瓶' }
-            ]
-        },
-        steps: {
-            en: [
-                'Fill glass with ice.',
-                'Pour vodka.',
-                'Add Yakult. Shake/Stir well.'
-            ],
-            zh: [
-                '杯中裝滿冰塊。',
-                '倒入伏特加。',
-                '加入養樂多。攪拌均勻。'
-            ]
-        },
-        tags: {
-            en: ['sweet', 'creamy', 'easy'],
-            zh: ['酸甜', '妹酒', '超簡單']
-        },
-        description: {
-            en: 'Dangerous. Tastes exactly like yogurt drink.',
-            zh: '危險。喝起來完全就是養樂多，不知不覺就醉了。'
-        },
-        specs: {
-            alcohol: 6,
-            sweetness: 9,
-            ease: 10
-        },
-        color: '#fef08a', // Pale yellow
-        image: '/cocktails/vodka-yakult.png'
-    },
-    {
-        id: 'rum-guava',
-        name: { en: 'Rum & Guava', zh: '蘭姆芭樂' },
-        type: 'cvs',
-        baseSpirit: ['rum'],
-        ingredients: {
-            en: [
-                { name: 'White Rum', amount: '45ml' },
-                { name: 'Guava Juice', amount: 'Top up' },
-                { name: 'Lemon', amount: 'Squeeze' }
-            ],
-            zh: [
-                { name: '白蘭姆酒', amount: '45ml' },
-                { name: '芭樂汁 (辦桌那種)', amount: '加滿' },
-                { name: '檸檬', amount: '擠一點' }
-            ]
-        },
-        steps: {
-            en: [
-                'Ice in glass.',
-                'Rum and Guava juice.',
-                'Squeeze some lemon to balance the sweetness.'
-            ],
-            zh: [
-                '冰塊。',
-                '蘭姆酒加芭樂汁。',
-                '擠一點檸檬汁來平衡甜度 (重要)。'
-            ]
-        },
-        tags: {
-            en: ['tropical', 'sweet', 'taiwanese'],
-            zh: ['熱帶', '台式', '辦桌味']
-        },
-        description: {
-            en: 'Taiwanese banquet style. The lemon makes it pop.',
-            zh: '台式辦桌風味。加了檸檬之後層次完全不同。'
-        },
-        specs: {
-            alcohol: 5,
-            sweetness: 8,
-            ease: 10
-        },
-        color: '#bef264', // Lime-200
-        image: '/cocktails/rum-guava.png'
-    },
+
     {
         id: 'hot-toddy',
         name: { en: 'Hot Toddy', zh: '熱托迪' },
@@ -1854,7 +1781,8 @@ export const recipes: Recipe[] = [
             ease: 10
         },
         color: '#f59e0b', // Amber-500
-        image: '/cocktails/hot-toddy.png'
+        image: 'https://uyamflgtvqndbjpbjito.supabase.co/storage/v1/object/public/cocktails/hot-toddy.png',
+        collections: ['winter-warmers']
     },
     {
         id: 'mulled-wine',
@@ -1901,7 +1829,8 @@ export const recipes: Recipe[] = [
             ease: 7
         },
         color: '#be123c', // Rose-700
-        image: '/cocktails/mulled-wine.png'
+        image: 'https://uyamflgtvqndbjpbjito.supabase.co/storage/v1/object/public/cocktails/mulled-wine.png',
+        collections: ['winter-warmers']
     },
     {
         id: 'irish-coffee',
@@ -1950,7 +1879,8 @@ export const recipes: Recipe[] = [
             ease: 6
         },
         color: '#451a03', // Amber-950
-        image: '/cocktails/irish-coffee.png'
+        image: 'https://uyamflgtvqndbjpbjito.supabase.co/storage/v1/object/public/cocktails/irish-coffee.png',
+        collections: ['winter-warmers']
     },
     {
         id: 'hot-buttered-rum',
@@ -2001,7 +1931,8 @@ export const recipes: Recipe[] = [
             ease: 8
         },
         color: '#d97706', // Amber-600
-        image: '/cocktails/hot-buttered-rum.png'
+        image: 'https://uyamflgtvqndbjpbjito.supabase.co/storage/v1/object/public/cocktails/hot-buttered-rum.png',
+        collections: ['winter-warmers']
     },
     {
         id: 'eggnog',
@@ -2052,7 +1983,8 @@ export const recipes: Recipe[] = [
             ease: 6
         },
         color: '#fef3c7', // Amber-100
-        image: '/cocktails/eggnog.png'
+        image: 'https://uyamflgtvqndbjpbjito.supabase.co/storage/v1/object/public/cocktails/eggnog.png',
+        collections: ['winter-warmers']
     },
     {
         id: 'baileys-hot-chocolate',
@@ -2101,7 +2033,8 @@ export const recipes: Recipe[] = [
             ease: 10
         },
         color: '#3f2c22', // Chocolate
-        image: '/cocktails/baileys-hot-chocolate.png'
+        image: 'https://uyamflgtvqndbjpbjito.supabase.co/storage/v1/object/public/cocktails/baileys-hot-chocolate.png',
+        collections: ['winter-warmers']
     },
     {
         id: 'whiskey-oolong',
@@ -2123,30 +2056,10 @@ export const recipes: Recipe[] = [
         },
         specs: { alcohol: 5, sweetness: 3, ease: 10 },
         color: '#d97706', // amber-600
-        image: '/cocktails/whiskey-oolong.png'
+        image: 'https://uyamflgtvqndbjpbjito.supabase.co/storage/v1/object/public/cocktails/whiskey-oolong.png',
+        collections: ['cvs-hacks']
     },
-    {
-        id: 'sake-calpis',
-        name: { en: 'Sake Calpis', zh: '可爾必思清酒' },
-        type: 'cvs',
-        baseSpirit: ['other'], // 'sake' not standard type yet? Using 'other' or 'sake' depends on types.ts. Assuming string.
-        ingredients: {
-            en: [{ name: 'Sake', amount: '60ml' }, { name: 'Calpis Water', amount: '60ml' }, { name: 'Soda Water', amount: 'Top up' }],
-            zh: [{ name: '清酒', amount: '60ml' }, { name: '可爾必思', amount: '60ml' }, { name: '氣泡水', amount: '適量' }]
-        },
-        steps: {
-            en: ['Fill glass with ice.', 'Pour sake and Calpis.', 'Top with soda water and stir gently.'],
-            zh: ['杯中加入冰塊。', '倒入清酒和可爾必思。', '加入氣泡水輕輕攪拌。']
-        },
-        tags: { en: ['cvs', 'sweet', 'refreshing'], zh: ['超商', '甜', '清爽'] },
-        description: {
-            en: 'A gentle and milky cocktail. The acidity of Calpis balances the rice flavor of Sake.',
-            zh: '溫柔的乳酸系調酒。可爾必思的酸甜平衡了清酒的米香，非常好入口。'
-        },
-        specs: { alcohol: 3, sweetness: 7, ease: 10 },
-        color: '#f8fafc', // slate-50
-        image: '/cocktails/sake-calpis.png'
-    },
+
     {
         id: 'vodka-energy',
         name: { en: 'Vodka Energy', zh: '能量伏特加' },
@@ -2167,7 +2080,8 @@ export const recipes: Recipe[] = [
         },
         specs: { alcohol: 5, sweetness: 8, ease: 10 },
         color: '#bef264', // lime-300
-        image: '/cocktails/vodka-energy.png'
+        image: 'https://uyamflgtvqndbjpbjito.supabase.co/storage/v1/object/public/cocktails/vodka-energy.png',
+        collections: ['cvs-hacks']
     },
     {
         id: 'gin-sports',
@@ -2184,12 +2098,13 @@ export const recipes: Recipe[] = [
         },
         tags: { en: ['cvs', 'refreshing', 'hydration'], zh: ['超商', '清爽', '補水'] },
         description: {
-            en: 'Unexpectedly hydrating. The botanicals of gin mix surprisingly well with the grapefruit notes of sports drinks.',
-            zh: '意外的清爽補水組合。琴酒的杜松子香氣與運動飲料的柚子味非常搭。'
+            en: 'The "Sportsman\'s" drink. Gin botanicals meet grapefruit ions. Surprisingly refreshing after a workout (or before one).',
+            zh: '「運動員」專屬。琴酒草本香遇上寶礦力柚子味。運動完（或運動前）喝，意外清爽。'
         },
         specs: { alcohol: 4, sweetness: 5, ease: 10 },
         color: '#e0f2fe', // sky-100
-        image: '/cocktails/gin-sports.png'
+        image: 'https://uyamflgtvqndbjpbjito.supabase.co/storage/v1/object/public/cocktails/gin-sports.png',
+        collections: ['cvs-hacks']
     },
     {
         id: 'lemon-tea-whiskey',
@@ -2211,6 +2126,547 @@ export const recipes: Recipe[] = [
         },
         specs: { alcohol: 5, sweetness: 7, ease: 10 },
         color: '#a16207', // yellow-700
-        image: '/cocktails/lemon-tea-whiskey.png'
+        image: 'https://uyamflgtvqndbjpbjito.supabase.co/storage/v1/object/public/cocktails/lemon-tea-whiskey.png',
+        collections: ['cvs-hacks']
+    },
+    {
+        id: 'kaoliang-yakult',
+        name: { en: 'Kaoliang & Yakult', zh: '高粱養樂多' },
+        type: 'cvs',
+        baseSpirit: ['kaoliang'],
+        ingredients: {
+            en: [{ name: 'Kaoliang Liquor (58%)', amount: '1 part' }, { name: 'Yakult', amount: '4 parts' }, { name: 'Lemon Juice', amount: 'Splash (Optional)' }],
+            zh: [{ name: '58度高粱酒', amount: '1份' }, { name: '養樂多', amount: '4份' }, { name: '檸檬汁', amount: '少許 (選填)' }]
+        },
+        steps: {
+            en: ['Fill a glass with ice.', 'Pour Kaoliang liquor.', 'Top with Yakult.', 'Stir well.'],
+            zh: ['杯中裝滿冰塊。', '倒入高粱酒。', '加滿養樂多。', '攪拌均勻。']
+        },
+        tags: { en: ['cvs', 'local', 'creamy'], zh: ['超商', '台式', '濃郁'] },
+        description: { en: 'The legendary "White Water" mix. Yakult miraculously tames the Kaoliang fire. A right of passage.', zh: '傳說中的「白水」。養樂多奇蹟般地馴服了高粱的嗆辣。台灣人的成年禮。' },
+        specs: { alcohol: 7, sweetness: 8, ease: 10 },
+        color: '#fefce8',
+        image: 'https://uyamflgtvqndbjpbjito.supabase.co/storage/v1/object/public/cocktails/kaoliang-yakult.png',
+        collections: ['cvs-hacks']
+    },
+    {
+        id: 'guava-gin',
+        name: { en: 'Gin & Guava', zh: '芭樂琴酒' },
+        type: 'cvs',
+        baseSpirit: ['gin'],
+        ingredients: {
+            en: [{ name: 'Gin', amount: '45ml' }, { name: 'Guava Juice', amount: 'Top up' }],
+            zh: [{ name: '琴酒', amount: '45ml' }, { name: '芭樂汁', amount: '加滿' }]
+        },
+        steps: {
+            en: ['Fill glass with ice.', 'Add Gin.', 'Top with sweet Guava juice.', 'Stir.'],
+            zh: ['杯中加冰。', '加入琴酒。', '倒滿芭樂汁', '攪拌。']
+        },
+        tags: { en: ['cvs', 'fruity', 'sweet'], zh: ['超商', '果香', '甜'] },
+        description: { en: 'The herbal notes of Gin pair surprisingly well with the tropical sweetness of Guava.', zh: '琴酒的草本香氣與芭樂的熱帶甜味意外地搭。' },
+        specs: { alcohol: 5, sweetness: 7, ease: 10 },
+        color: '#bef264',
+        image: 'https://uyamflgtvqndbjpbjito.supabase.co/storage/v1/object/public/cocktails/guava-gin.png',
+        collections: ['cvs-hacks']
+    },
+    {
+        id: 'rum-guava',
+        name: { en: 'Rum & Guava', zh: '蘭姆芭樂' },
+        type: 'cvs',
+        baseSpirit: ['rum'],
+        ingredients: {
+            en: [{ name: 'White Rum', amount: '45ml' }, { name: 'Guava Juice', amount: 'Top up' }, { name: 'Lemon', amount: 'Wedge' }],
+            zh: [{ name: '白蘭姆酒', amount: '45ml' }, { name: '芭樂汁', amount: '加滿' }, { name: '檸檬', amount: '切角' }]
+        },
+        steps: {
+            en: ['Ice in glass.', 'Pour Rum.', 'Fill with Guava juice.', 'Squeeze lemon.'],
+            zh: ['杯中加冰。', '倒入蘭姆酒。', '加滿芭樂汁。', '擠入檸檬汁。']
+        },
+        tags: { en: ['cvs', 'tropical', 'sweet'], zh: ['超商', '熱帶', '甜'] },
+        description: { en: 'Taiwanese banquet style. The lemon makes it pop.', zh: '台式辦桌風味。加了檸檬之後層次完全不同。' },
+        specs: { alcohol: 5, sweetness: 7, ease: 10 },
+        color: '#bef264',
+        image: 'https://uyamflgtvqndbjpbjito.supabase.co/storage/v1/object/public/cocktails/rum-guava.png',
+        collections: ['cvs-hacks']
+    },
+    {
+        id: 'sake-calpis',
+        name: { en: 'Sake Calpis', zh: '可爾必思清酒' },
+        type: 'cvs',
+        baseSpirit: ['sake'],
+        ingredients: {
+            en: [{ name: 'Sake', amount: '1 part' }, { name: 'Calpis Water', amount: '1 part' }],
+            zh: [{ name: '清酒', amount: '1份' }, { name: '可爾必思水', amount: '1份' }]
+        },
+        steps: {
+            en: ['Mix equal parts Sake and Calpis in a glass with ice.'],
+            zh: ['在裝冰的杯中混合等量的清酒和可爾必思。']
+        },
+        tags: { en: ['cvs', 'milky', 'low-abv'], zh: ['超商', '乳酸', '低酒精'] },
+        description: { en: 'Calpis makes everything better. A smooth, milky delight that goes down way too easy.', zh: '可爾必思救贖一切。綿密順口的乳酸滋味，不小心就會喝太快。' },
+        specs: { alcohol: 4, sweetness: 8, ease: 10 },
+        color: '#ffffff',
+        image: 'https://uyamflgtvqndbjpbjito.supabase.co/storage/v1/object/public/cocktails/sake-calpis.png',
+        collections: ['cvs-hacks']
+    },
+    {
+        id: 'sarsaparilla-whiskey',
+        name: { en: 'Sarsaparilla Highball', zh: '沙士威士忌' },
+        type: 'cvs',
+        baseSpirit: ['whiskey'],
+        ingredients: {
+            en: [{ name: 'Whiskey', amount: '45ml' }, { name: 'Sarsaparilla (Root Beer)', amount: 'Top up' }],
+            zh: [{ name: '威士忌', amount: '45ml' }, { name: '黑松沙士', amount: '加滿' }]
+        },
+        steps: {
+            en: ['Ice in glass.', 'Add whisky.', 'Fill with Sarsaparilla.', 'Briefly stir.'],
+            zh: ['杯中加冰。', '加入威士忌。', '加滿沙士。', '稍微攪拌。']
+        },
+        tags: { en: ['cvs', 'bubbly', 'classic'], zh: ['超商', '氣泡', '經典'] },
+        description: { en: 'A Taiwanese staple. The herbal root beer notes merge with whisky barrel spices. Trust us, it works.', zh: '台灣特有人情味。沙士的草本香與威士忌的木桶味完美融合。相信我，這真的很搭。' },
+        specs: { alcohol: 5, sweetness: 6, ease: 10 },
+        color: '#713f12',
+        image: 'https://uyamflgtvqndbjpbjito.supabase.co/storage/v1/object/public/cocktails/sarsaparilla-whiskey.png',
+        collections: ['cvs-hacks']
+    },
+    {
+        id: 'soju-melona',
+        name: { en: 'Soju Melona', zh: '燒酒哈密瓜冰棒' },
+        type: 'cvs',
+        baseSpirit: ['soju'],
+        ingredients: {
+            en: [{ name: 'Soju (Original)', amount: '60ml' }, { name: 'Sprite/Cider', amount: '60ml' }, { name: 'Melona Ice Bar', amount: '1 whole' }],
+            zh: [{ name: '原味燒酒', amount: '60ml' }, { name: '雪碧/七喜', amount: '60ml' }, { name: '哈密瓜冰棒', amount: '1支' }]
+        },
+        steps: {
+            en: ['Put the ice bar into a large glass.', 'Pour Soju and Sprite over it.', 'Use the stick to stir as it melts.'],
+            zh: ['將冰棒放入大杯中。', '倒入燒酒和雪碧。', '用冰棒棍攪拌讓其融化。']
+        },
+        tags: { en: ['cvs', 'fun', 'creamy'], zh: ['超商', '好玩', '濃郁'] },
+        description: { en: 'A popular Korean party drink. The melting creamsicle makes it rich and sweet.', zh: '韓國流行的派對喝法。融化的冰棒讓口感變得濃郁香甜。' },
+        specs: { alcohol: 6, sweetness: 9, ease: 8 },
+        color: '#86efac',
+        image: 'https://uyamflgtvqndbjpbjito.supabase.co/storage/v1/object/public/cocktails/soju-melona.png',
+        collections: ['cvs-hacks']
+    },
+    {
+        id: 'vodka-yakult',
+        name: { en: 'Vodka Yakult', zh: '伏特加養樂多' },
+        type: 'cvs',
+        baseSpirit: ['vodka'],
+        ingredients: {
+            en: [{ name: 'Vodka', amount: '45ml' }, { name: 'Yakult', amount: '2-3 bottles' }],
+            zh: [{ name: '伏特加', amount: '45ml' }, { name: '養樂多', amount: '2-3瓶' }]
+        },
+        steps: {
+            en: ['Fill glass with ice.', 'Add Vodka.', 'Top with Yakult.', 'Shake or Stir.'],
+            zh: ['杯中加冰。', '加入伏特加。', '倒滿養樂多。', '搖盪或攪拌。']
+        },
+        tags: { en: ['cvs', 'sweet', 'party'], zh: ['超商', '甜', '派對'] },
+        description: { en: 'The "Adult Yakult". Tastes exactly like your childhood, if your childhood involved getting hammered.', zh: '大人的養樂多。喝起來像童年回憶，如果你的童年包含喝掛的話。' },
+        specs: { alcohol: 8, sweetness: 8, ease: 10 },
+        color: '#fefce8',
+        image: 'https://uyamflgtvqndbjpbjito.supabase.co/storage/v1/object/public/cocktails/vodka-yakult.png',
+        collections: ['cvs-hacks']
+    },
+    {
+        id: 'french-75',
+        name: { en: 'French 75', zh: '法式75' },
+        type: 'classic',
+        baseSpirit: ['gin', 'wine'],
+        ingredients: {
+            en: [{ name: 'Gin', amount: '30ml' }, { name: 'Lemon Juice', amount: '15ml' }, { name: 'Simple Syrup', amount: '15ml' }, { name: 'Champagne', amount: 'Top up' }],
+            zh: [{ name: '琴酒', amount: '30ml' }, { name: '檸檬汁', amount: '15ml' }, { name: '糖漿', amount: '15ml' }, { name: '香檳', amount: '加滿' }]
+        },
+        steps: {
+            en: ['Shake gin, juice, and syrup with ice.', 'Strain into a champagne flute.', 'Top with champagne.'],
+            zh: ['將琴酒、檸檬汁和糖漿加冰搖盪。', '濾入香檳杯。', '加滿香檳。']
+        },
+        tags: { en: ['bubbly', 'celebration', 'sour'], zh: ['氣泡', '慶祝', '酸'] },
+        description: { en: 'A sophisticated combination of gin and champagne.', zh: '琴酒與香檳的優雅結合，威力如75毫米野戰砲。' },
+        specs: { alcohol: 6, sweetness: 5, ease: 7 },
+        color: '#fefce8',
+        image: 'https://uyamflgtvqndbjpbjito.supabase.co/storage/v1/object/public/cocktails/french-75.png',
+        collections: ['classic']
+    },
+    {
+        id: 'aperol-spritz',
+        name: { en: 'Aperol Spritz', zh: '艾普羅氣泡酒' },
+        type: 'classic',
+        baseSpirit: ['wine'],
+        ingredients: {
+            en: [{ name: 'Prosecco', amount: '90ml' }, { name: 'Aperol', amount: '60ml' }, { name: 'Soda Water', amount: '30ml' }],
+            zh: [{ name: 'Prosecco氣泡酒', amount: '90ml' }, { name: 'Aperol開胃酒', amount: '60ml' }, { name: '蘇打水', amount: '30ml' }]
+        },
+        steps: {
+            en: ['Fill wine glass with ice.', 'Add Prosecco, then Aperol, then Soda.', 'Garnish with orange slice.'],
+            zh: ['酒杯裝滿冰塊。', '依序加入氣泡酒、Aperol、蘇打水。', '以柳橙片裝飾。']
+        },
+        tags: { en: ['bubbly', 'bittersweet', 'refreshing', 'party'], zh: ['氣泡', '苦甜', '清爽', '派對'] },
+        description: { en: 'The ultimate Italian aperitif.', zh: '義大利國民餐前酒，清爽開胃。' },
+        specs: { alcohol: 4, sweetness: 6, ease: 10 },
+        color: '#fb923c',
+        image: 'https://uyamflgtvqndbjpbjito.supabase.co/storage/v1/object/public/cocktails/aperol-spritz.png',
+        collections: ['classic', 'party-time']
+    },
+    {
+        id: 'moscow-mule',
+        name: { en: 'Moscow Mule', zh: '莫斯科以此' },
+        type: 'classic',
+        baseSpirit: ['vodka'],
+        ingredients: {
+            en: [{ name: 'Vodka', amount: '45ml' }, { name: 'Lime Juice', amount: '15ml' }, { name: 'Ginger Beer', amount: 'Top up' }],
+            zh: [{ name: '伏特加', amount: '45ml' }, { name: '萊姆汁', amount: '15ml' }, { name: '薑汁啤酒', amount: '加滿' }]
+        },
+        steps: {
+            en: ['Fill copper mug with ice.', 'Add vodka and lime juice.', 'Top with ginger beer.', 'Stir.'],
+            zh: ['銅杯加冰。', '加入伏特加和萊姆汁。', '倒滿薑汁啤酒。', '攪拌。']
+        },
+        tags: { en: ['refreshing', 'spicy', 'party'], zh: ['清爽', '辛辣', '派對'] },
+        description: { en: 'Spicy ginger and lime make this a refreshing classic.', zh: '薑味與萊姆的完美結合，清爽辛辣。' },
+        specs: { alcohol: 5, sweetness: 5, ease: 9 },
+        color: '#fef3c7',
+        image: 'https://uyamflgtvqndbjpbjito.supabase.co/storage/v1/object/public/cocktails/moscow-mule.png',
+        collections: ['classic', 'party-time']
+    },
+    {
+        id: 'pina-colada',
+        name: { en: 'Piña Colada', zh: '鳳梨可樂達' },
+        type: 'classic',
+        baseSpirit: ['rum'],
+        ingredients: {
+            en: [{ name: 'White Rum', amount: '60ml' }, { name: 'Coconut Cream', amount: '30ml' }, { name: 'Pineapple Juice', amount: '90ml' }],
+            zh: [{ name: '白蘭姆酒', amount: '60ml' }, { name: '椰漿', amount: '30ml' }, { name: '鳳梨汁', amount: '90ml' }]
+        },
+        steps: {
+            en: ['Blend all ingredients with crushed ice until smooth.', 'Pour into tall glass.'],
+            zh: ['將所有材料與碎冰放入果汁機打勻。', '倒入長杯。']
+        },
+        tags: { en: ['tropical', 'fruity', 'creamy', 'party'], zh: ['熱帶', '果味', '濃郁', '派對'] },
+        description: { en: 'The quintessential tropical cocktail.', zh: '最經典的熱帶調酒，充滿鳳梨與椰子香氣。' },
+        specs: { alcohol: 5, sweetness: 9, ease: 6 },
+        color: '#ffffff',
+        image: 'https://uyamflgtvqndbjpbjito.supabase.co/storage/v1/object/public/cocktails/pina-colada.png',
+        collections: ['classic', 'party-time']
+    },
+    {
+        id: 'long-island',
+        name: { en: 'Long Island Iced Tea', zh: '長島冰茶' },
+        type: 'classic',
+        baseSpirit: ['vodka', 'rum', 'gin', 'tequila'],
+        ingredients: {
+            en: [{ name: 'Vodka', amount: '15ml' }, { name: 'Rum', amount: '15ml' }, { name: 'Gin', amount: '15ml' }, { name: 'Tequila', amount: '15ml' }, { name: 'Triple Sec', amount: '15ml' }, { name: 'Lemon Juice', amount: '25ml' }, { name: 'Cola', amount: 'Splash' }],
+            zh: [{ name: '伏特加', amount: '15ml' }, { name: '蘭姆酒', amount: '15ml' }, { name: '琴酒', amount: '15ml' }, { name: '龍舌蘭', amount: '15ml' }, { name: '君度橙酒', amount: '15ml' }, { name: '檸檬汁', amount: '25ml' }, { name: '可樂', amount: '少許' }]
+        },
+        steps: {
+            en: ['Add all spirits and lemon juice to highball glass with ice.', 'Top with cola.', 'Stir.'],
+            zh: ['所有烈酒與檸檬汁加入裝滿冰的長杯。', '注入可樂。', '攪拌。']
+        },
+        tags: { en: ['strong', 'party', 'classic'], zh: ['烈', '派對', '經典'] },
+        description: { en: 'Looks like tea, hits like a truck.', zh: '看起來像茶，喝起來像被卡車撞。' },
+        specs: { alcohol: 9, sweetness: 6, ease: 8 },
+        color: '#a16207',
+        image: 'https://uyamflgtvqndbjpbjito.supabase.co/storage/v1/object/public/cocktails/long-island.png',
+        collections: ['classic', 'party-time']
+    },
+    {
+        id: 'sex-on-the-beach',
+        name: { en: 'Sex on the Beach', zh: '性慾海灘' },
+        type: 'classic',
+        baseSpirit: ['vodka'],
+        ingredients: {
+            en: [{ name: 'Vodka', amount: '45ml' }, { name: 'Peach Schnapps', amount: '15ml' }, { name: 'Orange Juice', amount: '45ml' }, { name: 'Cranberry Juice', amount: '45ml' }],
+            zh: [{ name: '伏特加', amount: '45ml' }, { name: '水蜜桃酒', amount: '15ml' }, { name: '柳橙汁', amount: '45ml' }, { name: '蔓越莓汁', amount: '45ml' }]
+        },
+        steps: {
+            en: ['Shake all ingredients with ice.', 'Strain into highball glass filled with ice.'],
+            zh: ['所有材料加冰搖盪。', '濾入裝滿冰的長杯。']
+        },
+        tags: { en: ['fruity', 'sweet', 'party'], zh: ['果味', '甜', '派對'] },
+        description: { en: 'Fruity, refreshing, and popular.', zh: '果香濃郁，清爽受歡迎的夏季調酒。' },
+        specs: { alcohol: 5, sweetness: 8, ease: 8 },
+        color: '#fb7185',
+        image: 'https://uyamflgtvqndbjpbjito.supabase.co/storage/v1/object/public/cocktails/sex-on-the-beach.png',
+        collections: ['classic', 'party-time']
+    },
+    {
+        id: 'singapore-sling',
+        name: { en: 'Singapore Sling', zh: '新加坡司令' },
+        type: 'classic',
+        baseSpirit: ['gin', 'brandy'],
+        ingredients: {
+            en: [{ name: 'Gin', amount: '30ml' }, { name: 'Cherry Brandy', amount: '15ml' }, { name: 'Cointreau', amount: '7.5ml' }, { name: 'DOM Benedictine', amount: '7.5ml' }, { name: 'Pineapple Juice', amount: '120ml' }, { name: 'Lime Juice', amount: '15ml' }, { name: 'Grenadine', amount: '10ml' }],
+            zh: [{ name: '琴酒', amount: '30ml' }, { name: '櫻桃白蘭地', amount: '15ml' }, { name: '君度橙酒', amount: '7.5ml' }, { name: 'DOM 班尼狄克汀', amount: '7.5ml' }, { name: '鳳梨汁', amount: '120ml' }, { name: '萊姆汁', amount: '15ml' }, { name: '紅石榴糖漿', amount: '10ml' }]
+        },
+        steps: {
+            en: ['Shake all ingredients with ice.', 'Strain into tall glass.'],
+            zh: ['所有材料加冰搖盪。', '濾入長杯。']
+        },
+        tags: { en: ['complex', 'fruity', 'tropical'], zh: ['複雜', '果味', '熱帶'] },
+        description: { en: 'A complex, fruity cocktail created at the Raffles Hotel.', zh: '萊佛士酒店創製的複雜果味調酒。' },
+        specs: { alcohol: 6, sweetness: 7, ease: 4 },
+        color: '#ef4444',
+        image: 'https://uyamflgtvqndbjpbjito.supabase.co/storage/v1/object/public/cocktails/singapore-sling.png',
+        collections: ['classic']
+    },
+    {
+        id: 'caipirinha',
+        name: { en: 'Caipirinha', zh: '卡琵莉亞' },
+        type: 'classic',
+        baseSpirit: ['rum'],
+        ingredients: {
+            en: [{ name: 'Cachaça', amount: '60ml' }, { name: 'Lime', amount: '1/2 cut into wedges' }, { name: 'Sugar', amount: '2 tsp' }],
+            zh: [{ name: '卡夏莎 (巴西甘蔗酒)', amount: '60ml' }, { name: '萊姆', amount: '半顆切塊' }, { name: '糖', amount: '2茶匙' }]
+        },
+        steps: {
+            en: ['Muddle lime and sugar in glass.', 'Add Cachaça and ice.', 'Stir.'],
+            zh: ['在杯中搗碎萊姆與糖。', '加入卡夏莎與冰塊。', '攪拌。']
+        },
+        tags: { en: ['sour', 'refreshing', 'classic'], zh: ['酸', '清爽', '經典'] },
+        description: { en: 'Brazil’s national cocktail. Rustic and strong.', zh: '巴西國酒。粗獷有力，充滿甘蔗香氣。' },
+        specs: { alcohol: 8, sweetness: 6, ease: 8 },
+        color: '#f0fdf4',
+        image: 'https://uyamflgtvqndbjpbjito.supabase.co/storage/v1/object/public/cocktails/caipirinha.png',
+        collections: ['classic']
+    },
+    {
+        id: 'pisco-sour',
+        name: { en: 'Pisco Sour', zh: '皮斯科沙瓦' },
+        type: 'classic',
+        baseSpirit: ['brandy'],
+        ingredients: {
+            en: [{ name: 'Pisco', amount: '60ml' }, { name: 'Lime Juice', amount: '30ml' }, { name: 'Simple Syrup', amount: '20ml' }, { name: 'Egg White', amount: '1' }, { name: 'Angostura Bitters', amount: '3 drops' }],
+            zh: [{ name: '皮斯科 (葡萄蒸餾酒)', amount: '60ml' }, { name: '萊姆汁', amount: '30ml' }, { name: '糖漿', amount: '20ml' }, { name: '蛋白', amount: '1顆' }, { name: '安格氏苦精', amount: '3滴' }]
+        },
+        steps: {
+            en: ['Dry shake ingredients without ice.', 'Add ice and shake rigorously.', 'Strain into glass.', 'Top with bitters.'],
+            zh: ['不加冰乾搖所有材料。', '加冰劇烈搖盪。', '濾入杯中。', '滴上苦精。']
+        },
+        tags: { en: ['sour', 'creamy', 'classic'], zh: ['酸', '綿密', '經典'] },
+        description: { en: 'The national drink of Peru and Chile. Creamy and tart.', zh: '秘魯與智利的國飲。綿密酸甜。' },
+        specs: { alcohol: 6, sweetness: 5, ease: 6 },
+        color: '#d1d5db',
+        image: 'https://uyamflgtvqndbjpbjito.supabase.co/storage/v1/object/public/cocktails/pisco-sour.png',
+        collections: ['classic']
+    },
+    {
+        id: 'boulevardier',
+        name: { en: 'Boulevardier', zh: '花花公子' },
+        type: 'classic',
+        baseSpirit: ['whiskey'],
+        ingredients: {
+            en: [{ name: 'Bourbon or Rye Whiskey', amount: '45ml' }, { name: 'Campari', amount: '30ml' }, { name: 'Sweet Vermouth', amount: '30ml' }],
+            zh: [{ name: '波本或裸麥威士忌', amount: '45ml' }, { name: 'Campari', amount: '30ml' }, { name: '甜香艾酒', amount: '30ml' }]
+        },
+        steps: {
+            en: ['Stir all ingredients with ice.', 'Strain into chilled glass.', 'Garnish with orange peel.'],
+            zh: ['所有材料加冰攪拌。', '濾入冰鎮過的杯子。', '以橙皮裝飾。']
+        },
+        tags: { en: ['bitter', 'strong', 'classic'], zh: ['苦', '烈', '經典'] },
+        description: { en: 'A Negroni made with whiskey.', zh: '用威士忌做的內格羅尼。' },
+        specs: { alcohol: 8, sweetness: 4, ease: 9 },
+        color: '#b91c1c',
+        image: 'https://uyamflgtvqndbjpbjito.supabase.co/storage/v1/object/public/cocktails/boulevardier.png',
+        collections: ['classic']
+    },
+    {
+        id: 'mint-julep',
+        name: { en: 'Mint Julep', zh: '薄荷茱莉普' },
+        type: 'classic',
+        baseSpirit: ['whiskey'],
+        ingredients: {
+            en: [{ name: 'Bourbon', amount: '60ml' }, { name: 'Mint Leaves', amount: '4-5' }, { name: 'Simple Syrup', amount: '10ml' }],
+            zh: [{ name: '波本威士忌', amount: '60ml' }, { name: '薄荷葉', amount: '4-5片' }, { name: '糖漿', amount: '10ml' }]
+        },
+        steps: {
+            en: ['Gently muddle mint and syrup.', 'Add bourbon and crushed ice.', 'Stir until cup is frosted.', 'Garnish with more mint.'],
+            zh: ['輕輕搗碎薄荷與糖漿。', '加入波本與碎冰。', '攪拌至杯壁結霜。', '以薄荷裝飾。']
+        },
+        tags: { en: ['refreshing', 'classic', 'strong'], zh: ['清爽', '經典', '烈'] },
+        description: { en: 'The signature drink of the Kentucky Derby.', zh: '肯塔基賽馬會的標誌性調酒。' },
+        specs: { alcohol: 8, sweetness: 4, ease: 7 },
+        color: '#d1fae5',
+        image: 'https://uyamflgtvqndbjpbjito.supabase.co/storage/v1/object/public/cocktails/mint-julep.png',
+        collections: ['classic']
+    },
+    {
+        id: 'sazerac',
+        name: { en: 'Sazerac', zh: '薩澤拉克' },
+        type: 'classic',
+        baseSpirit: ['whiskey'],
+        ingredients: {
+            en: [{ name: 'Rye Whiskey', amount: '60ml' }, { name: 'Absinthe', amount: 'Rinse' }, { name: 'Sugar Cube', amount: '1' }, { name: 'Peychaud\'s Bitters', amount: '3 dashes' }],
+            zh: [{ name: '裸麥威士忌', amount: '60ml' }, { name: '艾碧斯', amount: '涮洗杯壁' }, { name: '方糖', amount: '1顆' }, { name: '佩修苦精', amount: '3 dash' }]
+        },
+        steps: {
+            en: ['Rinse chilled glass with absinthe.', 'Muddle sugar and bitters.', 'Add whiskey and ice, stir.', 'Strain into rinsed glass.'],
+            zh: ['冰鎮杯子用艾碧斯涮過。', '搗碎糖與苦精。', '加入威士忌與冰攪拌。', '濾入杯中。']
+        },
+        tags: { en: ['strong', 'aromatic', 'classic'], zh: ['烈', '香氣', '經典'] },
+        description: { en: 'New Orleans classic. Aromatic and potent.', zh: '紐奧良經典。香氣馥郁且濃烈。' },
+        specs: { alcohol: 9, sweetness: 3, ease: 6 },
+        color: '#c2410c',
+        image: 'https://uyamflgtvqndbjpbjito.supabase.co/storage/v1/object/public/cocktails/sazerac.png',
+        collections: ['classic']
+    },
+    {
+        id: 'dark-n-stormy',
+        name: { en: 'Dark \'n\' Stormy', zh: '月黑風高' },
+        type: 'classic',
+        baseSpirit: ['rum'],
+        ingredients: {
+            en: [{ name: 'Dark Rum', amount: '60ml' }, { name: 'Ginger Beer', amount: '100ml' }, { name: 'Lime', amount: 'Wedge' }],
+            zh: [{ name: '黑蘭姆酒', amount: '60ml' }, { name: '薑汁啤酒', amount: '100ml' }, { name: '萊姆', amount: '切角' }]
+        },
+        steps: {
+            en: ['Fill glass with ice.', 'Pour ginger beer.', 'Float dark rum on top.', 'Garnish with lime.'],
+            zh: ['杯中加冰。', '倒入薑汁啤酒。', '將黑蘭姆酒漂浮在上方。', '以萊姆裝飾。']
+        },
+        tags: { en: ['spicy', 'refreshing', 'classic'], zh: ['辛辣', '清爽', '經典'] },
+        description: { en: 'Bermuda\'s national drink. Spicy and refreshing.', zh: '百慕達國酒。辛辣清爽。' },
+        specs: { alcohol: 6, sweetness: 5, ease: 10 },
+        color: '#713f12',
+        image: 'https://uyamflgtvqndbjpbjito.supabase.co/storage/v1/object/public/cocktails/dark-n-stormy.png',
+        collections: ['classic']
+    },
+    {
+        id: 'amaretto-sour',
+        name: { en: 'Amaretto Sour', zh: '杏仁酸酒' },
+        type: 'classic',
+        baseSpirit: ['liqueur'],
+        ingredients: {
+            en: [{ name: 'Amaretto', amount: '60ml' }, { name: 'Lemon Juice', amount: '30ml' }, { name: 'Simple Syrup', amount: '10ml' }, { name: 'Egg White', amount: '1 (Optional)' }],
+            zh: [{ name: '杏仁酒', amount: '60ml' }, { name: '檸檬汁', amount: '30ml' }, { name: '糖漿', amount: '10ml' }, { name: '蛋白', amount: '1顆 (選填)' }]
+        },
+        steps: {
+            en: ['Shake all ingredients with ice.', 'Strain into glass with ice.'],
+            zh: ['所有材料加冰搖盪。', '濾入裝滿冰的杯子。']
+        },
+        tags: { en: ['sweet', 'sour', 'classic'], zh: ['甜', '酸', '經典'] },
+        description: { en: 'Sweet almond flavor balanced by tart lemon.', zh: '香甜杏仁味與酸檸檬的平衡。' },
+        specs: { alcohol: 4, sweetness: 8, ease: 9 },
+        color: '#fde047',
+        image: 'https://uyamflgtvqndbjpbjito.supabase.co/storage/v1/object/public/cocktails/amaretto-sour.png',
+        collections: ['classic']
+    },
+    {
+        id: 'bellini',
+        name: { en: 'Bellini', zh: '貝里尼' },
+        type: 'classic',
+        baseSpirit: ['wine'],
+        ingredients: {
+            en: [{ name: 'Prosecco', amount: '100ml' }, { name: 'Peach Puree', amount: '50ml' }],
+            zh: [{ name: 'Prosecco氣泡酒', amount: '100ml' }, { name: '白桃果泥', amount: '50ml' }]
+        },
+        steps: {
+            en: ['Put fruit puree in flute.', 'Top with Prosecco.', 'Stir gently.'],
+            zh: ['將果泥放入香檳杯。', '倒入氣泡酒。', '輕輕攪拌。']
+        },
+        tags: { en: ['fruity', 'brunch', 'classic'], zh: ['果味', '早午餐', '經典'] },
+        description: { en: 'Venetian classic created at Harry\'s Bar.', zh: '威尼斯 Harry\'s Bar 創製的經典。' },
+        specs: { alcohol: 4, sweetness: 7, ease: 9 },
+        color: '#fed7aa',
+        image: 'https://uyamflgtvqndbjpbjito.supabase.co/storage/v1/object/public/cocktails/bellini.png',
+        collections: ['classic']
+    },
+    {
+        id: 'mimosa',
+        name: { en: 'Mimosa', zh: '摩摩喳' },
+        type: 'classic',
+        baseSpirit: ['wine'],
+        ingredients: {
+            en: [{ name: 'Champagne', amount: '75ml' }, { name: 'Orange Juice', amount: '75ml' }],
+            zh: [{ name: '香檳', amount: '75ml' }, { name: '柳橙汁', amount: '75ml' }]
+        },
+        steps: {
+            en: ['Pour orange juice into flute.', 'Top with Champagne.'],
+            zh: ['將柳橙汁倒入香檳杯。', '倒滿香檳。']
+        },
+        tags: { en: ['brunch', 'fruity', 'classic'], zh: ['早午餐', '果味', '經典'] },
+        description: { en: 'The quintessential brunch cocktail.', zh: '早午餐的代名詞。' },
+        specs: { alcohol: 4, sweetness: 7, ease: 10 },
+        color: '#facc15',
+        image: 'https://uyamflgtvqndbjpbjito.supabase.co/storage/v1/object/public/cocktails/mimosa.png',
+        collections: ['classic']
+    },
+    {
+        id: 'clover-club',
+        name: { en: 'Clover Club', zh: '幸運草俱樂部' },
+        type: 'classic',
+        baseSpirit: ['gin'],
+        ingredients: {
+            en: [{ name: 'Gin', amount: '45ml' }, { name: 'Lemon Juice', amount: '15ml' }, { name: 'Raspberry Syrup', amount: '15ml' }, { name: 'Egg White', amount: '1' }],
+            zh: [{ name: '琴酒', amount: '45ml' }, { name: '檸檬汁', amount: '15ml' }, { name: '覆盆子糖漿', amount: '15ml' }, { name: '蛋白', amount: '1顆' }]
+        },
+        steps: {
+            en: ['Dry shake all ingredients.', 'Add ice and shake again.', 'Double strain into coupe.'],
+            zh: ['乾搖所有材料。', '加冰再次搖盪。', '雙重過濾入淺碟香檳杯。']
+        },
+        tags: { en: ['fruity', 'classic', 'sour'], zh: ['果味', '經典', '酸'] },
+        description: { en: 'A pre-prohibition classic. Silky and fruity.', zh: '禁酒令前的經典。口感絲滑帶有果香。' },
+        specs: { alcohol: 6, sweetness: 6, ease: 7 },
+        color: '#f472b6',
+        image: 'https://uyamflgtvqndbjpbjito.supabase.co/storage/v1/object/public/cocktails/clover-club.png',
+        collections: ['classic']
+    },
+    {
+        id: 'last-word',
+        name: { en: 'The Last Word', zh: '最後一語' },
+        type: 'classic',
+        baseSpirit: ['gin'],
+        ingredients: {
+            en: [{ name: 'Gin', amount: '20ml' }, { name: 'Green Chartreuse', amount: '20ml' }, { name: 'Maraschino Liqueur', amount: '20ml' }, { name: 'Lime Juice', amount: '20ml' }],
+            zh: [{ name: '琴酒', amount: '20ml' }, { name: '綠色夏翠絲', amount: '20ml' }, { name: '黑櫻桃酒', amount: '20ml' }, { name: '萊姆汁', amount: '20ml' }]
+        },
+        steps: {
+            en: ['Shake all ingredients with ice.', 'Strain into chilled glass.'],
+            zh: ['所有材料加冰搖盪。', '濾入冰鎮杯中。']
+        },
+        tags: { en: ['herbal', 'sour', 'complex'], zh: ['草本', '酸', '複雜'] },
+        description: { en: 'Equal parts. Perfectly balanced.', zh: '等量配方。完美平衡。' },
+        specs: { alcohol: 8, sweetness: 5, ease: 8 },
+        color: '#86efac',
+        image: 'https://uyamflgtvqndbjpbjito.supabase.co/storage/v1/object/public/cocktails/last-word.png',
+        collections: ['classic']
+    },
+    {
+        id: 'bees-knees',
+        name: { en: 'Bee\'s Knees', zh: '蜜蜂之膝' },
+        type: 'classic',
+        baseSpirit: ['gin'],
+        ingredients: {
+            en: [{ name: 'Gin', amount: '60ml' }, { name: 'Lemon Juice', amount: '22ml' }, { name: 'Honey Syrup', amount: '22ml' }],
+            zh: [{ name: '琴酒', amount: '60ml' }, { name: '檸檬汁', amount: '22ml' }, { name: '蜂蜜糖漿', amount: '22ml' }]
+        },
+        steps: {
+            en: ['Shake ingredients with ice.', 'Strain into chilled glass.'],
+            zh: ['材料加冰搖盪。', '濾入冰鎮杯中。']
+        },
+        tags: { en: ['classic', 'sour', 'sweet'], zh: ['經典', '酸', '甜'] },
+        description: { en: 'A prohibition era cocktail to hide the taste of bathtub gin.', zh: '禁酒令時期的經典，用蜂蜜掩蓋劣質琴酒的味道。' },
+        specs: { alcohol: 6, sweetness: 6, ease: 8 },
+        color: '#fefcb8',
+        image: 'https://uyamflgtvqndbjpbjito.supabase.co/storage/v1/object/public/cocktails/bees-knees.png',
+        collections: ['classic']
+    },
+    {
+        id: 'southside',
+        name: { en: 'Southside', zh: '南區' },
+        type: 'classic',
+        baseSpirit: ['gin'],
+        ingredients: {
+            en: [{ name: 'Gin', amount: '60ml' }, { name: 'Lime Juice', amount: '30ml' }, { name: 'Simple Syrup', amount: '15ml' }, { name: 'Mint Leaves', amount: '6-8' }],
+            zh: [{ name: '琴酒', amount: '60ml' }, { name: '萊姆汁', amount: '30ml' }, { name: '糖漿', amount: '15ml' }, { name: '薄荷葉', amount: '6-8片' }]
+        },
+        steps: {
+            en: ['Shake all ingredients with ice.', 'Double strain into chilled glass.'],
+            zh: ['材料加冰搖盪。', '雙重濾入冰鎮杯中。']
+        },
+        tags: { en: ['refreshing', 'classic', 'sour'], zh: ['清爽', '經典', '酸'] },
+        description: { en: 'Like a Mojito but with Gin, or a Gimlet with Mint.', zh: '像琴酒版的Mojito，或加了薄荷的Gimlet。' },
+        specs: { alcohol: 6, sweetness: 5, ease: 8 },
+        color: '#d1fae5',
+        image: 'https://uyamflgtvqndbjpbjito.supabase.co/storage/v1/object/public/cocktails/southside.png',
+        collections: ['classic']
     }
 ];

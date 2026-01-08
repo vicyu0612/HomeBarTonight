@@ -90,7 +90,8 @@ function App() {
         setAllRecipes(recipeData.map((r: any) => ({
           id: r.id, name: r.name, type: r.type, baseSpirit: r.base_spirit,
           ingredients: r.ingredients, steps: r.steps, tags: r.tags,
-          description: r.description, specs: r.specs, color: r.color, image: r.image
+          description: r.description, specs: r.specs, color: r.color, image: r.image,
+          collections: r.collections // Important: Include collections tags for filtering
         })));
       }
       if (supabase) {
@@ -106,6 +107,7 @@ function App() {
           .order('sort_order', { ascending: true });
 
         if (colData && colData.length > 0) {
+          console.log('[App] Fetched collections from Supabase:', colData);
           // Map DB fields to Collection interface
           const mappedCollections: Collection[] = colData.map((c: any) => ({
             id: c.id,
@@ -395,11 +397,9 @@ function App() {
 
   // Helper function to filter recipes based on collection rules
   const filterRecipes = useMemo(() => (collection: Collection, recipes: Recipe[]): Recipe[] => {
-    // 1. Curated List (IDs)
-    if (collection.recipeIds && collection.recipeIds.length > 0) {
-      const ids = collection.recipeIds;
-      return recipes.filter(r => ids.includes(r.id));
-    }
+    // 1. Curated List (IDs) - REMOVED per user request (Dynamic Rules Only)
+    // if (collection.recipeIds && collection.recipeIds.length > 0) { ... }
+
 
     // 2. Dynamic JSON Rules (DB)
     if (collection.filterRules) {
@@ -408,13 +408,9 @@ function App() {
 
       // Handle "CVS" special case
       if (rules.type === 'cvs') {
-        const cvsRecs = ['rum-coke', 'gin-tonic', 'screwdriver', 'highball', 'kalimotxo'];
-        const results = recipes.filter(r => {
-          if (cvsRecs.includes(r.id)) return true;
-          if (r.tags && r.tags.en && r.tags.en.includes('cvs')) return true;
-          return false;
-        });
-        console.log(`[${collection.id}] Results: ${results.length}`);
+        // Updated Logic: Check the recipe.type directly, or legacy ID check as fallback
+        const results = recipes.filter(r => r.type === 'cvs');
+        console.log(`[${collection.id}] Results (type=cvs): ${results.length}`);
         return results;
       }
 
@@ -422,6 +418,12 @@ function App() {
       if (rules.tag) {
         const results = recipes.filter(r => r.tags && r.tags.en && r.tags.en.includes(rules.tag));
         console.log(`[${collection.id}] Results: ${results.length}`);
+        return results;
+      }
+
+      // Handle "Collection" tag rule (New Standard)
+      if (rules.collection) {
+        const results = recipes.filter(r => r.collections && r.collections.includes(rules.collection));
         return results;
       }
 

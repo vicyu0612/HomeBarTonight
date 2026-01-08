@@ -42,18 +42,10 @@ export function ExplorePage({
     const [isScrolled, setIsScrolled] = useState(false);
     const [featuredBanner, setFeaturedBanner] = useState<FeaturedBanner | null>(null);
 
+    // Featured banner fetch logic removed to prevent 404s (Table featured_banners does not exist)
     useEffect(() => {
-        const fetchBanner = async () => {
-            if (!supabase) return;
-            const { data } = await supabase
-                .from('featured_banners')
-                .select('*')
-                .eq('is_active', true)
-                .single();
-
-            if (data) setFeaturedBanner(data);
-        };
-        fetchBanner();
+        // Placeholder for future banner logic if needed
+        setFeaturedBanner(null);
     }, []);
 
     const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
