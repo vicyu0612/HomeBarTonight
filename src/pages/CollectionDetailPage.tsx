@@ -4,6 +4,7 @@ import { ArrowLeft } from 'lucide-react';
 import type { Collection } from '../data/collections';
 import type { Recipe } from '../data/recipes';
 import { RecipeCard } from '../components/RecipeCard';
+import { RecipeCardSkeleton } from '../components/RecipeCardSkeleton';
 import clsx from 'clsx';
 import { useState } from 'react';
 // import { useSwipeBack } from '../hooks/useSwipeBack';
@@ -202,17 +203,23 @@ export function CollectionDetailPage({
                         </div>
                     )}
                     <div className="grid grid-cols-2 gap-3">
-                        {collectionRecipes.map(recipe => (
-                            <RecipeCard
-                                key={recipe.id}
-                                recipe={recipe}
-                                isFavorite={favorites.has(recipe.id)}
-                                toggleFavorite={toggleFavorite}
-                                onClick={() => onSelectRecipe(recipe, collectionRecipes)}
-                                lang={lang}
-                                variant="vertical"
-                            />
-                        ))}
+                        {allRecipes.length === 0 ? (
+                            Array.from({ length: 6 }).map((_, i) => (
+                                <RecipeCardSkeleton key={i} variant="vertical" />
+                            ))
+                        ) : (
+                            collectionRecipes.map(recipe => (
+                                <RecipeCard
+                                    key={recipe.id}
+                                    recipe={recipe}
+                                    isFavorite={favorites.has(recipe.id)}
+                                    toggleFavorite={toggleFavorite}
+                                    onClick={() => onSelectRecipe(recipe, collectionRecipes)}
+                                    lang={lang}
+                                    variant="vertical"
+                                />
+                            ))
+                        )}
                     </div>
                 </div>
             </div>

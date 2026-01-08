@@ -53,7 +53,6 @@ export function RecipeCard({
                     alt={recipe.name[lang]}
                     onError={(e) => { e.currentTarget.src = "/placeholder.png"; }}
                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                    loading="lazy"
                 />
             ) : (
                 <div className="w-full h-full flex items-center justify-center text-zinc-700">
@@ -74,7 +73,7 @@ export function RecipeCard({
                 {...motionProps}
             >
                 {/* Image Area with Overlay Heart */}
-                <div className="w-full aspect-square bg-zinc-800 relative overflow-hidden">
+                <div className="w-full aspect-square bg-zinc-700/20 relative overflow-hidden">
                     {ImageContent}
                     <div className="absolute top-2 right-2 z-10">
                         {HeartButton}
@@ -117,7 +116,7 @@ export function RecipeCard({
             {...motionProps}
         >
             <div className="flex p-3 gap-4">
-                <div className="w-[120px] h-[120px] rounded-xl bg-zinc-800 shrink-0 overflow-hidden relative">
+                <div className="w-[120px] h-[120px] rounded-xl bg-zinc-700/20 shrink-0 overflow-hidden relative">
                     {ImageContent}
                 </div>
 

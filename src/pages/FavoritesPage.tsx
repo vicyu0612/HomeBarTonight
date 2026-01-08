@@ -1,6 +1,7 @@
 import { AnimatePresence } from 'framer-motion';
 import { Heart } from 'lucide-react';
 import { RecipeCard } from '../components/RecipeCard';
+import { RecipeCardSkeleton } from '../components/RecipeCardSkeleton';
 import type { Recipe } from '../data/recipes';
 import { useState } from 'react';
 import clsx from 'clsx';
@@ -60,7 +61,13 @@ export function FavoritesPage({ recipes, favorites, toggleFavorite, onSelectReci
                     {lang === 'zh' ? '我的最愛' : 'Favorites'}
                 </h1>
 
-                {favoriteRecipes.length === 0 ? (
+                {recipes.length === 0 ? (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {Array.from({ length: 4 }).map((_, i) => (
+                            <RecipeCardSkeleton key={i} variant="horizontal" />
+                        ))}
+                    </div>
+                ) : favoriteRecipes.length === 0 ? (
                     <div className="absolute inset-0 flex flex-col items-center justify-center text-zinc-500 pt-[calc(3rem+env(safe-area-inset-top))] pb-24 pointer-events-none">
                         <Heart size={48} className="mb-4 opacity-20" />
                         <p>{lang === 'zh' ? '還沒有收藏任何調酒喔' : 'No favorites yet.'}</p>

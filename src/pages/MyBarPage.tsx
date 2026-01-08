@@ -5,6 +5,7 @@ import clsx from 'clsx';
 import type { Recipe } from '../data/recipes';
 import { normalizeIngredient } from '../utils/normalization';
 import { RecipeCard } from '../components/RecipeCard';
+import { RecipeCardSkeleton } from '../components/RecipeCardSkeleton';
 
 interface MyBarPageProps {
     allRecipes: Recipe[];
@@ -194,7 +195,13 @@ export function MyBarPage({
                 </div>
 
                 {/* Recipe Grid */}
-                {availableRecipes.length === 0 ? (
+                {allRecipes.length === 0 ? (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {Array.from({ length: 6 }).map((_, i) => (
+                            <RecipeCardSkeleton key={i} variant="horizontal" />
+                        ))}
+                    </div>
+                ) : availableRecipes.length === 0 ? (
                     <div className="text-center py-20 text-zinc-600">
                         <p>{lang === 'zh' ? '庫存不足，無法調製任何酒譜' : 'Not enough ingredients to make any cocktails.'}</p>
                     </div>

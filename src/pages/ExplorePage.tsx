@@ -4,6 +4,7 @@ import { ArrowRight, ChevronRight } from 'lucide-react';
 import type { Collection } from '../data/collections';
 import type { Recipe } from '../data/recipes';
 import { RecipeCard } from '../components/RecipeCard';
+import { RecipeCardSkeleton } from '../components/RecipeCardSkeleton';
 import clsx from 'clsx';
 
 interface FeaturedBanner {
@@ -196,18 +197,26 @@ export function ExplorePage({
                                 style={{ WebkitOverflowScrolling: 'touch' }}
                             >
                                 <div className="snap-start shrink-0 w-0" /> {/* Leading Spacer (w-0 + gap-4 = 1rem offset) */}
-                                {getPreviewRecipes(collection).map(recipe => (
-                                    <div key={recipe.id} className="snap-start shrink-0 w-[160px]">
-                                        <RecipeCard
-                                            recipe={recipe}
-                                            isFavorite={favorites.has(recipe.id)}
-                                            toggleFavorite={toggleFavorite}
-                                            onClick={() => onSelectRecipe(recipe, getPreviewRecipes(collection))}
-                                            lang={lang}
-                                            variant="vertical"
-                                        />
-                                    </div>
-                                ))}
+                                {allRecipes.length === 0 ? (
+                                    Array.from({ length: 3 }).map((_, i) => (
+                                        <div key={i} className="snap-start shrink-0 w-[160px]">
+                                            <RecipeCardSkeleton variant="vertical" />
+                                        </div>
+                                    ))
+                                ) : (
+                                    getPreviewRecipes(collection).map(recipe => (
+                                        <div key={recipe.id} className="snap-start shrink-0 w-[160px]">
+                                            <RecipeCard
+                                                recipe={recipe}
+                                                isFavorite={favorites.has(recipe.id)}
+                                                toggleFavorite={toggleFavorite}
+                                                onClick={() => onSelectRecipe(recipe, getPreviewRecipes(collection))}
+                                                lang={lang}
+                                                variant="vertical"
+                                            />
+                                        </div>
+                                    ))
+                                )}
                                 {/* See More Card (Vertical Style) */}
                                 <button
                                     onClick={() => onSelectCollection(collection.id)}

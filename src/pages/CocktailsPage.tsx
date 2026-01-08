@@ -7,6 +7,7 @@ import clsx from 'clsx';
 // Shaker Icon Component
 import { ShakerIcon } from '../components/ShakerIcon';
 import { RecipeCard } from '../components/RecipeCard';
+import { RecipeCardSkeleton } from '../components/RecipeCardSkeleton';
 
 interface CocktailsPageProps {
     allRecipes: Recipe[];
@@ -292,7 +293,13 @@ export function CocktailsPage({ allRecipes, favorites, toggleFavorite, onSelectR
 
             {/* Recipe Grid */}
             <div className="px-4 flex-1 pt-4 pb-24">
-                {filteredRecipes.length > 0 ? (
+                {allRecipes.length === 0 ? (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pb-12">
+                        {Array.from({ length: 6 }).map((_, i) => (
+                            <RecipeCardSkeleton key={i} variant="horizontal" />
+                        ))}
+                    </div>
+                ) : filteredRecipes.length > 0 ? (
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pb-12">
                         {filteredRecipes.map((recipe) => (
                             <RecipeCard
