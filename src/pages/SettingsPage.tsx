@@ -92,8 +92,9 @@ export function SettingsPage({ session, lang, setLang, onLogin, onLogout, onDele
         return (
             <div key="account-view" className="h-full w-full bg-black relative">
                 {/* Floating Header */}
+                {/* Floating Header */}
                 <div className={clsx(
-                    "fixed top-0 left-0 right-0 z-30 flex items-center justify-between transition-all duration-300 pointer-events-none",
+                    "fixed top-0 left-1/2 -translate-x-1/2 w-full max-w-[1024px] z-30 flex items-center justify-between transition-all duration-300 pointer-events-none",
                     "h-[calc(4rem+env(safe-area-inset-top))] px-4 pt-[calc(1rem+env(safe-area-inset-top))]"
                 )}>
                     <div className="pointer-events-auto z-10">
@@ -116,7 +117,7 @@ export function SettingsPage({ session, lang, setLang, onLogin, onLogout, onDele
                 </div>
 
                 <div
-                    className="h-full overflow-y-auto px-4 pb-12 pt-[calc(4rem+env(safe-area-inset-top))]"
+                    className="h-full overflow-y-auto px-4 pb-12 pt-[calc(4rem+env(safe-area-inset-top))] max-w-[1024px] mx-auto w-full"
                 >
                     {/* Profile Card */}
                     <div className="flex flex-col items-center py-6">
