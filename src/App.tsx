@@ -257,12 +257,21 @@ function App() {
 
     if (session && supabase) {
       try {
+        const cleanId = id.trim();
         if (isAdding) {
-          const { error } = await supabase.from('favorites').insert({ user_id: session.user.id, recipe_id: id });
-          if (error) throw error;
+          // Check if already exists to prevent duplicate key error if UI is out of sync
+          const { data: existing } = await supabase.from('favorites').select('id').eq('recipe_id', cleanId).eq('user_id', session.user.id).maybeSingle();
+          if (!existing) {
+            const { error } = await supabase.from('favorites').insert({ user_id: session.user.id, recipe_id: cleanId });
+            if (error) throw error;
+          }
         } else {
-          const { error } = await supabase.from('favorites').delete().eq('user_id', session.user.id).eq('recipe_id', id);
+          // Use 'match' or simple eq. Rely on RLS for user_id security to minimize mismatch risk.
+          const { error } = await supabase.from('favorites').delete({ count: 'exact' }).eq('recipe_id', cleanId);
           if (error) throw error;
+
+          // If count is 0, it means it wasn't in the DB anyway. That's fine (Result is "Not Favorited").
+          // No need to revert.
         }
       } catch (err) {
         console.error('Toggle Favorite Error:', err);
