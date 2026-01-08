@@ -207,7 +207,7 @@ export function MyBarPage({
                     </div>
                 ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        {availableRecipes.map((recipe) => (
+                        {availableRecipes.map((recipe, index) => (
                             <RecipeCard
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
@@ -217,6 +217,7 @@ export function MyBarPage({
                                 isFavorite={favorites.has(recipe.id)}
                                 toggleFavorite={toggleFavorite}
                                 onClick={() => onSelectRecipe(recipe, availableRecipes)}
+                                priority={index < 6}
                             />
                         ))}
 

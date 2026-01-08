@@ -173,7 +173,7 @@ export function ExplorePage({
 
                 {/* Collection Rows */}
                 <div className="space-y-10">
-                    {otherCollections.map(collection => (
+                    {otherCollections.map((collection, sectionIndex) => (
                         <div key={collection.id} className="flex flex-col gap-4">
                             {/* Header */}
                             <div
@@ -204,7 +204,7 @@ export function ExplorePage({
                                         </div>
                                     ))
                                 ) : (
-                                    getPreviewRecipes(collection).map(recipe => (
+                                    getPreviewRecipes(collection).map((recipe, index) => (
                                         <div key={recipe.id} className="snap-start shrink-0 w-[160px]">
                                             <RecipeCard
                                                 recipe={recipe}
@@ -213,6 +213,7 @@ export function ExplorePage({
                                                 onClick={() => onSelectRecipe(recipe, getPreviewRecipes(collection))}
                                                 lang={lang}
                                                 variant="vertical"
+                                                priority={sectionIndex < 2 && index < 3}
                                             />
                                         </div>
                                     ))

@@ -301,7 +301,7 @@ export function CocktailsPage({ allRecipes, favorites, toggleFavorite, onSelectR
                     </div>
                 ) : filteredRecipes.length > 0 ? (
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pb-12">
-                        {filteredRecipes.map((recipe) => (
+                        {filteredRecipes.map((recipe, index) => (
                             <RecipeCard
                                 key={recipe.id}
                                 recipe={recipe}
@@ -309,6 +309,7 @@ export function CocktailsPage({ allRecipes, favorites, toggleFavorite, onSelectR
                                 isFavorite={favorites.has(recipe.id)}
                                 toggleFavorite={toggleFavorite}
                                 onClick={() => onSelectRecipe(recipe, filteredRecipes)}
+                                priority={index < 6}
                             />
                         ))}
                     </div >

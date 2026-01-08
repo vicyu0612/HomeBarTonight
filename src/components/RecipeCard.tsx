@@ -10,6 +10,7 @@ interface RecipeCardProps extends Omit<HTMLMotionProps<"div">, 'id'> {
     toggleFavorite: (id: string, e?: React.MouseEvent) => void;
     onClick: () => void;
     variant?: 'horizontal' | 'vertical';
+    priority?: boolean;
 }
 
 export function RecipeCard({
@@ -20,6 +21,7 @@ export function RecipeCard({
     onClick,
     className,
     variant = 'horizontal',
+    priority = false,
     ...motionProps
 }: RecipeCardProps) {
     // Unified Heart Button Style
@@ -52,6 +54,7 @@ export function RecipeCard({
                     src={recipe.image}
                     alt={recipe.name[lang]}
                     onError={(e) => { e.currentTarget.src = "/placeholder.png"; }}
+                    loading={priority ? "eager" : "lazy"}
                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                 />
             ) : (

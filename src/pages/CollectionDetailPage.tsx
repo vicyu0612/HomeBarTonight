@@ -208,7 +208,7 @@ export function CollectionDetailPage({
                                 <RecipeCardSkeleton key={i} variant="vertical" />
                             ))
                         ) : (
-                            collectionRecipes.map(recipe => (
+                            collectionRecipes.map((recipe, index) => (
                                 <RecipeCard
                                     key={recipe.id}
                                     recipe={recipe}
@@ -217,6 +217,7 @@ export function CollectionDetailPage({
                                     onClick={() => onSelectRecipe(recipe, collectionRecipes)}
                                     lang={lang}
                                     variant="vertical"
+                                    priority={index < 6}
                                 />
                             ))
                         )}

@@ -75,7 +75,7 @@ export function FavoritesPage({ recipes, favorites, toggleFavorite, onSelectReci
                 ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <AnimatePresence mode="popLayout">
-                            {favoriteRecipes.map((recipe) => (
+                            {favoriteRecipes.map((recipe, index) => (
                                 <RecipeCard
                                     layout
                                     initial={{ opacity: 0, scale: 0.9 }}
@@ -88,6 +88,7 @@ export function FavoritesPage({ recipes, favorites, toggleFavorite, onSelectReci
                                     toggleFavorite={toggleFavorite}
                                     onClick={() => onSelectRecipe(recipe, favoriteRecipes)}
                                     whileTap={{ scale: 0.98 }}
+                                    priority={index < 6}
                                 />
                             ))}
                         </AnimatePresence>

@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState, useMemo, lazy, Suspense } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { recipes as localRecipes, type Recipe } from './data/recipes';
 import { supabase } from './supabaseClient';
@@ -13,13 +13,15 @@ import { Browser } from '@capacitor/browser';
 import { MixingShaker } from './components/MixingShaker';
 
 // Pages
-import { CocktailsPage } from './pages/CocktailsPage';
-import { MyBarPage } from './pages/MyBarPage';
-import { FavoritesPage } from './pages/FavoritesPage';
-import { ExplorePage } from './pages/ExplorePage';
-import { CollectionDetailPage } from './pages/CollectionDetailPage';
+// Pages (Lazy Loaded)
+const CocktailsPage = lazy(() => import('./pages/CocktailsPage').then(module => ({ default: module.CocktailsPage })));
+const MyBarPage = lazy(() => import('./pages/MyBarPage').then(module => ({ default: module.MyBarPage })));
+const FavoritesPage = lazy(() => import('./pages/FavoritesPage').then(module => ({ default: module.FavoritesPage })));
+const ExplorePage = lazy(() => import('./pages/ExplorePage').then(module => ({ default: module.ExplorePage })));
+const CollectionDetailPage = lazy(() => import('./pages/CollectionDetailPage').then(module => ({ default: module.CollectionDetailPage })));
+const SettingsPage = lazy(() => import('./pages/SettingsPage').then(module => ({ default: module.SettingsPage })));
+
 import { collections as fallbackCollections, type Collection } from './data/collections';
-import { SettingsPage } from './pages/SettingsPage';
 
 
 
@@ -394,132 +396,140 @@ function App() {
       {/* Main Content Area */}
       {/* Main Content Area */}
       <main className="flex-1 min-h-0 overflow-hidden relative max-w-5xl mx-auto w-full">
+        <Suspense fallback={
+          <div className="w-full h-full flex items-center justify-center bg-black">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-500"></div>
+          </div>
+        }>
 
-        {/* Explore Page */}
-        <div className={activeTab === 'explore' || activeTab === 'collection' ? 'h-full relative overflow-hidden' : 'hidden'}>
-          <ExplorePage
-            lang={lang}
-            onSelectCollection={(id) => {
-              setActiveTab('collection');
-              window.history.pushState({}, '', `/collection/${id}`);
-            }}
-            allRecipes={allRecipes}
-            allCollections={allCollections} // Pass dynamic collections
-            filterRecipes={filterRecipes} // Pass filter helper
-            onSelectRecipe={handleSelectRecipe}
-            toggleFavorite={toggleFavorite}
-            favorites={favorites}
-          />
+          {/* Explore Page */}
+          <div className={activeTab === 'explore' || activeTab === 'collection' ? 'h-full relative overflow-hidden' : 'hidden'}>
+            <ExplorePage
+              lang={lang}
+              onSelectCollection={(id) => {
+                setActiveTab('collection');
+                window.history.pushState({}, '', `/collection/${id}`);
+              }}
+              allRecipes={allRecipes}
+              allCollections={allCollections} // Pass dynamic collections
+              filterRecipes={filterRecipes} // Pass filter helper
+              onSelectRecipe={handleSelectRecipe}
+              toggleFavorite={toggleFavorite}
+              favorites={favorites}
+            />
 
-          <AnimatePresence>
-            {activeTab === 'collection' && (
-              <motion.div
-                initial={{ x: '100%' }}
-                animate={{ x: 0 }}
-                exit={{ x: '100%' }}
-                transition={{ ease: "circOut", duration: 0.3 }}
-                className="absolute inset-0 z-50 bg-black h-full w-full overflow-hidden"
-              >
-                {(() => {
-                  const id = window.location.pathname.split('/').pop() || '';
-                  return (
-                    <div className="absolute inset-0 bg-black z-50">
-                      <CollectionDetailPage
-                        collectionId={id}
-                        allCollections={allCollections} // Pass dynamic collections
-                        onBack={() => {
-                          setActiveTab('explore');
-                          window.history.pushState({}, '', '/');
-                        }}
-                        allRecipes={allRecipes}
-                        onSelectRecipe={handleSelectRecipe}
-                        toggleFavorite={toggleFavorite}
-                        favorites={favorites}
-                        lang={lang}
-                        filterRecipes={filterRecipes}
-                      />
-                    </div>
-                  );
-                })()}
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
+            <AnimatePresence>
+              {activeTab === 'collection' && (
+                <motion.div
+                  initial={{ x: '100%' }}
+                  animate={{ x: 0 }}
+                  exit={{ x: '100%' }}
+                  transition={{ ease: "circOut", duration: 0.3 }}
+                  className="absolute inset-0 z-50 bg-black h-full w-full overflow-hidden"
+                >
+                  {(() => {
+                    const id = window.location.pathname.split('/').pop() || '';
+                    return (
+                      <div className="absolute inset-0 bg-black z-50">
+                        <CollectionDetailPage
+                          collectionId={id}
+                          allCollections={allCollections} // Pass dynamic collections
+                          onBack={() => {
+                            setActiveTab('explore');
+                            window.history.pushState({}, '', '/');
+                          }}
+                          allRecipes={allRecipes}
+                          onSelectRecipe={handleSelectRecipe}
+                          toggleFavorite={toggleFavorite}
+                          favorites={favorites}
+                          lang={lang}
+                          filterRecipes={filterRecipes}
+                        />
+                      </div>
+                    );
+                  })()}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
 
-        {/* Cocktails Page (Persistent) */}
-        <div className={activeTab === 'cocktails' ? 'h-full' : 'hidden'}>
-          <CocktailsPage
-            allRecipes={allRecipes}
-            favorites={favorites}
-            toggleFavorite={toggleFavorite}
-            onSelectRecipe={handleSelectRecipe}
-            lang={lang}
-            onShake={handleShake}
-          />
-        </div>
+          {/* Cocktails Page (Persistent) */}
+          <div className={activeTab === 'cocktails' ? 'h-full' : 'hidden'}>
+            <CocktailsPage
+              allRecipes={allRecipes}
+              favorites={favorites}
+              toggleFavorite={toggleFavorite}
+              onSelectRecipe={handleSelectRecipe}
+              lang={lang}
+              onShake={handleShake}
+            />
+          </div>
 
-        {/* My Bar Page */}
-        <div className={activeTab === 'my_bar' ? 'h-full' : 'hidden'}>
-          <MyBarPage
-            allRecipes={allRecipes}
-            myInventory={myInventory}
-            setMyInventory={saveInventory}
-            allIngredients={allIngredients}
-            lang={lang}
-            onSelectRecipe={handleSelectRecipe}
-            favorites={favorites}
-            toggleFavorite={toggleFavorite}
-          />
-        </div>
+          {/* My Bar Page */}
+          <div className={activeTab === 'my_bar' ? 'h-full' : 'hidden'}>
+            <MyBarPage
+              allRecipes={allRecipes}
+              myInventory={myInventory}
+              setMyInventory={saveInventory}
+              allIngredients={allIngredients}
+              lang={lang}
+              onSelectRecipe={handleSelectRecipe}
+              favorites={favorites}
+              toggleFavorite={toggleFavorite}
+            />
+          </div>
 
-        {/* Favorites Page */}
-        <div className={activeTab === 'favorites' ? 'h-full' : 'hidden'}>
-          <FavoritesPage
-            recipes={allRecipes}
-            favorites={favorites}
-            toggleFavorite={toggleFavorite}
-            onSelectRecipe={handleSelectRecipe}
-            lang={lang}
-          />
-        </div>
+          {/* Favorites Page */}
+          <div className={activeTab === 'favorites' ? 'h-full' : 'hidden'}>
+            <FavoritesPage
+              recipes={allRecipes}
+              favorites={favorites}
+              toggleFavorite={toggleFavorite}
+              onSelectRecipe={handleSelectRecipe}
+              lang={lang}
+            />
+          </div>
 
-        {/* Settings Page */}
-        <div className={activeTab === 'settings' ? 'h-full' : 'hidden'}>
-          <SettingsPage
-            session={session}
-            lang={lang}
-            setLang={setLang}
-            onLogin={handleLogin}
-            onLogout={handleLogout}
-            onDeleteAccount={handleDeleteAccount}
-          />
-        </div>
+          {/* Settings Page */}
+          <div className={activeTab === 'settings' ? 'h-full' : 'hidden'}>
+            <SettingsPage
+              session={session}
+              lang={lang}
+              setLang={setLang}
+              onLogin={handleLogin}
+              onLogout={handleLogout}
+              onDeleteAccount={handleDeleteAccount}
+            />
+          </div>
+        </Suspense>
       </main>
 
       {/* Tab Bar */}
-      <TabBar activeTab={activeTab} onTabChange={setActiveTab} lang={lang} />
+      < TabBar activeTab={activeTab} onTabChange={setActiveTab} lang={lang} />
 
       {/* Overlays: Shaker & Detail Modal */}
       <AnimatePresence>
-        {isShaking && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[60] flex flex-col items-center justify-center bg-black/80 backdrop-blur-md"
-          >
+        {
+          isShaking && (
             <motion.div
-              animate={{ rotate: [0, -15, 15, -15, 15, 0], y: [0, -10, 5, -10, 5, 0], scale: [1, 1.1, 1.1, 1.1, 1] }}
-              transition={{ duration: 0.5, repeat: 3, ease: "easeInOut" }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 z-[60] flex flex-col items-center justify-center bg-black/80 backdrop-blur-md"
             >
-              <MixingShaker size={200} />
+              <motion.div
+                animate={{ rotate: [0, -15, 15, -15, 15, 0], y: [0, -10, 5, -10, 5, 0], scale: [1, 1.1, 1.1, 1.1, 1] }}
+                transition={{ duration: 0.5, repeat: 3, ease: "easeInOut" }}
+              >
+                <MixingShaker size={200} />
+              </motion.div>
+              <p className="mt-8 text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-300 to-purple-300 tracking-widest uppercase">
+                Mixing...
+              </p>
             </motion.div>
-            <p className="mt-8 text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-300 to-purple-300 tracking-widest uppercase">
-              Mixing...
-            </p>
-          </motion.div>
-        )}
-      </AnimatePresence>
+          )
+        }
+      </AnimatePresence >
 
       <AnimatePresence>
         {selectedRecipe && (
@@ -564,7 +574,7 @@ function App() {
           </motion.div>
         )}
       </AnimatePresence>
-    </div>
+    </div >
   );
 }
 
