@@ -208,26 +208,38 @@ function App() {
     if (idx < currentList.length - 1) setSelectedRecipe(currentList[idx + 1]);
   };
 
-  const handleLogin = async () => {
+  const handleLogin = async (provider: 'google' | 'apple') => {
     if (!supabase) return;
 
     if (Capacitor.isNativePlatform()) {
-      // Native: Use Browser Plugin
+      // Native: Use Browser Plugin to ensure Safari View Controller (SVC)
+      // This satisfies App Store Guideline 4.0 (avoiding default browser app)
+
       const { data, error } = await supabase.auth.signInWithOAuth({
-        provider: 'google',
+        provider: provider,
         options: {
           redirectTo: 'homebartonight://auth/callback',
-          skipBrowserRedirect: true
+          skipBrowserRedirect: true // We handle redirection manually via Browser.open
         }
       });
-      if (error) console.error('Login Error:', error);
+
+      if (error) {
+        console.error('Login Error:', error);
+        return;
+      }
+
       if (data?.url) {
-        await Browser.open({ url: data.url });
+        // Open the Auth URL in the In-App Browser (SVC on iOS)
+        await Browser.open({
+          url: data.url,
+          windowName: '_self', // Suggests opening in-place/SVC
+          presentationStyle: 'popover' // Optional, for nicer transition on iPad
+        });
       }
     } else {
       // Web: Standard Redirect
       await supabase.auth.signInWithOAuth({
-        provider: 'google',
+        provider: provider,
         options: { redirectTo: window.location.origin }
       });
     }
