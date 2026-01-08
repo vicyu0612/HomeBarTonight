@@ -160,25 +160,80 @@ function App() {
   // Sync favorites/inventory on login
   useEffect(() => {
     if (!session || !supabase) return;
+
     const sync = async () => {
       if (!supabase) return;
-      // 1. Favorites
-      const localArray = Array.from(favorites);
-      if (localArray.length > 0) {
-        const { data: existing } = await supabase.from('favorites').select('recipe_id').eq('user_id', session.user.id);
-        const existingIds = new Set(existing?.map((x: any) => x.recipe_id) || []);
-        const toAdd = localArray.filter(id => !existingIds.has(id));
-        if (toAdd.length > 0) await supabase.from('favorites').insert(toAdd.map(id => ({ user_id: session.user.id, recipe_id: id })));
-      }
-      const { data: dbFavs } = await supabase.from('favorites').select('recipe_id').eq('user_id', session.user.id);
-      if (dbFavs) setFavorites(new Set(dbFavs.map((f: any) => f.recipe_id)));
+      const currentUser = session.user.id;
+      const lastUser = localStorage.getItem('app_last_session_user');
+      const isSameUser = lastUser === currentUser;
 
-      // 2. Inventory
-      const { data: invData } = await supabase.from('user_inventory').select('ingredients').eq('user_id', session.user.id).single();
-      if (invData) setMyInventory(prev => new Set([...prev, ...(invData.ingredients || [])]));
+      // Update tracker
+      localStorage.setItem('app_last_session_user', currentUser);
+
+      try {
+        // --- 1. Favorites Strategy ---
+        // If switching users or new login (Guest -> User), MERGE local additions to server.
+        // If restoring session (Same User), TRUST SERVER (Overwrite local to prevent zombie items).
+
+        if (!isSameUser) {
+          const localArray = Array.from(favorites);
+          if (localArray.length > 0) {
+            // Check existing on server to avoid duplicates (though insert handles it usually, cleaner to check)
+            const { data: existing } = await supabase.from('favorites').select('recipe_id').eq('user_id', currentUser);
+            const existingIds = new Set(existing?.map((x: any) => x.recipe_id) || []);
+
+            // Only insert items that are NOT on server yet
+            const toAdd = localArray.filter(id => !existingIds.has(id));
+            if (toAdd.length > 0) {
+              await supabase.from('favorites').insert(toAdd.map(id => ({ user_id: currentUser, recipe_id: id })));
+            }
+          }
+        }
+
+        // ALWAYS fetch final state from server to ensure consistency
+        const { data: dbFavs, error: favError } = await supabase.from('favorites').select('recipe_id').eq('user_id', currentUser);
+        if (!favError && dbFavs) {
+          // Verify we aren't overwriting with empty if fetch failed dangerously, but error check handles that.
+          setFavorites(new Set(dbFavs.map((f: any) => f.recipe_id)));
+        }
+
+        // --- 2. Inventory Strategy ---
+        // Similar logic: If new flow, merge. If restore, trust server (or merge conservatively).
+        // For simplicity and safety, we merge if !isSameUser, and trust server if isSameUser.
+
+        const { data: invData, error: invError } = await supabase.from('user_inventory').select('ingredients').eq('user_id', currentUser).single();
+
+        if (!invError && invData) {
+          const ingredientsArray: string[] = Array.isArray(invData.ingredients) ? invData.ingredients : [];
+          const serverInv = new Set<string>(ingredientsArray);
+
+          if (!isSameUser && myInventory.size > 0) {
+            // Merge Local -> Server
+            const combined = new Set<string>([...serverInv, ...myInventory]);
+            // If combined has more items than server, update server
+            if (combined.size > serverInv.size) {
+              await supabase.from('user_inventory').upsert({
+                user_id: currentUser,
+                ingredients: Array.from(combined),
+                updated_at: new Date().toISOString()
+              });
+              setMyInventory(combined);
+            } else {
+              setMyInventory(serverInv);
+            }
+          } else {
+            // Restore Session: Trust Server
+            setMyInventory(serverInv);
+          }
+        }
+      } catch (e) {
+        console.error('Sync Error:', e);
+      }
     };
+
     sync();
-  }, [session]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [session]); // Only run on session change
 
   const saveInventory = async (inv: Set<string>) => {
     setMyInventory(inv); // Optimistic Update
@@ -192,16 +247,28 @@ function App() {
 
   const toggleFavorite = async (id: string, e?: React.MouseEvent) => {
     e?.stopPropagation();
+    const prevFavs = new Set(favorites); // Backup
     const newFavs = new Set(favorites);
     const isAdding = !newFavs.has(id);
+
+    // Optimistic Update
     if (isAdding) newFavs.add(id); else newFavs.delete(id);
     setFavorites(newFavs);
 
     if (session && supabase) {
-      if (isAdding) {
-        await supabase.from('favorites').insert({ user_id: session.user.id, recipe_id: id });
-      } else {
-        await supabase.from('favorites').delete().eq('user_id', session.user.id).eq('recipe_id', id);
+      try {
+        if (isAdding) {
+          const { error } = await supabase.from('favorites').insert({ user_id: session.user.id, recipe_id: id });
+          if (error) throw error;
+        } else {
+          const { error } = await supabase.from('favorites').delete().eq('user_id', session.user.id).eq('recipe_id', id);
+          if (error) throw error;
+        }
+      } catch (err) {
+        console.error('Toggle Favorite Error:', err);
+        // Revert on error
+        setFavorites(prevFavs);
+        // Optional: Show toast here
       }
     }
   };
@@ -281,6 +348,7 @@ function App() {
       // 1. Clear Local State immediately
       setFavorites(new Set());
       setMyInventory(new Set());
+      localStorage.removeItem('app_last_session_user'); // Clear sync tracker
       setSession(null); // Force UI update
 
       // 2. Call Supabase SignOut
