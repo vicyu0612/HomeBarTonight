@@ -423,7 +423,14 @@ function App() {
 
       // Handle "Collection" tag rule (New Standard)
       if (rules.collection) {
-        const results = recipes.filter(r => r.collections && r.collections.includes(rules.collection));
+        // Debug Log
+        console.log(`[${collection.id}] Applying collection rule: "${rules.collection}"`);
+        const results = recipes.filter(r => {
+          const hasTag = r.collections && r.collections.includes(rules.collection);
+          if (!hasTag && r.id === 'vodka-yakult') console.log('Vodka Yakult tags:', r.collections);
+          return hasTag;
+        });
+        console.log(`[${collection.id}] Found ${results.length} recipes.`);
         return results;
       }
 

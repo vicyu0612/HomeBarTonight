@@ -1,4 +1,3 @@
-import { supabase } from '../supabaseClient';
 import { useEffect, useState } from 'react';
 import { ArrowRight, ChevronRight } from 'lucide-react';
 import type { Collection } from '../data/collections';
