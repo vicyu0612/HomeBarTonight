@@ -61,7 +61,7 @@ export function FavoritesPage({ recipes, favorites, toggleFavorite, onSelectReci
                 </h1>
 
                 {favoriteRecipes.length === 0 ? (
-                    <div className="flex-1 flex flex-col items-center justify-center text-zinc-500 pb-20 pt-20">
+                    <div className="absolute inset-0 flex flex-col items-center justify-center text-zinc-500 pt-[calc(3rem+env(safe-area-inset-top))] pb-24 pointer-events-none">
                         <Heart size={48} className="mb-4 opacity-20" />
                         <p>{lang === 'zh' ? '還沒有收藏任何調酒喔' : 'No favorites yet.'}</p>
                     </div>
