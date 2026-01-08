@@ -1,4 +1,4 @@
-import { HelpCircle, ChevronRight, X, FileText, Globe } from 'lucide-react';
+import { HelpCircle, ChevronRight, X, FileText, Globe, ArrowLeft, LogOut, Trash2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState } from 'react';
 import type { Session } from '@supabase/supabase-js';
@@ -10,6 +10,7 @@ interface SettingsPageProps {
     setLang: (lang: 'en' | 'zh') => void;
     onLogin: (provider: 'google' | 'apple') => void;
     onLogout: () => void;
+    onDeleteAccount: () => void;
 }
 
 const GoogleIcon = () => (
@@ -21,9 +22,11 @@ const GoogleIcon = () => (
     </svg>
 );
 
-export function SettingsPage({ session, lang, setLang, onLogin, onLogout }: SettingsPageProps) {
+export function SettingsPage({ session, lang, setLang, onLogin, onLogout, onDeleteAccount }: SettingsPageProps) {
+    const [view, setView] = useState<'main' | 'account'>('main');
     const [showLanguageSheet, setShowLanguageSheet] = useState(false);
     const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
+    const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
     const [isScrolled, setIsScrolled] = useState(false);
 
     const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
@@ -34,11 +37,19 @@ export function SettingsPage({ session, lang, setLang, onLogin, onLogout }: Sett
         title: lang === 'zh' ? '設定' : 'Settings',
         account: {
             title: lang === 'zh' ? '帳戶' : 'Account',
+            details: lang === 'zh' ? '帳戶詳情' : 'Account Details',
             guest: lang === 'zh' ? '訪客' : 'Guest',
+            joined: lang === 'zh' ? '加入於' : 'Joined',
             login: lang === 'zh' ? '登入' : 'Sign In',
             logout: lang === 'zh' ? '登出' : 'Sign Out',
             confirmLogout: lang === 'zh' ? '確定要登出嗎？' : 'Are you sure you want to sign out?',
-            cancel: lang === 'zh' ? '取消' : 'Cancel'
+            delete: lang === 'zh' ? '刪除帳號' : 'Delete Account',
+            confirmDeleteTitle: lang === 'zh' ? '永久刪除帳號' : 'Permanently Delete Account',
+            confirmDeleteMsg: lang === 'zh'
+                ? '此動作無法復原。您的所有收藏、庫存和設定將從我們的資料庫中永久刪除。確定要繼續嗎？'
+                : 'This action cannot be undone. All your favorites, inventory, and settings will be permanently deleted from our database. Are you sure you want to proceed?',
+            cancel: lang === 'zh' ? '取消' : 'Cancel',
+            hiddenEmail: lang === 'zh' ? '隱藏的電子郵件' : 'Hidden Email'
         },
         language: {
             title: lang === 'zh' ? '當前語言' : 'Current Language',
@@ -53,8 +64,192 @@ export function SettingsPage({ session, lang, setLang, onLogin, onLogout }: Sett
 
     const openLink = (url: string) => window.open(url, '_blank');
 
+    const formatDate = (isoString?: string) => {
+        if (!isoString) return '';
+        return new Date(isoString).toLocaleDateString(lang === 'zh' ? 'zh-TW' : 'en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        });
+    };
+
+    // Helper to get display email
+    const getDisplayEmail = () => {
+        if (!session?.user?.email) return '';
+        if (session.user.email.includes('privaterelay.appleid.com')) {
+            return t.account.hiddenEmail;
+        }
+        return session.user.email;
+    };
+
+    // Helper to get display name (Name -> Email -> 'User')
+    const getDisplayName = () => {
+        return session?.user?.user_metadata?.full_name || getDisplayEmail() || 'User';
+    };
+
+    // Account Detail View
+    if (view === 'account' && session) {
+        return (
+            <div key="account-view" className="h-full w-full bg-black relative">
+                {/* Floating Header */}
+                <div className={clsx(
+                    "fixed top-0 left-0 right-0 z-30 flex items-center justify-between transition-all duration-300 pointer-events-none",
+                    "h-[calc(4rem+env(safe-area-inset-top))] px-4 pt-[calc(1rem+env(safe-area-inset-top))]"
+                )}>
+                    <div className="pointer-events-auto z-10">
+                        <button
+                            onClick={() => setView('main')}
+                            className="w-10 h-10 flex items-center justify-center rounded-full bg-black/20 backdrop-blur-md text-white border border-white/10 active:scale-90 transition-transform"
+                        >
+                            <ArrowLeft size={20} />
+                        </button>
+                    </div>
+
+                    {/* Centered Title */}
+                    <div className="absolute inset-0 flex items-center justify-center pt-[calc(1rem+env(safe-area-inset-top))] pointer-events-none">
+                        <span className="font-bold text-white text-lg drop-shadow-md bg-black/20 backdrop-blur-sm px-4 py-1 rounded-full border border-white/5">
+                            {t.account.details}
+                        </span>
+                    </div>
+
+                    <div className="w-10" />
+                </div>
+
+                <div
+                    className="h-full overflow-y-auto px-4 pb-12 pt-[calc(4rem+env(safe-area-inset-top))]"
+                >
+                    {/* Profile Card */}
+                    <div className="flex flex-col items-center py-6">
+                        <div className="w-24 h-24 rounded-full overflow-hidden border-2 border-white/10 shadow-2xl bg-zinc-800 flex items-center justify-center mb-4">
+                            {session.user.user_metadata.avatar_url ? (
+                                <img src={session.user.user_metadata.avatar_url} alt="User" className="w-full h-full object-cover" />
+                            ) : (
+                                <div className="w-full h-full flex items-center justify-center bg-indigo-500 text-white font-bold text-3xl">
+                                    {session.user.email?.[0].toUpperCase() || 'U'}
+                                </div>
+                            )}
+                        </div>
+                        <h2 className="text-xl font-bold text-white text-center px-4">
+                            {getDisplayName()}
+                        </h2>
+                        <p className="text-zinc-500 text-sm mt-1">{getDisplayEmail()}</p>
+                        <p className="text-zinc-600 text-xs mt-4 bg-zinc-900/50 px-3 py-1 rounded-full border border-white/5">
+                            {t.account.joined} {formatDate(session.user.created_at)}
+                        </p>
+                    </div>
+
+                    {/* Actions */}
+                    <div className="bg-zinc-900/50 backdrop-blur-md border border-white/10 rounded-2xl overflow-hidden divide-y divide-white/5 mt-4">
+                        <button
+                            onClick={() => setShowLogoutConfirm(true)}
+                            className="w-full p-4 flex items-center justify-between hover:bg-white/5 transition-colors text-white group"
+                        >
+                            <div className="flex items-center gap-3">
+                                <LogOut size={20} className="text-zinc-400 group-hover:text-white transition-colors" />
+                                <span>{t.account.logout}</span>
+                            </div>
+                            <ChevronRight size={20} className="text-zinc-500" />
+                        </button>
+                        <button
+                            onClick={() => setShowDeleteConfirm(true)}
+                            className="w-full p-4 flex items-center justify-between hover:bg-red-500/10 transition-colors text-red-500 group"
+                        >
+                            <div className="flex items-center gap-3">
+                                <Trash2 size={20} className="text-red-500/70 group-hover:text-red-500 transition-colors" />
+                                <span>{t.account.delete}</span>
+                            </div>
+                            <ChevronRight size={20} className="text-red-500/50" />
+                        </button>
+                    </div>
+                </div>
+
+                {/* Modals placed here as well to work in this view */}
+                <AnimatePresence>
+                    {showLogoutConfirm && (
+                        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+                            <motion.div
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                exit={{ opacity: 0 }}
+                                onClick={() => setShowLogoutConfirm(false)}
+                                className="absolute inset-0 bg-black/80 backdrop-blur-sm"
+                            />
+                            <motion.div
+                                initial={{ scale: 0.9, opacity: 0 }}
+                                animate={{ scale: 1, opacity: 1 }}
+                                exit={{ scale: 0.9, opacity: 0 }}
+                                className="relative bg-zinc-900 border border-white/10 rounded-2xl p-6 w-full max-w-sm shadow-2xl"
+                            >
+                                <h3 className="text-lg font-bold text-white mb-2">{t.account.logout}</h3>
+                                <p className="text-zinc-400 mb-6">{t.account.confirmLogout}</p>
+                                <div className="flex gap-3">
+                                    <button
+                                        onClick={() => setShowLogoutConfirm(false)}
+                                        className="flex-1 py-3 rounded-xl bg-zinc-800 text-white font-medium hover:bg-zinc-700 transition-colors"
+                                    >
+                                        {t.account.cancel}
+                                    </button>
+                                    <button
+                                        onClick={() => {
+                                            onLogout();
+                                            setShowLogoutConfirm(false);
+                                            setView('main'); // Go back to main on logout
+                                        }}
+                                        className="flex-1 py-3 rounded-xl bg-red-500/10 text-red-500 border border-red-500/20 font-medium hover:bg-red-500/20 transition-colors"
+                                    >
+                                        {t.account.logout}
+                                    </button>
+                                </div>
+                            </motion.div>
+                        </div>
+                    )}
+                </AnimatePresence>
+
+                <AnimatePresence>
+                    {showDeleteConfirm && (
+                        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+                            <motion.div
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                exit={{ opacity: 0 }}
+                                onClick={() => setShowDeleteConfirm(false)}
+                                className="absolute inset-0 bg-black/80 backdrop-blur-sm"
+                            />
+                            <motion.div
+                                initial={{ scale: 0.9, opacity: 0 }}
+                                animate={{ scale: 1, opacity: 1 }}
+                                exit={{ scale: 0.9, opacity: 0 }}
+                                className="relative bg-zinc-900 border border-red-500/30 rounded-2xl p-6 w-full max-w-sm shadow-2xl"
+                            >
+                                <h3 className="text-lg font-bold text-red-500 mb-2">{t.account.confirmDeleteTitle}</h3>
+                                <p className="text-zinc-300 mb-6">{t.account.confirmDeleteMsg}</p>
+                                <div className="flex gap-3">
+                                    <button
+                                        onClick={() => setShowDeleteConfirm(false)}
+                                        className="flex-1 py-3 rounded-xl bg-zinc-800 text-white font-medium hover:bg-zinc-700 transition-colors"
+                                    >
+                                        {t.account.cancel}
+                                    </button>
+                                    <button
+                                        onClick={() => {
+                                            onDeleteAccount();
+                                            setShowDeleteConfirm(false);
+                                        }}
+                                        className="flex-1 py-3 rounded-xl bg-red-600 text-white font-medium hover:bg-red-700 transition-colors shadow-lg shadow-red-900/20"
+                                    >
+                                        {t.account.delete}
+                                    </button>
+                                </div>
+                            </motion.div>
+                        </div>
+                    )}
+                </AnimatePresence>
+            </div>
+        );
+    }
+
     return (
-        <div className="h-full relative flex flex-col">
+        <div key="main-view" className="h-full relative flex flex-col">
             {/* Sticky Header */}
             <div className={clsx(
                 "absolute top-0 left-0 right-0 z-20 flex justify-center items-center transition-all duration-300",
@@ -94,7 +289,10 @@ export function SettingsPage({ session, lang, setLang, onLogin, onLogout }: Sett
                     <section>
                         <h2 className="text-zinc-500 text-sm font-medium mb-3 ml-1">{t.account.title}</h2>
                         {session ? (
-                            <div className="bg-zinc-900/50 backdrop-blur-md border border-white/10 rounded-2xl overflow-hidden p-4 flex items-center justify-between">
+                            <button
+                                onClick={() => setView('account')}
+                                className="w-full bg-zinc-900/50 backdrop-blur-md border border-white/10 rounded-2xl p-4 flex items-center justify-between hover:bg-white/5 transition-colors group"
+                            >
                                 <div className="flex items-center gap-4">
                                     <div className="w-12 h-12 rounded-full overflow-hidden border border-white/10 shadow-lg bg-zinc-800 flex items-center justify-center shrink-0">
                                         {session.user.user_metadata.avatar_url ? (
@@ -105,14 +303,17 @@ export function SettingsPage({ session, lang, setLang, onLogin, onLogout }: Sett
                                             </div>
                                         )}
                                     </div>
-                                    <div className="overflow-hidden">
-                                        <p className="text-white font-medium truncate max-w-[200px]">{session.user.email}</p>
-                                        <button onClick={() => setShowLogoutConfirm(true)} className="text-red-400 text-sm mt-0.5 hover:text-red-300 transition-colors text-left">
-                                            {t.account.logout}
-                                        </button>
+                                    <div className="text-left overflow-hidden">
+                                        <p className="text-white font-medium truncate max-w-[200px]">
+                                            {getDisplayName()}
+                                        </p>
+                                        <p className="text-zinc-500 text-sm group-hover:text-zinc-400 transition-colors">
+                                            {getDisplayEmail()}
+                                        </p>
                                     </div>
                                 </div>
-                            </div>
+                                <ChevronRight size={20} className="text-zinc-500 group-hover:text-white transition-colors" />
+                            </button>
                         ) : (
                             <div className="space-y-3">
                                 <button
@@ -141,6 +342,7 @@ export function SettingsPage({ session, lang, setLang, onLogin, onLogout }: Sett
                     </section>
 
                     {/* Language Section */}
+                    {/* ... (Kept existing language and about sections) ... */}
                     <section>
                         <h2 className="text-zinc-500 text-sm font-medium mb-3 ml-1">{t.language.title}</h2>
                         <button

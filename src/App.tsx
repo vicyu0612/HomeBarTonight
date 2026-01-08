@@ -261,6 +261,20 @@ function App() {
     }
   };
 
+  const handleDeleteAccount = async () => {
+    if (!supabase) return;
+    try {
+      const { error } = await supabase.rpc('delete_own_account');
+      if (error) throw error;
+      // After successful deletion, clean up like logout
+      await handleLogout();
+      alert('Your account has been permanently deleted.');
+    } catch (e) {
+      console.error('Delete Account Error:', e);
+      alert('Failed to delete account. Please try again.');
+    }
+  };
+
   return (
     <div
       className="fixed inset-0 w-full h-full overflow-hidden bg-black text-white font-sans selection:bg-indigo-500/30 select-none flex flex-col"
@@ -349,6 +363,7 @@ function App() {
             setLang={setLang}
             onLogin={handleLogin}
             onLogout={handleLogout}
+            onDeleteAccount={handleDeleteAccount}
           />
         </div>
       </main>
