@@ -247,9 +247,18 @@ function App() {
 
   const handleLogout = async () => {
     if (!supabase) return;
-    await supabase.auth.signOut();
-    setFavorites(new Set());
-    setMyInventory(new Set());
+    try {
+      // 1. Clear Local State immediately
+      setFavorites(new Set());
+      setMyInventory(new Set());
+      setSession(null); // Force UI update
+
+      // 2. Call Supabase SignOut
+      const { error } = await supabase.auth.signOut();
+      if (error) console.error('SignOut Error:', error);
+    } catch (e) {
+      console.error('Logout Exception:', e);
+    }
   };
 
   return (
