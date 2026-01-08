@@ -170,8 +170,13 @@ export function MyBarPage({
                         </div>
 
                         {/* Explicit CTA Button */}
-                        <button className="w-full py-3.5 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-600 text-white font-bold flex items-center justify-center gap-2 shadow-lg shadow-black/20 group-hover:shadow-amber-900/20 transition-all">
-                            <ShakerIcon size={20} className="text-white" />
+                        <button className={clsx(
+                            "w-full py-3.5 rounded-2xl font-bold flex items-center justify-center gap-2 shadow-lg transition-all",
+                            myInventory.size > 0
+                                ? "bg-indigo-500 text-white shadow-indigo-500/20"
+                                : "bg-white text-black shadow-black/20"
+                        )}>
+                            <ShakerIcon size={20} className={myInventory.size > 0 ? "text-white" : "text-black"} />
                             {lang === 'zh'
                                 ? `管理我的庫存 (${myInventory.size})`
                                 : `Manage my inventory (${myInventory.size})`}

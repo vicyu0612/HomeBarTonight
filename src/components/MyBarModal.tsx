@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Check } from 'lucide-react';
+import { X } from 'lucide-react';
 import clsx from 'clsx';
 
 // Define Ingredient interface matching DB schema
@@ -140,12 +140,14 @@ export function MyBarModal({
 
                             {/* Right Actions */}
                             <div className="flex items-center gap-2 relative z-10">
-                                <button
-                                    onClick={() => setMyInventory(new Set())}
-                                    className="px-3 py-1.5 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500/20 text-xs font-bold transition-colors border border-red-500/20"
-                                >
-                                    {lang === 'zh' ? '全部清除' : 'Clear All'}
-                                </button>
+                                {myInventory.size > 0 && (
+                                    <button
+                                        onClick={() => setMyInventory(new Set())}
+                                        className="h-10 px-4 py-2 rounded-full bg-red-500/10 text-red-400 hover:bg-red-500/20 text-xs font-bold transition-colors border border-red-500/20"
+                                    >
+                                        {lang === 'zh' ? '全部清除' : 'Clear All'}
+                                    </button>
+                                )}
                                 <button
                                     onClick={onClose}
                                     className="p-2 rounded-full bg-black/30 backdrop-blur-md text-white border border-white/10 shadow-lg hover:bg-black/50 active:scale-95 transition-all"
@@ -162,8 +164,8 @@ export function MyBarModal({
                         >
                             {/* Large Title */}
                             <div>
-                                <h2 className="text-3xl font-bold bg-gradient-to-r from-primary to-purple-400 bg-clip-text text-transparent mb-1">
-                                    {lang === 'zh' ? '我的吧台' : 'My Bar'}
+                                <h2 className="text-2xl font-bold text-white mb-1">
+                                    {lang === 'zh' ? '我的庫存' : 'My Inventory'}
                                 </h2>
                                 <p className="text-zinc-400 text-sm">
                                     {lang === 'zh'
@@ -177,9 +179,9 @@ export function MyBarModal({
                                 { id: 'base', title: lang === 'zh' ? '基酒' : 'Base Spirits', color: 'bg-amber-500', items: categories.base },
                                 { id: 'liqueur', title: lang === 'zh' ? '利口酒' : 'Liqueurs', color: 'bg-orange-500', items: categories.liqueur },
                                 { id: 'other_alc', title: lang === 'zh' ? '其他酒類' : 'Other Alcohol', color: 'bg-red-500', items: categories.other_alc },
-                                { id: 'essential', title: lang === 'zh' ? '基本 (冰、糖、檸檬、苦精)' : 'Essentials (Ice, Sugar, Lemon, Bitters)', color: 'bg-zinc-400', items: categories.essential },
-                                { id: 'mixer', title: lang === 'zh' ? '常見飲料甜品 (果汁、汽水、冰棒)' : 'Common Drinks & Desserts (Juice, Soda, Popsicle)', color: 'bg-blue-400', items: categories.mixer },
-                                { id: 'garnish', title: lang === 'zh' ? '裝飾 & 其他 (薄荷、橄欖、小黃瓜...)' : 'Garnishes & Others (Mint, Olive, Cucumber...)', color: 'bg-green-500', items: categories.garnish },
+                                { id: 'essential', title: lang === 'zh' ? '基本材料' : 'Essentials', color: 'bg-zinc-400', items: categories.essential },
+                                { id: 'mixer', title: lang === 'zh' ? '常見飲料甜品' : 'Common Drinks & Desserts', color: 'bg-blue-400', items: categories.mixer },
+                                { id: 'garnish', title: lang === 'zh' ? '裝飾 & 其他' : 'Garnishes & Others', color: 'bg-green-500', items: categories.garnish },
                             ].map(section => (
                                 section.items.length > 0 && (
                                     <section key={section.id}>
@@ -200,27 +202,19 @@ export function MyBarModal({
                                                     : (lang === 'zh' ? '全選' : 'Select All')}
                                             </button>
                                         </div>
-                                        <div className="grid grid-cols-2 gap-3">
+                                        <div className="flex flex-wrap gap-2">
                                             {section.items.map(item => (
                                                 <button
                                                     key={item}
                                                     onClick={() => toggleItem(item)}
                                                     className={clsx(
-                                                        "flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all text-left border relative overflow-hidden group",
+                                                        "whitespace-nowrap px-4 py-2 rounded-full text-sm font-medium border transition-colors",
                                                         myInventory.has(item)
-                                                            ? "bg-white text-black border-white shadow-lg shadow-white/10 scale-[1.02]"
-                                                            : "bg-white/5 text-zinc-400 border-white/5 hover:bg-white/10 hover:border-white/10 active:scale-95"
+                                                            ? "bg-indigo-500 text-white border-indigo-500 shadow-md shadow-indigo-500/20"
+                                                            : "bg-zinc-800/40 text-zinc-400 border-white/10 hover:bg-zinc-700"
                                                     )}
                                                 >
-                                                    <div className={clsx(
-                                                        "w-5 h-5 rounded-full border flex items-center justify-center shrink-0 transition-colors",
-                                                        myInventory.has(item)
-                                                            ? "bg-black border-black text-white"
-                                                            : "border-zinc-700 bg-transparent group-hover:border-zinc-500"
-                                                    )}>
-                                                        {myInventory.has(item) && <Check size={12} strokeWidth={3} />}
-                                                    </div>
-                                                    <span className="truncate">{getLabel(item)}</span>
+                                                    {getLabel(item)}
                                                 </button>
                                             ))}
                                         </div>
@@ -234,7 +228,12 @@ export function MyBarModal({
                         <div className="p-6 border-t-[0.5px] border-white/10 bg-black/20 backdrop-blur-xl z-10">
                             <button
                                 onClick={onClose}
-                                className="w-full py-4 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-600 text-white font-bold shadow-lg shadow-amber-900/40 active:scale-[0.98] transition-all"
+                                className={clsx(
+                                    "w-full py-4 font-bold rounded-2xl active:scale-[0.98] transition-all",
+                                    myInventory.size > 0
+                                        ? "bg-indigo-500 text-white shadow-lg shadow-indigo-500/20"
+                                        : "bg-white text-black"
+                                )}
                             >
                                 {lang === 'zh' ? `完成 (${myInventory.size} 項材料)` : `Done (${myInventory.size} items)`}
                             </button>

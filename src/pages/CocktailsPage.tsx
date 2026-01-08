@@ -18,14 +18,12 @@ interface CocktailsPageProps {
 }
 
 export function CocktailsPage({ allRecipes, favorites, toggleFavorite, onSelectRecipe, lang, onShake }: CocktailsPageProps) {
-    const [activeSubTab, setActiveSubTab] = useState<'all' | 'classic' | 'cvs'>('all');
-    const [activeSpirit, setActiveSpirit] = useState<string>('all');
+    const [selectedCategories, setSelectedCategories] = useState<Set<'classic' | 'cvs'>>(new Set());
+    const [selectedSpirits, setSelectedSpirits] = useState<Set<string>>(new Set());
     const [searchQuery, setSearchQuery] = useState('');
     const [showFilter, setShowFilter] = useState(false);
 
-
-
-    const tabs: ('all' | 'cvs' | 'classic')[] = ['all', 'cvs', 'classic'];
+    const tabs: ('cvs' | 'classic')[] = ['cvs', 'classic'];
 
     const t = {
         title: lang === 'zh' ? '酒譜' : 'Cocktails',
@@ -45,7 +43,6 @@ export function CocktailsPage({ allRecipes, favorites, toggleFavorite, onSelectR
     };
 
     const spirits = [
-        { id: 'all', label: t.spirits.all },
         { id: 'gin', label: lang === 'zh' ? '琴酒' : 'Gin' },
         { id: 'vodka', label: lang === 'zh' ? '伏特加' : 'Vodka' },
         { id: 'rum', label: lang === 'zh' ? '蘭姆酒' : 'Rum' },
@@ -57,25 +54,56 @@ export function CocktailsPage({ allRecipes, favorites, toggleFavorite, onSelectR
         { id: 'beer', label: lang === 'zh' ? '啤酒' : 'Beer' },
     ];
 
+    const activeFilterCount = selectedCategories.size + selectedSpirits.size;
+
     const filteredRecipes = useMemo(() => {
         return allRecipes.filter(recipe => {
-            if (activeSubTab === 'classic' && recipe.type !== 'classic') return false;
-            if (activeSubTab === 'cvs' && recipe.type !== 'cvs') return false;
-            if (activeSpirit !== 'all' && !recipe.baseSpirit.includes(activeSpirit)) return false;
-            if (!searchQuery) return true;
+            // Category filter (OR logic within categories)
+            const categoryMatch = selectedCategories.size === 0 ||
+                (selectedCategories.has('classic') && recipe.type === 'classic') ||
+                (selectedCategories.has('cvs') && recipe.type === 'cvs');
+
+            // Spirit filter (OR logic within spirits)
+            const spiritMatch = selectedSpirits.size === 0 ||
+                Array.from(selectedSpirits).some(spirit => recipe.baseSpirit.includes(spirit));
+
+            // Search filter
+            if (!searchQuery) return categoryMatch && spiritMatch;
             const q = searchQuery.toLowerCase();
             const matchName = recipe.name.en.toLowerCase().includes(q) || recipe.name.zh.toLowerCase().includes(q);
             const matchIng = recipe.ingredients.en.some(i => i.name.toLowerCase().includes(q)) ||
                 recipe.ingredients.zh.some(i => i.name.toLowerCase().includes(q));
-            return matchName || matchIng;
+            const searchMatch = matchName || matchIng;
+
+            return categoryMatch && spiritMatch && searchMatch;
         });
-    }, [allRecipes, activeSubTab, activeSpirit, searchQuery]);
+    }, [allRecipes, selectedCategories, selectedSpirits, searchQuery]);
 
     const [isSticky, setIsSticky] = useState(false);
 
     const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
         const scrollTop = e.currentTarget.scrollTop;
         setIsSticky(scrollTop > 50);
+    };
+
+    const toggleCategory = (cat: 'classic' | 'cvs') => {
+        const newSet = new Set(selectedCategories);
+        if (newSet.has(cat)) {
+            newSet.delete(cat);
+        } else {
+            newSet.add(cat);
+        }
+        setSelectedCategories(newSet);
+    };
+
+    const toggleSpirit = (spirit: string) => {
+        const newSet = new Set(selectedSpirits);
+        if (newSet.has(spirit)) {
+            newSet.delete(spirit);
+        } else {
+            newSet.add(spirit);
+        }
+        setSelectedSpirits(newSet);
     };
 
     return (
@@ -140,14 +168,14 @@ export function CocktailsPage({ allRecipes, favorites, toggleFavorite, onSelectR
                     </button>
                     <button
                         onClick={() => setShowFilter(true)}
-                        className={clsx(
-                            "w-[50px] h-[50px] rounded-full flex items-center justify-center border transition-colors shrink-0",
-                            (activeSpirit !== 'all')
-                                ? "bg-indigo-500 border-indigo-500 text-white"
-                                : "bg-zinc-800/40 border-white/10 text-white hover:bg-zinc-700"
-                        )}
+                        className="relative w-[50px] h-[50px] rounded-full bg-zinc-800/40 flex items-center justify-center border border-white/10 text-white hover:bg-zinc-700 transition-colors shrink-0"
                     >
                         <SlidersHorizontal size={20} />
+                        {activeFilterCount > 0 && (
+                            <span className="absolute -top-1 -right-1 w-5 h-5 bg-indigo-500 text-white text-xs font-bold rounded-full flex items-center justify-center">
+                                {activeFilterCount}
+                            </span>
+                        )}
                     </button>
                 </div>
 
@@ -174,18 +202,21 @@ export function CocktailsPage({ allRecipes, favorites, toggleFavorite, onSelectR
                             className="fixed bottom-0 left-0 right-0 z-[101] bg-black/40 backdrop-blur-2xl rounded-t-[2.5rem] border-t-[0.5px] border-white/10 shadow-[0_-10px_40px_rgba(0,0,0,0.5),inset_0_0.5px_0_rgba(255,255,255,0.1)] p-6 pb-12 mx-auto max-w-[1024px]"
                         >
                             <div className="flex justify-between items-center mb-6">
-                                <h3 className="text-xl font-bold text-white">{lang === 'zh' ? '篩選' : 'Filters'}</h3>
+                                <h3 className="text-2xl font-bold text-white">{lang === 'zh' ? '篩選' : 'Filters'}</h3>
                                 <div className="flex gap-2">
-                                    {(activeSpirit !== 'all') && (
+                                    {activeFilterCount > 0 && (
                                         <button
-                                            onClick={() => { setActiveSpirit('all'); }}
-                                            className="text-sm text-zinc-400 font-medium px-3 py-1.5 rounded-full hover:bg-white/5 transition-colors"
+                                            onClick={() => {
+                                                setSelectedCategories(new Set());
+                                                setSelectedSpirits(new Set());
+                                            }}
+                                            className="px-4 py-2 rounded-full bg-red-500/10 text-red-400 hover:bg-red-500/20 text-xs font-bold transition-colors border border-red-500/20"
                                         >
-                                            {t.clear}
+                                            {lang === 'zh' ? '全部清除' : 'Clear All'}
                                         </button>
                                     )}
-                                    <button onClick={() => setShowFilter(false)} className="p-2 bg-zinc-800 rounded-full text-zinc-400 hover:text-white">
-                                        <X size={20} />
+                                    <button onClick={() => setShowFilter(false)} className="p-2 rounded-full bg-black/30 backdrop-blur-md text-white border border-white/10 shadow-lg hover:bg-black/50 active:scale-95 transition-all">
+                                        <X size={24} />
                                     </button>
                                 </div>
                             </div>
@@ -199,17 +230,16 @@ export function CocktailsPage({ allRecipes, favorites, toggleFavorite, onSelectR
                                     <div className="flex flex-wrap gap-2">
                                         {tabs.map(tab => {
                                             const labels = {
-                                                all: t.tabs.all,
                                                 cvs: t.tabs.cvs,
                                                 classic: t.tabs.classic
                                             };
                                             return (
                                                 <button
                                                     key={tab}
-                                                    onClick={() => setActiveSubTab(tab)}
+                                                    onClick={() => toggleCategory(tab)}
                                                     className={clsx(
                                                         "whitespace-nowrap px-4 py-2 rounded-full text-sm font-medium border transition-colors",
-                                                        activeSubTab === tab
+                                                        selectedCategories.has(tab)
                                                             ? "bg-indigo-500 text-white border-indigo-500 shadow-md shadow-indigo-500/20"
                                                             : "bg-zinc-800/40 text-zinc-400 border-white/10 hover:bg-zinc-700"
                                                     )}
@@ -229,10 +259,10 @@ export function CocktailsPage({ allRecipes, favorites, toggleFavorite, onSelectR
                                         {spirits.map(s => (
                                             <button
                                                 key={s.id}
-                                                onClick={() => setActiveSpirit(s.id)}
+                                                onClick={() => toggleSpirit(s.id)}
                                                 className={clsx(
                                                     "whitespace-nowrap px-4 py-2 rounded-full text-sm font-medium border transition-colors",
-                                                    activeSpirit === s.id
+                                                    selectedSpirits.has(s.id)
                                                         ? "bg-indigo-500 text-white border-indigo-500 shadow-md shadow-indigo-500/20"
                                                         : "bg-zinc-800/40 text-zinc-400 border-white/10 hover:bg-zinc-700"
                                                 )}
@@ -245,7 +275,12 @@ export function CocktailsPage({ allRecipes, favorites, toggleFavorite, onSelectR
 
                                 <button
                                     onClick={() => setShowFilter(false)}
-                                    className="w-full py-4 bg-white text-black font-bold rounded-2xl mt-4 active:scale-[0.98] transition-transform"
+                                    className={clsx(
+                                        "w-full py-4 font-bold rounded-2xl mt-4 active:scale-[0.98] transition-all",
+                                        activeFilterCount > 0
+                                            ? "bg-indigo-500 text-white shadow-lg shadow-indigo-500/20"
+                                            : "bg-white text-black"
+                                    )}
                                 >
                                     {lang === 'zh' ? `顯示 ${filteredRecipes.length} 個結果` : `Show ${filteredRecipes.length} Results`}
                                 </button>
@@ -274,8 +309,8 @@ export function CocktailsPage({ allRecipes, favorites, toggleFavorite, onSelectR
                     <div className="flex flex-col items-center justify-center py-20 text-zinc-500">
                         <Martini size={48} className="mb-4 opacity-50" />
                         <p>{t.noResults}</p>
-                        <button onClick={() => { setSearchQuery(''); setActiveSubTab('all'); setActiveSpirit('all'); }} className="mt-4 text-indigo-400 underline">
-                            {t.clear}
+                        <button onClick={() => { setSearchQuery(''); setSelectedCategories(new Set()); setSelectedSpirits(new Set()); }} className="mt-4 text-indigo-400 underline">
+                            {lang === 'zh' ? '清除篩選' : 'Clear filters'}
                         </button>
                     </div>
                 )

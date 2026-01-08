@@ -15,7 +15,7 @@ export const INGREDIENT_DB: Record<string, { en: string; zh: string }> = {
     'soju': { en: 'Soju', zh: '燒酒' },
     'sake': { en: 'Sake', zh: '清酒' },
     'champagne': { en: 'Champagne', zh: '香檳' },
-    'hard_cider': { en: 'Hard Cider', zh: '蘋果酒' },
+    'hard_cider': { en: 'Apple Cider', zh: '蘋果酒' },
 
     // Liqueurs
     'liqueur': { en: 'Liqueur', zh: '利口酒' },
@@ -54,7 +54,7 @@ export const INGREDIENT_DB: Record<string, { en: string; zh: string }> = {
     'milk': { en: 'Milk', zh: '牛奶' },
     'calpis': { en: 'Calpis', zh: '可爾必思' },
     'yakult': { en: 'Yakult', zh: '養樂多' },
-    'cider': { en: 'Apple Cider', zh: '西打' },
+
     'grenadine': { en: 'Grenadine', zh: '紅石榴糖漿' },
     'orgeat': { en: 'Orgeat', zh: '杏仁糖漿' }, // Added
     'lime_cordial': { en: 'Lime Cordial', zh: '莱姆汁 (Cordial)' }, // Added
