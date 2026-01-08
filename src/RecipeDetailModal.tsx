@@ -158,7 +158,7 @@ export const RecipeDetailModal = ({ recipe, onClose, isFavorite, onToggleFavorit
                                 {recipe.ingredients[lang].map((ing: any, i: number) => (
                                     <div key={i} className="flex justify-between items-center p-3 border-b border-white/5 last:border-0 hover:bg-white/5 transition-colors rounded-xl">
                                         <span className="text-zinc-200 font-medium">{ing.name}</span>
-                                        <span className="text-primary font-bold bg-primary/10 px-3 py-1 rounded-lg border border-primary/20">{ing.amount}</span>
+                                        <span className="text-indigo-500 font-bold bg-indigo-500/10 px-3 py-1 rounded-lg border border-indigo-500/20">{ing.amount}</span>
                                     </div>
                                 ))}
                             </div>
@@ -175,7 +175,7 @@ export const RecipeDetailModal = ({ recipe, onClose, isFavorite, onToggleFavorit
                                         {i !== recipe.steps[lang].length - 1 && (
                                             <div className="absolute left-[11px] top-8 bottom-[-24px] w-[2px] bg-white/10" />
                                         )}
-                                        <div className="w-6 h-6 rounded-full bg-primary flex items-center justify-center text-xs font-bold text-black shrink-0 shadow-[0_0_15px_rgba(139,92,246,0.5)] z-10">
+                                        <div className="w-6 h-6 rounded-full bg-indigo-500 flex items-center justify-center text-xs font-bold text-white shrink-0 shadow-[0_0_15px_rgba(99,102,241,0.5)] z-10">
                                             {i + 1}
                                         </div>
                                         <p className="text-zinc-300 text-base leading-relaxed pt-0.5">{step}</p>
@@ -187,7 +187,7 @@ export const RecipeDetailModal = ({ recipe, onClose, isFavorite, onToggleFavorit
                         <div className="pt-4 pb-16">
                             <button
                                 onClick={onClose}
-                                className="w-full py-4 rounded-2xl bg-gradient-to-r from-primary to-accent text-zinc-950 font-black text-xl hover:opacity-90 active:scale-[0.98] transition-all shadow-[0_0_30px_rgba(34,211,238,0.3)]"
+                                className="w-full py-4 rounded-2xl bg-indigo-500 text-white font-bold text-lg hover:bg-indigo-600 active:scale-[0.98] transition-all shadow-lg shadow-indigo-500/20"
                             >
                                 {t.done}
                             </button>

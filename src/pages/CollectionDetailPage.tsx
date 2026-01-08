@@ -7,7 +7,7 @@ import { RecipeCard } from '../components/RecipeCard';
 import { RecipeCardSkeleton } from '../components/RecipeCardSkeleton';
 import clsx from 'clsx';
 import { useState } from 'react';
-// import { useSwipeBack } from '../hooks/useSwipeBack';
+import { useSwipeBack } from '../hooks/useSwipeBack';
 
 interface CollectionDetailPageProps {
     collectionId: string;
@@ -32,7 +32,7 @@ export function CollectionDetailPage({
     favorites,
     lang
 }: CollectionDetailPageProps) {
-    // useSwipeBack(onBack);
+    useSwipeBack(onBack);
 
     const collection = allCollections.find(c => c.id === collectionId);
     const [isScrolled, setIsScrolled] = useState(false);
@@ -154,7 +154,7 @@ export function CollectionDetailPage({
 
                 {/* Hero Area */}
                 <div className={clsx(
-                    "relative pt-32 pb-8 px-6 md:pt-64 md:pb-16 overflow-hidden",
+                    "relative pt-48 pb-8 px-6 md:pt-64 md:pb-16 overflow-hidden",
                     "bg-zinc-900" // Fallback bg
                 )}>
                     {/* Background Image or Gradient */}

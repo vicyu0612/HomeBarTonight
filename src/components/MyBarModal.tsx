@@ -194,7 +194,7 @@ export function MyBarModal({
                                                 onClick={() => toggleAll(section.items)}
                                                 className={`text-xs px-2 py-1 rounded transition-colors ${section.items.every(i => myInventory.has(i))
                                                     ? 'text-zinc-400 hover:text-zinc-200 hover:bg-white/10'
-                                                    : 'text-primary hover:text-primary/80 hover:bg-primary/10'
+                                                    : 'text-indigo-500 hover:text-indigo-400 hover:bg-indigo-500/10'
                                                     }`}
                                             >
                                                 {section.items.every(i => myInventory.has(i))
