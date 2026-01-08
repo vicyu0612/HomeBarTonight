@@ -119,7 +119,7 @@ export function CollectionDetailPage({
 
             {/* Hero Area */}
             <div className={clsx(
-                "relative pt-32 pb-8 px-6 overflow-hidden",
+                "relative pt-32 pb-8 px-6 md:pt-64 md:pb-16 overflow-hidden",
                 "bg-zinc-900" // Fallback bg
             )}>
                 {/* Background Image or Gradient */}
@@ -135,7 +135,7 @@ export function CollectionDetailPage({
 
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-black/60" /> {/* Gradient Overlay */}
 
-                <div className="relative z-10">
+                <div className="relative z-10 max-w-5xl mx-auto w-full"> {/* Centered content for desktop */}
                     <h1 className="text-3xl font-bold text-white mb-2 text-shadow-lg">
                         {lang === 'zh' ? collection.title.zh : collection.title.en}
                     </h1>
