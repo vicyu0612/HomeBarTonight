@@ -89,7 +89,7 @@ export function ExplorePage({
 
     return (
         <div
-            className="h-full w-full overflow-y-auto bg-black no-scrollbar"
+            className="h-full w-full overflow-y-auto bg-black no-scrollbar touch-pan-y"
             onScroll={handleScroll}
         >
             {/* Sticky Header... (keep) */}

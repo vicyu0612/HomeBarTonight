@@ -388,12 +388,12 @@ function App() {
 
   return (
     <div
-      className="fixed inset-0 w-full h-full overflow-hidden bg-black text-white font-sans selection:bg-indigo-500/30 select-none flex flex-col"
+      className="fixed inset-0 w-full h-full overflow-hidden bg-black text-white font-sans selection:bg-indigo-500/30 flex flex-col"
     >
 
       {/* Main Content Area */}
       {/* Main Content Area */}
-      <main className="flex-1 overflow-hidden relative max-w-5xl mx-auto w-full">
+      <main className="flex-1 min-h-0 overflow-hidden relative max-w-5xl mx-auto w-full">
 
         {/* Explore Page */}
         <div className={activeTab === 'explore' || activeTab === 'collection' ? 'h-full relative overflow-hidden' : 'hidden'}>

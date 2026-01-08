@@ -8,13 +8,9 @@
 
 body {
   @apply bg-background text-zinc-100 antialiased selection:bg-primary selection:text-white;
-  overscroll-behavior-y: none;
   /* iOS Native Feel */
   -webkit-touch-callout: none;
-  -webkit-user-select: none;
-  user-select: none;
-  overflow: hidden;
-  /* Prevent body scroll */
+  /* Prevent body scroll bounce but allow content scroll */
   margin: 0;
   padding: 0;
 }
