@@ -23,38 +23,9 @@ export function CocktailsPage({ allRecipes, favorites, toggleFavorite, onSelectR
     const [searchQuery, setSearchQuery] = useState('');
     const [showFilter, setShowFilter] = useState(false);
 
-    // Swipe Logic
-    const [touchStart, setTouchStart] = useState<number | null>(null);
-    const [touchEnd, setTouchEnd] = useState<number | null>(null);
 
-    const minSwipeDistance = 50;
+
     const tabs: ('all' | 'cvs' | 'classic')[] = ['all', 'cvs', 'classic'];
-
-    const onTouchStart = (e: React.TouchEvent) => {
-        setTouchEnd(null);
-        setTouchStart(e.targetTouches[0].clientX);
-    };
-
-    const onTouchMove = (e: React.TouchEvent) => {
-        setTouchEnd(e.targetTouches[0].clientX);
-    };
-
-    const onTouchEnd = () => {
-        if (!touchStart || !touchEnd) return;
-        const distance = touchStart - touchEnd;
-        const isLeftSwipe = distance > minSwipeDistance;
-        const isRightSwipe = distance < -minSwipeDistance;
-
-        if (isLeftSwipe || isRightSwipe) {
-            const currentIndex = tabs.indexOf(activeSubTab);
-            if (isLeftSwipe && currentIndex < tabs.length - 1) {
-                setActiveSubTab(tabs[currentIndex + 1]);
-            }
-            if (isRightSwipe && currentIndex > 0) {
-                setActiveSubTab(tabs[currentIndex - 1]);
-            }
-        }
-    };
 
     const t = {
         title: lang === 'zh' ? '酒譜' : 'Cocktails',
@@ -111,20 +82,17 @@ export function CocktailsPage({ allRecipes, favorites, toggleFavorite, onSelectR
         <div
             className="h-full overflow-y-auto no-scrollbar flex flex-col"
             onScroll={handleScroll}
-            onTouchStart={onTouchStart}
-            onTouchMove={onTouchMove}
-            onTouchEnd={onTouchEnd}
         >
             {/* Scroll Sentinel (Removed) */}
 
             {/* Header (Scrolls away) */}
-            <div className="px-4 pb-4 pt-[calc(3rem+env(safe-area-inset-top))] flex justify-between items-center bg-transparent relative z-10 pointer-events-none">
+            <div className="px-4 pb-4 pt-[calc(3rem+env(safe-area-inset-top))] flex justify-between items-center bg-transparent relative z-10">
                 <h1 className="text-3xl font-bold text-white">{t.title}</h1>
             </div>
 
             {/* Sticky Header Group: Search & Tabs */}
             <div className={clsx(
-                "sticky top-0 px-4 pb-2 pt-[calc(0.5rem+env(safe-area-inset-top))] -mt-[calc(0.5rem+env(safe-area-inset-top))] transition-all duration-300 z-40 pointer-events-none",
+                "sticky top-0 px-4 pb-2 pt-[calc(0.5rem+env(safe-area-inset-top))] -mt-[calc(0.5rem+env(safe-area-inset-top))] transition-all duration-300 z-40",
                 // Container is always transparent now, enabling the inner gradient div to handle the look
                 "bg-transparent"
             )}>
@@ -144,7 +112,7 @@ export function CocktailsPage({ allRecipes, favorites, toggleFavorite, onSelectR
                 />
 
                 {/* Search Bar & Filter Button */}
-                <div className="flex gap-3 pointer-events-auto">
+                <div className="flex gap-3">
                     <div className="relative flex-1">
                         <Search className="absolute left-4 top-3.5 text-white z-10" size={20} />
                         <input

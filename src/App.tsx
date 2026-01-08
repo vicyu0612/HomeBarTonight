@@ -388,7 +388,7 @@ function App() {
 
   return (
     <div
-      className="fixed inset-0 w-full h-full overflow-hidden bg-black text-white font-sans selection:bg-indigo-500/30 flex flex-col"
+      className="fixed inset-0 w-full h-[100dvh] overflow-hidden bg-black text-white font-sans selection:bg-indigo-500/30 flex flex-col"
     >
 
       {/* Main Content Area */}

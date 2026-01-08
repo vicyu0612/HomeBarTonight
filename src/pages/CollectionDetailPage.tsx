@@ -6,7 +6,7 @@ import type { Recipe } from '../data/recipes';
 import { RecipeCard } from '../components/RecipeCard';
 import clsx from 'clsx';
 import { useState } from 'react';
-import { useSwipeBack } from '../hooks/useSwipeBack';
+// import { useSwipeBack } from '../hooks/useSwipeBack';
 
 interface CollectionDetailPageProps {
     collectionId: string;
@@ -31,7 +31,7 @@ export function CollectionDetailPage({
     favorites,
     lang
 }: CollectionDetailPageProps) {
-    useSwipeBack(onBack);
+    // useSwipeBack(onBack);
 
     const collection = allCollections.find(c => c.id === collectionId);
     const [isScrolled, setIsScrolled] = useState(false);
@@ -131,7 +131,7 @@ export function CollectionDetailPage({
                 <div className="flex items-center gap-3 h-full max-w-5xl mx-auto w-full md:px-6 pointer-events-auto">
                     <button
                         onClick={onBack}
-                        className="w-10 h-10 rounded-full bg-zinc-800/50 flex items-center justify-center text-white backdrop-blur-md active:scale-95 transition-transform"
+                        className="p-3 rounded-full bg-black/30 backdrop-blur-md flex items-center justify-center text-white border border-white/10 shadow-lg hover:bg-black/50 active:scale-95 transition-all"
                     >
                         <ArrowLeft size={20} />
                     </button>

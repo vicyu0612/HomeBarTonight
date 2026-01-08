@@ -148,7 +148,7 @@ export function MyBarModal({
                                 </button>
                                 <button
                                     onClick={onClose}
-                                    className="p-2 hover:bg-zinc-800 rounded-full transition-colors text-zinc-400 hover:text-white"
+                                    className="p-2 rounded-full bg-black/30 backdrop-blur-md text-white border border-white/10 shadow-lg hover:bg-black/50 active:scale-95 transition-all"
                                 >
                                     <X size={24} />
                                 </button>
