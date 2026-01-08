@@ -344,7 +344,18 @@ function App() {
 
   const handleLogout = async () => {
     if (!supabase) return;
+    const userId = session?.user?.id;
+
     try {
+      // 0. Final Sync (Inventory) ensures latest state is saved before logout
+      if (userId && myInventory.size > 0) {
+        await supabase.from('user_inventory').upsert({
+          user_id: userId,
+          ingredients: Array.from(myInventory),
+          updated_at: new Date().toISOString()
+        });
+      }
+
       // 1. Clear Local State immediately
       setFavorites(new Set());
       setMyInventory(new Set());
