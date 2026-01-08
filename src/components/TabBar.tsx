@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import clsx from 'clsx';
 import { ShakerIcon } from './ShakerIcon';
 
-export type TabId = 'explore' | 'cocktails' | 'my_bar' | 'favorites' | 'settings';
+export type TabId = 'explore' | 'cocktails' | 'my_bar' | 'favorites' | 'settings' | 'collection';
 
 interface TabBarProps {
     activeTab: TabId;
@@ -27,7 +27,8 @@ export function TabBar({ activeTab, onTabChange, lang }: TabBarProps) {
                 <div className="absolute inset-0 bg-gradient-to-b from-white/5 to-white/0 pointer-events-none rounded-full" />
 
                 {tabs.map((tab) => {
-                    const isActive = activeTab === tab.id;
+                    // Logic: If on 'collection' detail page, highlight 'explore' tab
+                    const isActive = activeTab === tab.id || (activeTab === 'collection' && tab.id === 'explore');
                     const Icon = tab.icon;
 
                     return (

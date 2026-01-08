@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { recipes as localRecipes, type Recipe } from './data/recipes';
 import { supabase } from './supabaseClient';
@@ -18,6 +18,7 @@ import { MyBarPage } from './pages/MyBarPage';
 import { FavoritesPage } from './pages/FavoritesPage';
 import { ExplorePage } from './pages/ExplorePage';
 import { CollectionDetailPage } from './pages/CollectionDetailPage';
+import { collections as fallbackCollections, type Collection } from './data/collections';
 import { SettingsPage } from './pages/SettingsPage';
 
 
@@ -38,7 +39,7 @@ function App() {
   const [activeTab, setActiveTab] = useState<TabId>('explore');
   const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(null);
   const [currentList, setCurrentList] = useState<Recipe[]>([]);
-  const [activeCollectionId, setActiveCollectionId] = useState<string | null>(null);
+  /* Removed unused activeCollectionId */
   const [isShaking, setIsShaking] = useState(false);
 
   // Auth State
@@ -47,6 +48,7 @@ function App() {
   // Data State
   const [allRecipes, setAllRecipes] = useState<Recipe[]>(localRecipes);
   const [allIngredients, setAllIngredients] = useState<IngredientItem[]>([]);
+  const [allCollections, setAllCollections] = useState<Collection[]>(fallbackCollections);
 
   // Inventory State
   const [myInventory, setMyInventory] = useState<Set<string>>(() => {
@@ -90,8 +92,34 @@ function App() {
         })));
       }
       if (supabase) {
+        // Fetch Ingredients
         const { data: ingData } = await supabase.from('ingredients').select('*');
         if (ingData) setAllIngredients(ingData as IngredientItem[]);
+
+        // Fetch Collections
+        const { data: colData } = await supabase
+          .from('collections')
+          .select('*')
+          .eq('is_active', true)
+          .order('sort_order', { ascending: true });
+
+        if (colData && colData.length > 0) {
+          // Map DB fields to Collection interface
+          const mappedCollections: Collection[] = colData.map((c: any) => ({
+            id: c.id,
+            title: c.title,
+            subtitle: c.subtitle,
+            type: c.type,
+            recipeIds: c.recipe_ids,
+            filterRules: c.filter_rules,
+            coverImage: c.cover_image,
+            themeColor: c.theme_color,
+            description: c.description,
+            sortOrder: c.sort_order,
+            isActive: c.is_active
+          }));
+          setAllCollections(mappedCollections);
+        }
       }
     };
     fetchData();
@@ -275,6 +303,89 @@ function App() {
     }
   };
 
+  // Helper function to filter recipes based on collection rules
+  const filterRecipes = useMemo(() => (collection: Collection, recipes: Recipe[]): Recipe[] => {
+    // 1. Curated List (IDs)
+    if (collection.recipeIds && collection.recipeIds.length > 0) {
+      const ids = collection.recipeIds;
+      return recipes.filter(r => ids.includes(r.id));
+    }
+
+    // 2. Dynamic JSON Rules (DB)
+    if (collection.filterRules) {
+      const rules = collection.filterRules as any;
+      console.log(`Filtering [${collection.id}] with rules:`, rules);
+
+      // Handle "CVS" special case
+      if (rules.type === 'cvs') {
+        const cvsRecs = ['rum-coke', 'gin-tonic', 'screwdriver', 'highball', 'kalimotxo'];
+        const results = recipes.filter(r => {
+          if (cvsRecs.includes(r.id)) return true;
+          if (r.tags && r.tags.en && r.tags.en.includes('cvs')) return true;
+          return false;
+        });
+        console.log(`[${collection.id}] Results: ${results.length}`);
+        return results;
+      }
+
+      // Handle "Party/Tag" special case
+      if (rules.tag) {
+        const results = recipes.filter(r => r.tags && r.tags.en && r.tags.en.includes(rules.tag));
+        console.log(`[${collection.id}] Results: ${results.length}`);
+        return results;
+      }
+
+      // Handle Generic Array Rules
+      if (Array.isArray(rules)) {
+        return recipes.filter(recipe => {
+          for (const rule of rules) {
+            const recipeValue = (recipe as any)[rule.field];
+            if (recipeValue === undefined) return false;
+
+            switch (rule.operator) {
+              case 'eq':
+                if (Array.isArray(recipeValue)) {
+                  if (!recipeValue.includes(rule.value)) return false;
+                } else {
+                  if (recipeValue !== rule.value) return false;
+                }
+                break;
+              case 'in':
+                if (!Array.isArray(recipeValue) || !recipeValue.some((v: any) => (rule.value as string[]).includes(v))) return false;
+                break;
+              default:
+                return false;
+            }
+          }
+          return true;
+        });
+      }
+    }
+
+    // 3. Legacy Function Filter (Local Fallback)
+    if (collection.filter) {
+      return recipes.filter(collection.filter);
+    }
+
+    // 4. Default: Return Empty (Safety) - Don't show everything if no rules match
+    return [];
+  }, []);
+
+  useEffect(() => {
+    // Handle browser back/forward for collection detail page
+    const handlePopState = () => {
+      const path = window.location.pathname;
+      if (path.startsWith('/collection/')) {
+        setActiveTab('collection');
+      } else {
+        setActiveTab('explore');
+      }
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
   return (
     <div
       className="fixed inset-0 w-full h-full overflow-hidden bg-black text-white font-sans selection:bg-indigo-500/30 select-none flex flex-col"
@@ -285,34 +396,51 @@ function App() {
       <main className="flex-1 overflow-hidden relative max-w-5xl mx-auto w-full">
 
         {/* Explore Page */}
-        <div className={activeTab === 'explore' ? 'h-full relative overflow-hidden' : 'hidden'}>
+        <div className={activeTab === 'explore' || activeTab === 'collection' ? 'h-full relative overflow-hidden' : 'hidden'}>
           <ExplorePage
             lang={lang}
-            onSelectCollection={setActiveCollectionId}
+            onSelectCollection={(id) => {
+              setActiveTab('collection');
+              window.history.pushState({}, '', `/collection/${id}`);
+            }}
             allRecipes={allRecipes}
+            allCollections={allCollections} // Pass dynamic collections
+            filterRecipes={filterRecipes} // Pass filter helper
             onSelectRecipe={handleSelectRecipe}
             toggleFavorite={toggleFavorite}
             favorites={favorites}
           />
 
           <AnimatePresence>
-            {activeCollectionId && (
+            {activeTab === 'collection' && (
               <motion.div
                 initial={{ x: '100%' }}
                 animate={{ x: 0 }}
                 exit={{ x: '100%' }}
-                transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+                transition={{ ease: "circOut", duration: 0.3 }}
                 className="absolute inset-0 z-50 bg-black h-full w-full overflow-hidden"
               >
-                <CollectionDetailPage
-                  collectionId={activeCollectionId}
-                  onBack={() => setActiveCollectionId(null)}
-                  allRecipes={allRecipes}
-                  onSelectRecipe={handleSelectRecipe}
-                  toggleFavorite={toggleFavorite}
-                  favorites={favorites}
-                  lang={lang}
-                />
+                {(() => {
+                  const id = window.location.pathname.split('/').pop() || '';
+                  return (
+                    <div className="absolute inset-0 bg-black z-50">
+                      <CollectionDetailPage
+                        collectionId={id}
+                        allCollections={allCollections} // Pass dynamic collections
+                        onBack={() => {
+                          setActiveTab('explore');
+                          window.history.pushState({}, '', '/');
+                        }}
+                        allRecipes={allRecipes}
+                        onSelectRecipe={handleSelectRecipe}
+                        toggleFavorite={toggleFavorite}
+                        favorites={favorites}
+                        lang={lang}
+                        filterRecipes={filterRecipes}
+                      />
+                    </div>
+                  );
+                })()}
               </motion.div>
             )}
           </AnimatePresence>
@@ -384,7 +512,7 @@ function App() {
               animate={{ rotate: [0, -15, 15, -15, 15, 0], y: [0, -10, 5, -10, 5, 0], scale: [1, 1.1, 1.1, 1.1, 1] }}
               transition={{ duration: 0.5, repeat: 3, ease: "easeInOut" }}
             >
-              <MixingShaker size={320} />
+              <MixingShaker size={200} />
             </motion.div>
             <p className="mt-8 text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-300 to-purple-300 tracking-widest uppercase">
               Mixing...
@@ -399,37 +527,40 @@ function App() {
             initial={{ x: '100%' }}
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
-            transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-            className="fixed inset-0 z-[60] bg-black h-full w-full overflow-hidden"
+            transition={{ ease: "circOut", duration: 0.3 }}
+            className="fixed inset-0 z-[60] w-full h-full overflow-hidden bg-black md:bg-black/80 md:backdrop-blur-sm md:flex md:items-center md:justify-center"
             drag="x"
             dragConstraints={{ left: 0, right: 0 }}
             dragElastic={false}
           >
-            <RecipeDetailModal
-              recipe={selectedRecipe}
-              onClose={() => setSelectedRecipe(null)}
-              isFavorite={favorites.has(selectedRecipe.id)}
-              onToggleFavorite={toggleFavorite}
-              t={{
-                done: lang === 'zh' ? '完成' : 'Done Making It',
-                ingredients: lang === 'zh' ? '材料' : 'Ingredients',
-                steps: lang === 'zh' ? '步驟' : 'Steps',
-                specs: {
-                  alcohol: lang === 'zh' ? '酒精濃度' : 'Alcohol',
-                  alcoholDesc: lang === 'zh' ? '低 - 高' : 'LOW - HIGH',
-                  sweetness: lang === 'zh' ? '甜度' : 'Sweetness',
-                  sweetnessDesc: lang === 'zh' ? '不甜 - 甜' : 'DRY - SWEET',
-                  ease: lang === 'zh' ? '易飲度' : 'Easy to drink',
-                  easeDesc: lang === 'zh' ? '挑戰 - 輕鬆' : 'CHALLENGING - EASY'
-                }
-              }}
-              lang={lang}
+            {/* Desktop Modal Wrapper */}
+            <div className="w-full h-full md:w-full md:max-w-2xl md:h-[90vh] md:rounded-2xl md:overflow-hidden md:shadow-2xl md:bg-black md:border md:border-white/10 relative">
+              <RecipeDetailModal
+                recipe={selectedRecipe}
+                onClose={() => setSelectedRecipe(null)}
+                isFavorite={favorites.has(selectedRecipe.id)}
+                onToggleFavorite={toggleFavorite}
+                t={{
+                  done: lang === 'zh' ? '完成' : 'Done Making It',
+                  ingredients: lang === 'zh' ? '材料' : 'Ingredients',
+                  steps: lang === 'zh' ? '步驟' : 'Steps',
+                  specs: {
+                    alcohol: lang === 'zh' ? '酒精濃度' : 'Alcohol',
+                    alcoholDesc: lang === 'zh' ? '低 - 高' : 'LOW - HIGH',
+                    sweetness: lang === 'zh' ? '甜度' : 'Sweetness',
+                    sweetnessDesc: lang === 'zh' ? '不甜 - 甜' : 'DRY - SWEET',
+                    ease: lang === 'zh' ? '易飲度' : 'Easy to drink',
+                    easeDesc: lang === 'zh' ? '挑戰 - 輕鬆' : 'CHALLENGING - EASY'
+                  }
+                }}
+                lang={lang}
 
-              hasPrev={selectedRecipe && currentList.findIndex(r => r.id === selectedRecipe.id) > 0}
-              hasNext={selectedRecipe && currentList.findIndex(r => r.id === selectedRecipe.id) < currentList.length - 1}
-              onPrev={handlePrevRecipe}
-              onNext={handleNextRecipe}
-            />
+                hasPrev={selectedRecipe && currentList.findIndex(r => r.id === selectedRecipe.id) > 0}
+                hasNext={selectedRecipe && currentList.findIndex(r => r.id === selectedRecipe.id) < currentList.length - 1}
+                onPrev={handlePrevRecipe}
+                onNext={handleNextRecipe}
+              />
+            </div>
           </motion.div>
         )}
       </AnimatePresence>

@@ -111,7 +111,7 @@ export function MyBarModal({
                         initial={{ scale: 0.95, opacity: 0 }}
                         animate={{ scale: 1, opacity: 1 }}
                         exit={{ scale: 0.95, opacity: 0 }}
-                        className="bg-zinc-900 w-full h-[100dvh] md:h-auto md:max-w-2xl md:max-h-[85vh] rounded-none md:rounded-3xl shadow-2xl overflow-hidden flex flex-col border-0 md:border border-zinc-800"
+                        className="bg-black/40 backdrop-blur-2xl w-full h-[100dvh] md:h-auto md:max-w-2xl md:max-h-[85vh] rounded-none md:rounded-3xl shadow-[0_0_50px_rgba(0,0,0,0.5),inset_0_0.5px_0_rgba(255,255,255,0.1)] overflow-hidden flex flex-col border-0 md:border-[0.5px] border-white/10"
                         onClick={e => e.stopPropagation()}
                     >
                         <div className={clsx(
@@ -123,7 +123,7 @@ export function MyBarModal({
                                 className={clsx(
                                     "absolute inset-0 -z-10 transition-opacity duration-300",
                                     isScrolled ? "opacity-100" : "opacity-0",
-                                    "bg-gradient-to-b from-zinc-900 to-transparent"
+                                    "bg-gradient-to-b from-black to-transparent"
                                 )}
                                 style={{
                                     backdropFilter: 'blur(60px)',
@@ -133,13 +133,7 @@ export function MyBarModal({
                                 }}
                             />
                             {/* Inline Title (Initially Hidden) */}
-                            <div className={clsx(
-                                "absolute left-1/2 -translate-x-1/2 font-bold text-white transition-opacity duration-300",
-                                "pt-[calc(env(safe-area-inset-top))] md:pt-0", // Match parent padding roughly
-                                isScrolled ? "opacity-100" : "opacity-0"
-                            )}>
-                                {lang === 'zh' ? '我的吧台' : 'My Bar'}
-                            </div>
+                            {/* Inline Title Removed */}
 
                             {/* Left Spacer */}
                             <div />
@@ -212,48 +206,21 @@ export function MyBarModal({
                                                     key={item}
                                                     onClick={() => toggleItem(item)}
                                                     className={clsx(
-                                                        "flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all text-left border relative overflow-hidden",
+                                                        "flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all text-left border relative overflow-hidden group",
                                                         myInventory.has(item)
-                                                            ? `bg-${section.color.split('-')[1]}-500/20 text-${section.color.split('-')[1]}-200 border-${section.color.split('-')[1]}-500/50 shadow-[0_0_10px_rgba(255,255,255,0.1)]`
-                                                            : "bg-white/5 text-zinc-400 border-white/5 hover:bg-white/10"
+                                                            ? "bg-white text-black border-white shadow-lg shadow-white/10 scale-[1.02]"
+                                                            : "bg-white/5 text-zinc-400 border-white/5 hover:bg-white/10 hover:border-white/10 active:scale-95"
                                                     )}
                                                 >
                                                     <div className={clsx(
                                                         "w-5 h-5 rounded-full border flex items-center justify-center shrink-0 transition-colors",
                                                         myInventory.has(item)
-                                                            ? "bg-primary border-primary text-black"
-                                                            : "border-zinc-600 bg-transparent"
+                                                            ? "bg-black border-black text-white"
+                                                            : "border-zinc-700 bg-transparent group-hover:border-zinc-500"
                                                     )}>
                                                         {myInventory.has(item) && <Check size={12} strokeWidth={3} />}
                                                     </div>
-                                                    <span className={clsx(
-                                                        "truncate",
-                                                        myInventory.has(item) && "text-white"
-                                                    )}>{getLabel(item)}</span>
-
-                                                    {/* Active Glow Background override */}
-                                                    {myInventory.has(item) && (
-                                                        <div className={clsx(
-                                                            "absolute inset-0 opacity-10 pointer-events-none",
-                                                            section.id === 'base' ? "bg-amber-500" :
-                                                                section.id === 'liqueur' ? "bg-orange-500" :
-                                                                    section.id === 'other_alc' ? "bg-red-500" :
-                                                                        section.id === 'essential' ? "bg-zinc-400" :
-                                                                            section.id === 'mixer' ? "bg-blue-400" :
-                                                                                "bg-green-500"
-                                                        )} />
-                                                    )}
-                                                    {myInventory.has(item) && (
-                                                        <div className={clsx(
-                                                            "absolute inset-0 border-2 rounded-xl pointer-events-none opacity-50",
-                                                            section.id === 'base' ? "border-amber-500" :
-                                                                section.id === 'liqueur' ? "border-orange-500" :
-                                                                    section.id === 'other_alc' ? "border-red-500" :
-                                                                        section.id === 'essential' ? "border-zinc-400" :
-                                                                            section.id === 'mixer' ? "border-blue-400" :
-                                                                                "border-green-500"
-                                                        )} />
-                                                    )}
+                                                    <span className="truncate">{getLabel(item)}</span>
                                                 </button>
                                             ))}
                                         </div>
@@ -264,7 +231,7 @@ export function MyBarModal({
                         </div>
 
                         {/* Footer */}
-                        <div className="p-6 border-t border-white/5 bg-zinc-900 z-10">
+                        <div className="p-6 border-t-[0.5px] border-white/10 bg-black/20 backdrop-blur-xl z-10">
                             <button
                                 onClick={onClose}
                                 className="w-full py-4 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-600 text-white font-bold shadow-lg shadow-amber-900/40 active:scale-[0.98] transition-all"

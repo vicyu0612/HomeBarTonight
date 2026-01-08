@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
 import { MyBarModal, type IngredientItem } from '../components/MyBarModal';
-import { Wine } from 'lucide-react';
+import { ShakerIcon } from '../components/ShakerIcon';
 import clsx from 'clsx';
 import type { Recipe } from '../data/recipes';
 import { normalizeIngredient } from '../utils/normalization';
@@ -142,16 +142,42 @@ export function MyBarPage({
                 </h1>
 
                 {/* Inventory Management Button */}
-                <button
+                {/* Inventory Hero Card */}
+                <div
                     onClick={() => setShowModal(true)}
-                    className="w-full py-4 rounded-2xl bg-zinc-900 border border-amber-500/30 text-amber-500 font-bold flex items-center justify-center gap-3 hover:bg-zinc-800 transition-all shadow-lg shadow-amber-900/10 active:scale-[0.98] mb-8"
+                    className="relative rounded-2xl overflow-hidden mb-8 group cursor-pointer shadow-2xl transition-transform active:scale-[0.98] border border-white/10 h-64"
                 >
-                    <Wine size={20} />
-                    {lang === 'zh' ? '管理我的吧台庫存' : 'Manage My Bar Inventory'}
-                    <span className="bg-amber-500/20 text-amber-500 text-xs px-2 py-0.5 rounded-full">
-                        {myInventory.size}
-                    </span>
-                </button>
+                    {/* Background Image */}
+                    <img
+                        src="/assets/home_bartender.png"
+                        alt="Home Bar"
+                        className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    />
+                    {/* Dark Overlay */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
+
+                    {/* Content */}
+                    <div className="absolute inset-0 p-5 flex flex-col justify-end">
+                        <div className="mb-4">
+                            <h2 className="text-2xl font-bold text-white leading-tight mb-1">
+                                {lang === 'zh' ? '打造專屬吧台' : 'Build Your Bar'}
+                            </h2>
+                            <p className="text-zinc-300 text-sm font-medium">
+                                {lang === 'zh'
+                                    ? `目前已有 ${myInventory.size} 項材料`
+                                    : `You have ${myInventory.size} ingredients`}
+                            </p>
+                        </div>
+
+                        {/* Explicit CTA Button */}
+                        <button className="w-full py-3.5 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-600 text-white font-bold flex items-center justify-center gap-2 shadow-lg shadow-black/20 group-hover:shadow-amber-900/20 transition-all">
+                            <ShakerIcon size={20} className="text-white" />
+                            {lang === 'zh'
+                                ? `管理我的庫存 (${myInventory.size})`
+                                : `Manage my inventory (${myInventory.size})`}
+                        </button>
+                    </div>
+                </div>
 
                 {/* Results Header */}
                 <div className="flex items-center gap-4 mb-4">

@@ -84,7 +84,7 @@ export const RecipeDetailModal = ({ recipe, onClose, isFavorite, onToggleFavorit
                     {hasPrev ? (
                         <button
                             onClick={(e) => { e.stopPropagation(); onPrev(); }}
-                            className="p-4 rounded-full bg-zinc-800/80 backdrop-blur-xl text-white border border-white/10 shadow-xl hover:bg-zinc-700 active:scale-95 transition-all pointer-events-auto"
+                            className="p-4 rounded-full bg-black/30 backdrop-blur-md text-white border border-white/10 shadow-lg hover:bg-black/50 active:scale-95 transition-all pointer-events-auto"
                         >
                             <ChevronLeft size={24} />
                         </button>
@@ -93,7 +93,7 @@ export const RecipeDetailModal = ({ recipe, onClose, isFavorite, onToggleFavorit
                     {hasNext && (
                         <button
                             onClick={(e) => { e.stopPropagation(); onNext(); }}
-                            className="p-4 rounded-full bg-zinc-800/80 backdrop-blur-xl text-white border border-white/10 shadow-xl hover:bg-zinc-700 active:scale-95 transition-all pointer-events-auto"
+                            className="p-4 rounded-full bg-black/30 backdrop-blur-md text-white border border-white/10 shadow-lg hover:bg-black/50 active:scale-95 transition-all pointer-events-auto"
                         >
                             <ChevronRight size={24} />
                         </button>
@@ -106,7 +106,7 @@ export const RecipeDetailModal = ({ recipe, onClose, isFavorite, onToggleFavorit
                     <div className="h-[50vh] w-full" onClick={onClose} />
 
                     {/* Content Sheet */}
-                    <div className="min-h-[60vh] bg-zinc-950/90 backdrop-blur-3xl rounded-t-[2.5rem] p-8 pb-32 border-t border-white/10 relative shadow-[0_-10px_40px_rgba(0,0,0,0.5)]">
+                    <div className="min-h-[60vh] bg-black/40 backdrop-blur-2xl rounded-t-[2.5rem] p-8 pb-32 border-t-[0.5px] border-white/10 relative shadow-[0_-10px_40px_rgba(0,0,0,0.5),inset_0_0.5px_0_rgba(255,255,255,0.1)]">
                         {/* Drag handle hint */}
                         <div className="w-12 h-1.5 bg-white/20 rounded-full mx-auto mb-8" />
 

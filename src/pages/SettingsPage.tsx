@@ -402,7 +402,7 @@ export function SettingsPage({ session, lang, setLang, onLogin, onLogout, onDele
                             animate={{ y: 0 }}
                             exit={{ y: '100%' }}
                             transition={{ type: "spring", damping: 25, stiffness: 200 }}
-                            className="fixed bottom-0 left-0 right-0 z-[101] bg-zinc-900 rounded-t-3xl border-t border-white/10 p-6 pb-12 ring-1 ring-white/10 mx-auto max-w-[1024px]"
+                            className="fixed bottom-0 left-0 right-0 z-[101] bg-black/40 backdrop-blur-2xl rounded-t-[2.5rem] border-t-[0.5px] border-white/10 shadow-[0_-10px_40px_rgba(0,0,0,0.5),inset_0_0.5px_0_rgba(255,255,255,0.1)] p-6 pb-12 mx-auto max-w-[1024px]"
                         >
                             <div className="flex justify-between items-center mb-6">
                                 <h3 className="text-xl font-bold text-white">{t.language.title}</h3>

@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, X, Martini, Store, LayoutGrid, SlidersHorizontal } from 'lucide-react';
+import { Search, X, Martini, SlidersHorizontal } from 'lucide-react';
 import type { Recipe } from '../data/recipes';
 import clsx from 'clsx';
 
@@ -61,7 +61,7 @@ export function CocktailsPage({ allRecipes, favorites, toggleFavorite, onSelectR
         searchPlaceholder: lang === 'zh' ? '搜尋調酒或材料...' : 'Search cocktails or ingredients...',
         tabs: {
             all: lang === 'zh' ? '全部' : 'All',
-            classic: lang === 'zh' ? '經典' : 'Classic',
+            classic: lang === 'zh' ? '經典調酒' : 'Classic',
             cvs: lang === 'zh' ? '超商速調' : 'Easy Mixes'
         },
         spirits: {
@@ -144,7 +144,7 @@ export function CocktailsPage({ allRecipes, favorites, toggleFavorite, onSelectR
                 />
 
                 {/* Search Bar & Filter Button */}
-                <div className="flex gap-3 mb-4 pointer-events-auto">
+                <div className="flex gap-3 pointer-events-auto">
                     <div className="relative flex-1">
                         <Search className="absolute left-4 top-3.5 text-white z-10" size={20} />
                         <input
@@ -184,44 +184,7 @@ export function CocktailsPage({ allRecipes, favorites, toggleFavorite, onSelectR
                 </div>
 
                 {/* Category Tabs (Restored here) */}
-                {/* Category Tabs (Restored here) */}
-                <div className="bg-zinc-800/40 backdrop-blur-xl border border-white/10 p-1 rounded-full flex items-center relative pointer-events-auto">
-                    {tabs.map((tab) => {
-                        const isActive = activeSubTab === tab;
-                        const labels = {
-                            all: t.tabs.all,
-                            cvs: t.tabs.cvs,
-                            classic: t.tabs.classic
-                        };
-                        const icons = {
-                            all: LayoutGrid,
-                            cvs: Store,
-                            classic: Martini
-                        };
-                        const Icon = icons[tab];
-
-                        return (
-                            <button
-                                key={tab}
-                                onClick={() => setActiveSubTab(tab)}
-                                className={clsx(
-                                    "flex-1 py-2.5 rounded-full text-sm font-medium transition-colors relative z-10 flex items-center justify-center gap-2",
-                                    isActive ? "text-white" : "text-zinc-500 hover:text-zinc-200"
-                                )}
-                            >
-                                {isActive && (
-                                    <motion.div
-                                        layoutId="activeTab"
-                                        className="absolute inset-0 bg-white/10 backdrop-blur-md rounded-full shadow-lg border border-white/5 -z-10"
-                                        transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
-                                    />
-                                )}
-                                <Icon size={16} />
-                                {labels[tab]}
-                            </button>
-                        );
-                    })}
-                </div>
+                {/* Category Tabs Moved to Filter */}
             </div>
 
             {/* Filter Sheet */}
@@ -240,7 +203,7 @@ export function CocktailsPage({ allRecipes, favorites, toggleFavorite, onSelectR
                             animate={{ y: 0 }}
                             exit={{ y: '100%' }}
                             transition={{ type: "spring", damping: 25, stiffness: 200 }}
-                            className="fixed bottom-0 left-0 right-0 z-[101] bg-zinc-900 rounded-t-3xl border-t border-white/10 p-6 pb-12 ring-1 ring-white/10 mx-auto max-w-[1024px]"
+                            className="fixed bottom-0 left-0 right-0 z-[101] bg-black/40 backdrop-blur-2xl rounded-t-[2.5rem] border-t-[0.5px] border-white/10 shadow-[0_-10px_40px_rgba(0,0,0,0.5),inset_0_0.5px_0_rgba(255,255,255,0.1)] p-6 pb-12 mx-auto max-w-[1024px]"
                         >
                             <div className="flex justify-between items-center mb-6">
                                 <h3 className="text-xl font-bold text-white">{lang === 'zh' ? '篩選' : 'Filters'}</h3>
@@ -260,6 +223,35 @@ export function CocktailsPage({ allRecipes, favorites, toggleFavorite, onSelectR
                             </div>
 
                             <div className="space-y-6">
+                                {/* Category Section */}
+                                <div>
+                                    <h4 className="text-zinc-500 text-xs font-bold uppercase tracking-wider mb-3">
+                                        {lang === 'zh' ? '分類' : 'Category'}
+                                    </h4>
+                                    <div className="flex flex-wrap gap-2">
+                                        {tabs.map(tab => {
+                                            const labels = {
+                                                all: t.tabs.all,
+                                                cvs: t.tabs.cvs,
+                                                classic: t.tabs.classic
+                                            };
+                                            return (
+                                                <button
+                                                    key={tab}
+                                                    onClick={() => setActiveSubTab(tab)}
+                                                    className={clsx(
+                                                        "whitespace-nowrap px-4 py-2 rounded-full text-sm font-medium border transition-colors",
+                                                        activeSubTab === tab
+                                                            ? "bg-indigo-500 text-white border-indigo-500 shadow-md shadow-indigo-500/20"
+                                                            : "bg-zinc-800/40 text-zinc-400 border-white/10 hover:bg-zinc-700"
+                                                    )}
+                                                >
+                                                    {labels[tab]}
+                                                </button>
+                                            );
+                                        })}
+                                    </div>
+                                </div>
                                 {/* Base Spirit Only */}
                                 <div>
                                     <h4 className="text-zinc-500 text-xs font-bold uppercase tracking-wider mb-3">

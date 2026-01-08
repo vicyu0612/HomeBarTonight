@@ -5,11 +5,14 @@ export interface Collection {
     title: { en: string; zh: string };
     subtitle: { en: string; zh: string };
     type: 'curated' | 'filter';
-    recipeIds?: string[];
-    filter?: (recipe: Recipe) => boolean;
+    recipeIds?: string[]; // For curated
+    filterRules?: any; // JSONB from DB: { type: 'cvs' } or { tag: 'party' }
+    filter?: (recipe: Recipe) => boolean; // Legacy/Fallback local function
     coverImage?: string;
     themeColor?: string; // CSS gradient classes
     description?: { en: string; zh: string };
+    sortOrder?: number;
+    isActive?: boolean;
 }
 
 export const collections: Collection[] = [
