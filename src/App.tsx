@@ -35,7 +35,7 @@ const getSystemLang = (): 'en' | 'zh' => {
     // 2. Check System Lang
     const lang = navigator.language.toLowerCase();
     return lang.startsWith('zh') ? 'zh' : 'en';
-  } catch (e) {
+  } catch {
     return 'en';
   }
 };
@@ -83,7 +83,7 @@ function App() {
     try {
       const saved = localStorage.getItem('myInventory');
       return saved ? new Set(JSON.parse(saved)) : new Set();
-    } catch (e) { return new Set(); }
+    } catch { return new Set(); }
   });
 
   useEffect(() => {
@@ -95,7 +95,7 @@ function App() {
     try {
       const saved = localStorage.getItem('favorites');
       return saved ? new Set(JSON.parse(saved)) : new Set();
-    } catch (e) { return new Set(); }
+    } catch { return new Set(); }
   });
 
   useEffect(() => {
@@ -113,6 +113,7 @@ function App() {
       if (!supabase) return;
       const { data: recipeData } = await supabase.from('recipes').select('*').order('id', { ascending: true });
       if (recipeData && recipeData.length > 0) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         setAllRecipes(recipeData.map((r: any) => ({
           id: r.id, name: r.name, type: r.type, baseSpirit: r.base_spirit,
           ingredients: r.ingredients, steps: r.steps, tags: r.tags,
@@ -135,6 +136,7 @@ function App() {
         if (colData && colData.length > 0) {
           console.log('[App] Fetched collections from Supabase:', colData);
           // Map DB fields to Collection interface
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           const mappedCollections: Collection[] = colData.map((c: any) => ({
             id: c.id,
             title: c.title,
@@ -212,7 +214,8 @@ function App() {
           if (error) console.error('Set Session Error:', error);
           // Close Browser/WebView if opened (iOS sometimes keeps SFSafariViewController open)
           // Browser.close(); // Not always needed but good practice
-          try { await Browser.close(); } catch (e) { }
+          // eslint-disable-next-line no-empty
+          try { await Browser.close(); } catch { }
         }
       }
     });
@@ -241,7 +244,7 @@ function App() {
           if (localArray.length > 0) {
             // Check existing on server to avoid duplicates (though insert handles it usually, cleaner to check)
             const { data: existing } = await supabase.from('favorites').select('recipe_id').eq('user_id', currentUser);
-            const existingIds = new Set(existing?.map((x: any) => x.recipe_id) || []);
+            const existingIds = new Set(existing?.map((x: { recipe_id: string }) => x.recipe_id) || []);
 
             // Only insert items that are NOT on server yet
             const toAdd = localArray.filter(id => !existingIds.has(id));
@@ -255,7 +258,7 @@ function App() {
         const { data: dbFavs, error: favError } = await supabase.from('favorites').select('recipe_id').eq('user_id', currentUser);
         if (!favError && dbFavs) {
           // Verify we aren't overwriting with empty if fetch failed dangerously, but error check handles that.
-          setFavorites(new Set(dbFavs.map((f: any) => f.recipe_id)));
+          setFavorites(new Set(dbFavs.map((f: { recipe_id: string }) => f.recipe_id)));
         }
 
         // --- 2. Inventory Strategy ---
@@ -462,11 +465,11 @@ function App() {
 
     // 2. Dynamic JSON Rules (DB)
     if (collection.filterRules) {
-      const rules = collection.filterRules as any;
+      const rules = collection.filterRules;
       console.log(`Filtering [${collection.id}] with rules:`, rules);
 
       // Handle "CVS" special case
-      if (rules.type === 'cvs') {
+      if ('type' in rules && rules.type === 'cvs') {
         // Updated Logic: Check the recipe.type directly, or legacy ID check as fallback
         const results = recipes.filter(r => r.type === 'cvs');
         console.log(`[${collection.id}] Results (type=cvs): ${results.length}`);
@@ -474,14 +477,14 @@ function App() {
       }
 
       // Handle "Party/Tag" special case
-      if (rules.tag) {
+      if ('tag' in rules) {
         const results = recipes.filter(r => r.tags && r.tags.en && r.tags.en.includes(rules.tag));
         console.log(`[${collection.id}] Results: ${results.length}`);
         return results;
       }
 
       // Handle "Collection" tag rule (New Standard)
-      if (rules.collection) {
+      if ('collection' in rules) {
         // Debug Log
         console.log(`[${collection.id}] Applying collection rule: "${rules.collection}"`);
         const results = recipes.filter(r => {
@@ -497,6 +500,7 @@ function App() {
       if (Array.isArray(rules)) {
         return recipes.filter(recipe => {
           for (const rule of rules) {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const recipeValue = (recipe as any)[rule.field];
             if (recipeValue === undefined) return false;
 
@@ -509,7 +513,7 @@ function App() {
                 }
                 break;
               case 'in':
-                if (!Array.isArray(recipeValue) || !recipeValue.some((v: any) => (rule.value as string[]).includes(v))) return false;
+                if (!Array.isArray(recipeValue) || !recipeValue.some((v: unknown) => (rule.value as string[]).includes(v as string))) return false;
                 break;
               default:
                 return false;

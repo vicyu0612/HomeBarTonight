@@ -6,7 +6,7 @@ export interface Collection {
     subtitle: { en: string; zh: string };
     type: 'curated' | 'filter';
     recipeIds?: string[]; // For curated
-    filterRules?: any; // JSONB from DB: { type: 'cvs' } or { tag: 'party' }
+    filterRules?: FilterRules; // JSONB from DB
     filter?: (recipe: Recipe) => boolean; // Legacy/Fallback local function
     coverImage?: string;
     themeColor?: string; // CSS gradient classes
@@ -14,6 +14,12 @@ export interface Collection {
     sortOrder?: number;
     isActive?: boolean;
 }
+
+export type FilterRules =
+    | { type: 'cvs' }
+    | { tag: string }
+    | { collection: string }
+    | Array<{ field: string; operator: 'eq' | 'in'; value: unknown }>;
 
 export const collections: Collection[] = [
     {

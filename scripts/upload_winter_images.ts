@@ -38,7 +38,7 @@ async function uploadImages() {
 
         // 1. Upload to Supabase Storage
         console.log(`⬆️ Uploading ${fileName}...`);
-        const { data: uploadData, error: uploadError } = await supabase.storage
+        const { error: uploadError } = await supabase.storage
             .from(BUCKET_NAME)
             .upload(fileName, fileBuffer, {
                 contentType: 'image/png',

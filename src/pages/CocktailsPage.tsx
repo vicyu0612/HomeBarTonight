@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Search, X, Martini, SlidersHorizontal } from 'lucide-react';
 import type { Recipe } from '../data/recipes';
@@ -19,10 +19,45 @@ interface CocktailsPageProps {
 }
 
 export function CocktailsPage({ allRecipes, favorites, toggleFavorite, onSelectRecipe, lang, onShake }: CocktailsPageProps) {
-    const [selectedCategories, setSelectedCategories] = useState<Set<'classic' | 'cvs'>>(new Set());
-    const [selectedSpirits, setSelectedSpirits] = useState<Set<string>>(new Set());
-    const [searchQuery, setSearchQuery] = useState('');
+    // State Initialization with URL Search Params
+    const [selectedCategories, setSelectedCategories] = useState<Set<'classic' | 'cvs'>>(() => {
+        const params = new URLSearchParams(window.location.search);
+        const cat = params.get('cat');
+        if (!cat) return new Set();
+        return new Set(cat.split(',').filter((c): c is 'classic' | 'cvs' => c === 'classic' || c === 'cvs'));
+    });
+
+    const [selectedSpirits, setSelectedSpirits] = useState<Set<string>>(() => {
+        const params = new URLSearchParams(window.location.search);
+        const spirits = params.get('spirit');
+        return spirits ? new Set(spirits.split(',')) : new Set();
+    });
+
+    const [searchQuery, setSearchQuery] = useState(() => {
+        return new URLSearchParams(window.location.search).get('q') || '';
+    });
+
     const [showFilter, setShowFilter] = useState(false);
+
+    // Sync State to URL
+    useEffect(() => {
+        const params = new URLSearchParams();
+
+        if (selectedCategories.size > 0) {
+            params.set('cat', Array.from(selectedCategories).join(','));
+        }
+
+        if (selectedSpirits.size > 0) {
+            params.set('spirit', Array.from(selectedSpirits).join(','));
+        }
+
+        if (searchQuery) {
+            params.set('q', searchQuery);
+        }
+
+        const newUrl = `${window.location.pathname}${params.toString() ? '?' + params.toString() : ''}`;
+        window.history.replaceState({}, '', newUrl);
+    }, [selectedCategories, selectedSpirits, searchQuery]);
 
     const tabs: ('cvs' | 'classic')[] = ['cvs', 'classic'];
 

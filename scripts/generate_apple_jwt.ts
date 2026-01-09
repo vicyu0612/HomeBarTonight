@@ -1,7 +1,7 @@
 
 import jwt from 'jsonwebtoken';
 import fs from 'fs';
-import path from 'path';
+
 
 const TEAM_ID = 'KGN4NEE345';
 const KEY_ID = '4DFJMYKY8F';

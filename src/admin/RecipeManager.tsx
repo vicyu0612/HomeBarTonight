@@ -37,10 +37,11 @@ export const RecipeManager = () => {
 
             setStatus('success');
             setMessage(`Successfully uploaded ${recipes.length} recipes!`);
-        } catch (err: any) {
+        } catch (err: unknown) {
             console.error(err);
             setStatus('error');
-            setMessage(err.message || 'Failed to upload recipes');
+            const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred';
+            setMessage(errorMessage || 'Failed to upload recipes');
         }
     };
 

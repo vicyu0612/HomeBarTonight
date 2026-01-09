@@ -12,7 +12,7 @@ async function check() {
     const tables = ['profiles', 'users', 'user_profiles'];
     console.log('--- Checking Potential Profile Tables ---');
     for (const t of tables) {
-        const { data, error } = await supabase.from(t).select('count(*)', { count: 'exact', head: true });
+        const { error } = await supabase.from(t).select('count(*)', { count: 'exact', head: true });
         if (error) console.log(`Table '${t}': Not Found or RLS Blocked (${error.message})`);
         else console.log(`Table '${t}': Exists (Access OK)`);
     }

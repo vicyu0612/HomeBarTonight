@@ -69,7 +69,13 @@ export const INGREDIENT_DB: Record<string, { en: string; zh: string }> = {
     // 'water': { en: 'Water', zh: '水' }, // Removed as requested
     'hot_chocolate': { en: 'Hot Chocolate', zh: '熱可可' }, // Added
     'lemon_tea': { en: 'Lemon Tea', zh: '檸檬紅茶' }, // Added
+    'lemon_tea': { en: 'Lemon Tea', zh: '檸檬紅茶' }, // Added
     'energy_drink': { en: 'Energy Drink', zh: '能量飲料' }, // Added
+    'sports_drink': { en: 'Sports Drink', zh: '運動飲料' }, // Added
+    'soy_milk': { en: 'Soy Milk', zh: '豆漿' }, // Added
+    'plum_green_tea': { en: 'Plum Green Tea', zh: '梅子綠茶' }, // Added
+    'black_coffee': { en: 'Black Coffee', zh: '黑咖啡' }, // Added
+    'plum': { en: 'Sour Plum', zh: '梅子 (話梅)' }, // Added
 
     // Essentials
     'ice': { en: 'Ice', zh: '冰塊' },
@@ -149,6 +155,18 @@ const ALIAS_MAP_ZH: Record<string, string> = {
     "能量飲料": "energy_drink",
     "白桃果泥": "peach_puree",
     "棉花糖": "marshmallow",
+    "運動飲料": "sports_drink",
+    "寶礦力": "sports_drink",
+    "舒跑": "sports_drink",
+    "豆漿": "soy_milk",
+    "無糖豆漿": "soy_milk",
+    "梅子綠": "plum_green_tea",
+    "梅子綠茶": "plum_green_tea",
+    "梅子": "plum",
+    "話梅": "plum",
+    "黑咖啡": "black_coffee",
+    "美式咖啡": "black_coffee",
+    "冰美式": "black_coffee",
     "蛋黃": "egg", // Added for Egg Yolk mapping
 
     "不甜香艾酒": "dry_vermouth",
@@ -269,6 +287,16 @@ const ALIAS_MAP_EN: Record<string, string> = {
     "peach puree": "peach_puree",
     "marshmallows": "marshmallow",
     "marshmallow": "marshmallow",
+    "sports drink": "sports_drink",
+    "pocari": "sports_drink",
+    "pocari sweat": "sports_drink",
+    "soy milk": "soy_milk",
+    "soymilk": "soy_milk",
+    "plum green tea": "plum_green_tea",
+    "plum": "plum",
+    "sour plum": "plum",
+    "black coffee": "black_coffee",
+    "americano": "black_coffee",
     "egg yolk": "egg", // Added for Egg Yolk mapping
 
     "dry vermouth": "dry_vermouth",
@@ -397,7 +425,7 @@ export function normalizeIngredient(name: string, lang: 'en' | 'zh'): string[] {
     const normalizedIds = new Set<string>();
 
     parts.forEach(part => {
-        let p = part.trim();
+        const p = part.trim();
         if (!p) return;
 
         const lowerP = p.toLowerCase();
@@ -440,6 +468,11 @@ export function normalizeIngredient(name: string, lang: 'en' | 'zh'): string[] {
                 if (p.includes('番茄汁')) id = 'tomato_juice';
                 if (p.includes('芭樂汁')) id = 'guava_juice';
                 if (p.includes('葡萄汁')) id = 'grape_juice'; // Added
+                if (p.includes('寶礦力') || p.includes('運動飲料')) id = 'sports_drink';
+                if (p.includes('豆漿')) id = 'soy_milk';
+                if (p.includes('梅子綠')) id = 'plum_green_tea';
+                if (p.includes('話梅') || (p.includes('梅子') && !p.includes('綠'))) id = 'plum';
+                if (p.includes('黑咖啡') || p.includes('美式')) id = 'black_coffee';
                 if (p.includes('蘆薈')) id = 'aloe'; // Added
                 if (p.includes('蘋果西打') || p.includes('西打')) id = 'apple_soda';
                 if (p.includes('橄欖')) id = 'olive';
@@ -484,6 +517,11 @@ export function normalizeIngredient(name: string, lang: 'en' | 'zh'): string[] {
                 if (lowerP.includes('concentrate')) id = 'calpis';
                 if (lowerP.includes('grape juice')) id = 'grape_juice'; // Added
                 if (lowerP.includes('aloe')) id = 'aloe'; // Added
+                if (lowerP.includes('pocari') || lowerP.includes('sports drink')) id = 'sports_drink';
+                if (lowerP.includes('soy milk')) id = 'soy_milk';
+                if (lowerP.includes('plum green tea')) id = 'plum_green_tea';
+                if (lowerP.includes('plum') && !lowerP.includes('tea')) id = 'plum';
+                if (lowerP.includes('black coffee') || lowerP.includes('americano')) id = 'black_coffee';
                 if (lowerP.includes('olive')) id = 'olive';
                 if (lowerP.includes('nutmeg')) id = 'nutmeg';
             }

@@ -2668,5 +2668,165 @@ export const recipes: Recipe[] = [
         color: '#d1fae5',
         image: 'https://uyamflgtvqndbjpbjito.supabase.co/storage/v1/object/public/cocktails/southside.png',
         collections: ['classic']
+    },
+    {
+        id: 'vitamin-c-bomb',
+        name: { en: 'Vitamin C Bomb', zh: '維他命C炸彈' },
+        type: 'cvs',
+        baseSpirit: ['gin', 'tequila'],
+        ingredients: {
+            en: [{ name: 'Gin or Tequila', amount: '45ml' }, { name: 'CC Lemon', amount: 'Top up' }],
+            zh: [{ name: '琴酒或龍舌蘭', amount: '45ml' }, { name: 'CC檸檬', amount: '加滿' }]
+        },
+        steps: {
+            en: ['Fill glass with ice.', 'Add spirit.', 'Top with CC Lemon.'],
+            zh: ['杯中加冰。', '加入烈酒。', '加滿CC檸檬。']
+        },
+        tags: { en: ['cvs', 'fizzy', 'sour'], zh: ['超商', '氣泡', '酸'] },
+        description: { en: 'An explosion of citrus freshness. Perfect for a hot day.', zh: '滿滿的維他命C與氣泡感，像在嘴裡爆炸一樣清爽。' },
+        specs: { alcohol: 5, sweetness: 7, ease: 10 },
+        color: '#facc15',
+        image: 'https://uyamflgtvqndbjpbjito.supabase.co/storage/v1/object/public/cocktails/vitamin-c-bomb.png',
+        collections: ['cvs-hacks']
+    },
+    {
+        id: 'oolong-gin',
+        name: { en: 'Oolong Gin', zh: '烏龍琴酒' },
+        type: 'cvs',
+        baseSpirit: ['gin'],
+        ingredients: {
+            en: [{ name: 'Gin', amount: '45ml' }, { name: 'Oolong Tea', amount: 'Top up' }],
+            zh: [{ name: '琴酒', amount: '45ml' }, { name: '烏龍茶', amount: '加滿' }]
+        },
+        steps: {
+            en: ['Ice in glass.', 'Pour Gin.', 'Top with Oolong Tea.'],
+            zh: ['杯中加冰。', '倒入琴酒。', '加滿烏龍茶。']
+        },
+        tags: { en: ['cvs', 'tea', 'refreshing'], zh: ['超商', '茶香', '清爽'] },
+        description: { en: 'The herbal notes of gin blend seamlessly with roasted oolong.', zh: '琴酒的草本味與烏龍茶的焙火香完美融合，優雅又簡單。' },
+        specs: { alcohol: 5, sweetness: 2, ease: 10 },
+        color: '#d97706',
+        image: 'https://uyamflgtvqndbjpbjito.supabase.co/storage/v1/object/public/cocktails/oolong-gin.png',
+        collections: ['cvs-hacks']
+    },
+    {
+        id: 'red-eye-tw',
+        name: { en: 'Red Eye (TW Style)', zh: '台式紅眼' },
+        type: 'cvs',
+        baseSpirit: ['beer'],
+        ingredients: {
+            en: [{ name: 'Beer', amount: '1/2' }, { name: 'Tomato Juice', amount: '1/2' }, { name: 'Sour Plum', amount: '1' }],
+            zh: [{ name: '啤酒', amount: '一半' }, { name: '番茄汁', amount: '一半' }, { name: '話梅', amount: '1顆' }]
+        },
+        steps: {
+            en: ['Pour tomato juice and beer into a glass.', 'Drop in a sour plum.', 'Let it sit for a minute.'],
+            zh: ['將番茄汁與啤酒倒入杯中。', '丟入一顆話梅。', '靜置一分鐘讓風味釋放。']
+        },
+        tags: { en: ['cvs', 'savory', 'local'], zh: ['超商', '鹹甜', '台式'] },
+        description: { en: 'The classic cure with a Taiwanese twist. The plum adds a sweet-salty depth.', zh: '經典解酒酒的台式變奏。話梅的鹹甜甘味讓整杯酒更有層次。' },
+        specs: { alcohol: 3, sweetness: 4, ease: 10 },
+        color: '#ef4444',
+        image: 'https://uyamflgtvqndbjpbjito.supabase.co/storage/v1/object/public/cocktails/red-eye-tw.png',
+        collections: ['cvs-hacks']
+    },
+    {
+        id: 'plum-green-tea-whiskey',
+        name: { en: 'Plum Green Tea Whiskey', zh: '梅子綠威士忌' },
+        type: 'cvs',
+        baseSpirit: ['whiskey'],
+        ingredients: {
+            en: [{ name: 'Whiskey', amount: '45ml' }, { name: 'Plum Green Tea', amount: 'Top up' }],
+            zh: [{ name: '威士忌', amount: '45ml' }, { name: '梅子綠茶', amount: '加滿' }]
+        },
+        steps: {
+            en: ['Fill glass with ice.', 'Add Whiskey.', 'Top with Plum Green Tea.'],
+            zh: ['杯中加冰。', '加入威士忌。', '加滿梅子綠茶。']
+        },
+        tags: { en: ['cvs', 'sweet', 'sour'], zh: ['超商', '酸甜', '茶'] },
+        description: { en: 'Sweet, sour, and boozy. A dangerous combination.', zh: '酸酸甜甜的梅子綠配上威士忌，不知不覺就會喝醉。' },
+        specs: { alcohol: 5, sweetness: 7, ease: 10 },
+        color: '#ca8a04',
+        image: 'https://uyamflgtvqndbjpbjito.supabase.co/storage/v1/object/public/cocktails/plum-green-tea-whiskey.png',
+        collections: ['cvs-hacks']
+    },
+    {
+        id: 'soy-milk-baileys',
+        name: { en: 'Soy Milk Baileys', zh: '豆漿貝禮詩' },
+        type: 'cvs',
+        baseSpirit: ['liqueur'],
+        ingredients: {
+            en: [{ name: 'Baileys', amount: '50ml' }, { name: 'Soy Milk (No Sugar)', amount: 'Top up' }],
+            zh: [{ name: '貝禮詩奶酒', amount: '50ml' }, { name: '無糖豆漿', amount: '加滿' }]
+        },
+        steps: {
+            en: ['Ice in glass.', 'Pour Baileys.', 'Top with Soy Milk.'],
+            zh: ['杯中加冰。', '倒入奶酒。', '加滿豆漿。']
+        },
+        tags: { en: ['cvs', 'creamy', 'vegan-option'], zh: ['超商', '濃郁', '豆乳'] },
+        description: { en: 'Lighter than using milk, with a nutty soy profile.', zh: '比牛奶更清爽，帶有豆乳的香氣，意外合拍。' },
+        specs: { alcohol: 4, sweetness: 6, ease: 10 },
+        color: '#fefce8',
+        image: 'https://uyamflgtvqndbjpbjito.supabase.co/storage/v1/object/public/cocktails/soy-milk-baileys.png',
+        collections: ['cvs-hacks']
+    },
+    {
+        id: 'yogurt-green-vodka',
+        name: { en: 'Yogurt Green Tea Vodka', zh: '多多綠伏特加' },
+        type: 'cvs',
+        baseSpirit: ['vodka'],
+        ingredients: {
+            en: [{ name: 'Vodka', amount: '45ml' }, { name: 'Yakult', amount: '2 bottles' }, { name: 'Green Tea', amount: 'Top up' }],
+            zh: [{ name: '伏特加', amount: '45ml' }, { name: '養樂多', amount: '2瓶' }, { name: '無糖綠茶', amount: '適量' }]
+        },
+        steps: {
+            en: ['Combine Vodka and Yakult with limited ice.', 'Top with Green Tea.', 'Stir.'],
+            zh: ['混合伏特加與養樂多。', '加入綠茶調整甜度。', '攪拌均勻。']
+        },
+        tags: { en: ['cvs', 'sweet', 'refreshing'], zh: ['超商', '酸甜', '清爽'] },
+        description: { en: 'The adult version of a popular hand-shaken drink.', zh: '手搖飲店人氣王「多多綠」的大人版。' },
+        specs: { alcohol: 5, sweetness: 7, ease: 9 },
+        color: '#fde047',
+        image: 'https://uyamflgtvqndbjpbjito.supabase.co/storage/v1/object/public/cocktails/yogurt-green-vodka.png',
+        collections: ['cvs-hacks']
+    },
+    {
+        id: 'pocari-soju',
+        name: { en: 'Pocari Soju', zh: '寶礦力燒酒' },
+        type: 'cvs',
+        baseSpirit: ['soju'],
+        ingredients: {
+            en: [{ name: 'Soju', amount: '1 part' }, { name: 'Pocari Sweat', amount: '1 part' }],
+            zh: [{ name: '燒酒', amount: '1份' }, { name: '寶礦力水得', amount: '1份' }]
+        },
+        steps: {
+            en: ['Fill glass with ice.', 'Mix equal parts Soju and Pocari.'],
+            zh: ['杯中加冰。', '混合等量的燒酒與寶礦力。']
+        },
+        tags: { en: ['cvs', 'hydration', 'smooth'], zh: ['超商', '補水', '順口'] },
+        description: { en: 'Dangerous. You can\'t taste the alcohol, and you stay hydrated (sort of).', zh: '危險。完全喝不出酒味，而且還順便補水（大概吧）。' },
+        specs: { alcohol: 6, sweetness: 5, ease: 10 },
+        color: '#bae6fd',
+        image: 'https://uyamflgtvqndbjpbjito.supabase.co/storage/v1/object/public/cocktails/pocari-soju.png',
+        collections: ['cvs-hacks']
+    },
+    {
+        id: 'black-coffee-whiskey',
+        name: { en: 'Black Coffee Whiskey', zh: '美式威士忌' },
+        type: 'cvs',
+        baseSpirit: ['whiskey'],
+        ingredients: {
+            en: [{ name: 'Whiskey', amount: '45ml' }, { name: 'Iced Americano', amount: 'Top up' }],
+            zh: [{ name: '威士忌', amount: '45ml' }, { name: '冰美式咖啡', amount: '加滿' }]
+        },
+        steps: {
+            en: ['Ice in glass.', 'Pour Whiskey.', 'Top with Black Coffee.'],
+            zh: ['杯中加冰。', '倒入威士忌。', '加滿冰美式。']
+        },
+        tags: { en: ['cvs', 'bitter', 'caffeine'], zh: ['超商', '苦', '提神'] },
+        description: { en: 'Caffeine and alcohol. For when you need to be awake and buzzed.', zh: '咖啡因與酒精的雙重奏。給需要清醒又想微醺的你。' },
+        specs: { alcohol: 5, sweetness: 1, ease: 10 },
+        color: '#451a03',
+        image: 'https://uyamflgtvqndbjpbjito.supabase.co/storage/v1/object/public/cocktails/black-coffee-whiskey.png',
+        collections: ['cvs-hacks']
     }
 ];

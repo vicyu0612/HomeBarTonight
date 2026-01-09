@@ -4,7 +4,16 @@ import { Heart, X, Flame, GlassWater, Smile, Wine, ChevronLeft, ChevronRight } f
 import clsx from 'clsx';
 import { useSwipeBack } from './hooks/useSwipeBack';
 
-const SpecBar = ({ value, label, subLabel, icon: Icon, colorClass, barColorClass }: { value: number; label: string; subLabel: string; icon: any; colorClass: string; barColorClass: string }) => (
+interface SpecBarProps {
+    value: number;
+    label: string;
+    subLabel: string;
+    icon: React.ElementType; // Better than any
+    colorClass: string;
+    barColorClass: string;
+}
+
+const SpecBar = ({ value, label, subLabel, icon: Icon, colorClass, barColorClass }: SpecBarProps) => (
     <div className="space-y-1.5">
         <div className="flex justify-between items-end">
             <div className="flex items-center gap-1.5 text-sm font-medium text-zinc-200">
@@ -24,7 +33,34 @@ const SpecBar = ({ value, label, subLabel, icon: Icon, colorClass, barColorClass
     </div>
 );
 
-export const RecipeDetailModal = ({ recipe, onClose, isFavorite, onToggleFavorite, t, lang, onPrev, onNext, hasPrev, hasNext }: any) => {
+import type { Recipe } from './data/recipes';
+
+interface RecipeDetailModalProps {
+    recipe: Recipe;
+    onClose: () => void;
+    isFavorite: boolean;
+    onToggleFavorite?: (id: string) => void;
+    t: {
+        done: string;
+        ingredients: string;
+        steps: string;
+        specs: {
+            alcohol: string;
+            alcoholDesc: string;
+            sweetness: string;
+            sweetnessDesc: string;
+            ease: string;
+            easeDesc: string;
+        }
+    };
+    lang: 'en' | 'zh';
+    onPrev: () => void;
+    onNext: () => void;
+    hasPrev: boolean;
+    hasNext: boolean;
+}
+
+export const RecipeDetailModal = ({ recipe, onClose, isFavorite, onToggleFavorite, t, lang, onPrev, onNext, hasPrev, hasNext }: RecipeDetailModalProps) => {
     useSwipeBack(onClose);
     const scrollRef = useRef(null);
     const { scrollY } = useScroll({ container: scrollRef });
@@ -155,7 +191,7 @@ export const RecipeDetailModal = ({ recipe, onClose, isFavorite, onToggleFavorit
                                 <Wine size={16} /> {t.ingredients}
                             </h3>
                             <div className="bg-white/5 rounded-2xl p-1 border border-white/5">
-                                {recipe.ingredients[lang].map((ing: any, i: number) => (
+                                {recipe.ingredients[lang].map((ing, i) => (
                                     <div key={i} className="flex justify-between items-center p-3 border-b border-white/5 last:border-0 hover:bg-white/5 transition-colors rounded-xl">
                                         <span className="text-zinc-200 font-medium">{ing.name}</span>
                                         <span className="text-indigo-500 font-bold bg-indigo-500/10 px-3 py-1 rounded-lg border border-indigo-500/20">{ing.amount}</span>

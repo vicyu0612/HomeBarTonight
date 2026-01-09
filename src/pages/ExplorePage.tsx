@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { ArrowRight, ChevronRight } from 'lucide-react';
 import type { Collection } from '../data/collections';
 import type { Recipe } from '../data/recipes';
@@ -39,13 +39,10 @@ export function ExplorePage({
     favorites
 }: ExplorePageProps) {
     const [isScrolled, setIsScrolled] = useState(false);
-    const [featuredBanner, setFeaturedBanner] = useState<FeaturedBanner | null>(null);
+    // const [featuredBanner, setFeaturedBanner] = useState<FeaturedBanner | null>(null);
+    const featuredBanner = null as FeaturedBanner | null;
 
     // Featured banner fetch logic removed to prevent 404s (Table featured_banners does not exist)
-    useEffect(() => {
-        // Placeholder for future banner logic if needed
-        setFeaturedBanner(null);
-    }, []);
 
     const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
         setIsScrolled(e.currentTarget.scrollTop > 20);
