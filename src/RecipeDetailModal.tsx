@@ -91,7 +91,7 @@ export const RecipeDetailModal = ({ recipe, onClose, isFavorite, onToggleFavorit
                 </motion.div>
 
                 {/* Header Actions */}
-                <div className="absolute top-0 left-0 right-0 z-30 p-6 pt-12 sm:pt-6 flex justify-end gap-3 items-start pointer-events-none">
+                <div className="absolute top-0 left-0 right-0 z-30 pl-6 pb-6 pr-4 pt-16 sm:pt-10 flex justify-end gap-3 items-start pointer-events-none">
                     {onToggleFavorite && (
                         <button
                             onClick={() => onToggleFavorite(recipe.id)}
