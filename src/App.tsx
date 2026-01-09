@@ -59,6 +59,10 @@ function App() {
     try {
       const saved = localStorage.getItem('activeTab');
       if (saved && ['explore', 'cocktails', 'my_bar', 'favorites', 'settings', 'collection'].includes(saved)) {
+        // CORRECTION: If saved is 'collection' but we are at root '/', force 'explore'
+        // This prevents the "Target ID: [empty]" error on root refresh
+        if (saved === 'collection' && path === '/') return 'explore';
+
         return saved as TabId;
       }
       return 'explore';
