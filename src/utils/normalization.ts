@@ -69,7 +69,7 @@ export const INGREDIENT_DB: Record<string, { en: string; zh: string }> = {
     // 'water': { en: 'Water', zh: '水' }, // Removed as requested
     'hot_chocolate': { en: 'Hot Chocolate', zh: '熱可可' }, // Added
     'lemon_tea': { en: 'Lemon Tea', zh: '檸檬紅茶' }, // Added
-    'lemon_tea': { en: 'Lemon Tea', zh: '檸檬紅茶' }, // Added
+
     'energy_drink': { en: 'Energy Drink', zh: '能量飲料' }, // Added
     'sports_drink': { en: 'Sports Drink', zh: '運動飲料' }, // Added
     'soy_milk': { en: 'Soy Milk', zh: '豆漿' }, // Added
