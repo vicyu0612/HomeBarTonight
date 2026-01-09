@@ -95,7 +95,8 @@ export function CollectionDetailPage({
                 </div>
                 <h2 className="text-xl font-bold text-white mb-2">Collection Not Found</h2>
                 <div className="text-left bg-zinc-900 p-4 rounded-lg w-full max-w-sm overflow-hidden text-xs font-mono text-zinc-400">
-                    <p className="mb-2 text-red-400">Target ID: {collectionId}</p>
+                    <p className="mb-2 text-red-400">Target ID: "{collectionId}"</p>
+                    <p className="mb-1 text-zinc-600 text-[10px]">Path: {window.location.pathname}</p>
                     <p className="mb-1 text-zinc-500">Available IDs ({allCollections.length}):</p>
                     <p className="break-all">{allCollections.map(c => c.id).join(', ')}</p>
                 </div>

@@ -51,9 +51,13 @@ function App() {
 
   // Tab Persistence
   const [activeTab, setActiveTab] = useState<TabId>(() => {
+    // 0. Check URL for Deep Links (Priority)
+    const path = window.location.pathname;
+    if (path.startsWith('/collection/')) return 'collection';
+
+    // 1. Check LocalStorage
     try {
       const saved = localStorage.getItem('activeTab');
-      // Fix: 'my_bar' matches TabBar id, 'collection' is also valid for persistence
       if (saved && ['explore', 'cocktails', 'my_bar', 'favorites', 'settings', 'collection'].includes(saved)) {
         return saved as TabId;
       }
