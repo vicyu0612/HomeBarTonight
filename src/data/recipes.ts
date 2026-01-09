@@ -2847,7 +2847,7 @@ export const recipes: Recipe[] = [
         specs: { alcohol: 4, sweetness: 4, ease: 10 },
         color: '#d6d3d1',
         image: 'https://uyamflgtvqndbjpbjito.supabase.co/storage/v1/object/public/cocktails/whiskey-hot-milk-tea.png',
-        collections: ['cvs-hacks', 'winter-warmer']
+        collections: ['cvs-hacks', 'winter-warmers']
     },
     {
         id: 'hot-gin-ginger',
@@ -2867,7 +2867,7 @@ export const recipes: Recipe[] = [
         specs: { alcohol: 5, sweetness: 3, ease: 10 },
         color: '#fef3c7',
         image: 'https://uyamflgtvqndbjpbjito.supabase.co/storage/v1/object/public/cocktails/hot-gin-ginger.png',
-        collections: ['cvs-hacks', 'winter-warmer']
+        collections: ['cvs-hacks', 'winter-warmers']
     },
     {
         id: 'hot-plum-sake',
@@ -2887,7 +2887,7 @@ export const recipes: Recipe[] = [
         specs: { alcohol: 5, sweetness: 2, ease: 10 },
         color: '#fef9c3',
         image: 'https://uyamflgtvqndbjpbjito.supabase.co/storage/v1/object/public/cocktails/hot-plum-sake.png',
-        collections: ['cvs-hacks', 'winter-warmer']
+        collections: ['cvs-hacks', 'winter-warmers']
     },
     {
         id: 'warm-apple-whiskey',
@@ -2907,7 +2907,7 @@ export const recipes: Recipe[] = [
         specs: { alcohol: 5, sweetness: 3, ease: 9 },
         color: '#b45309',
         image: 'https://uyamflgtvqndbjpbjito.supabase.co/storage/v1/object/public/cocktails/warm-apple-whiskey.png',
-        collections: ['cvs-hacks', 'winter-warmer']
+        collections: ['cvs-hacks', 'winter-warmers']
     },
     {
         id: 'hot-white-wine-peach',
@@ -2927,7 +2927,7 @@ export const recipes: Recipe[] = [
         specs: { alcohol: 4, sweetness: 4, ease: 9 },
         color: '#fbcfe8',
         image: 'https://uyamflgtvqndbjpbjito.supabase.co/storage/v1/object/public/cocktails/hot-white-wine-peach.png',
-        collections: ['cvs-hacks', 'winter-warmer']
+        collections: ['cvs-hacks', 'winter-warmers']
     },
     {
         id: 'grass-jelly-jagermeister',
@@ -2947,7 +2947,7 @@ export const recipes: Recipe[] = [
         specs: { alcohol: 4, sweetness: 4, ease: 10 },
         color: '#18181b',
         image: 'https://uyamflgtvqndbjpbjito.supabase.co/storage/v1/object/public/cocktails/grass-jelly-jagermeister.png',
-        collections: ['cvs-hacks', 'winter-warmer']
+        collections: ['cvs-hacks', 'winter-warmers']
     },
     {
         id: 'sake-barley-tea',
@@ -2967,6 +2967,6 @@ export const recipes: Recipe[] = [
         specs: { alcohol: 4, sweetness: 2, ease: 10 },
         color: '#a16207',
         image: 'https://uyamflgtvqndbjpbjito.supabase.co/storage/v1/object/public/cocktails/sake-barley-tea.png',
-        collections: ['cvs-hacks', 'winter-warmer']
+        collections: ['cvs-hacks', 'winter-warmers']
     }
 ];
