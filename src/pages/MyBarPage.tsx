@@ -51,8 +51,7 @@ export function MyBarPage({
         if (myInventory.size === 0) return { exactMatches: [], missingOneMatches: [] };
 
         const ignorableIngredients = new Set([
-            'ice', 'sugar', 'syrup', 'simple_syrup', 'brown_sugar', 'water',
-            'honey', 'salt', 'bitters', 'angostura_bitters'
+            'ice', 'water'
         ]);
 
         const exact: Recipe[] = [];
@@ -74,9 +73,7 @@ export function MyBarPage({
                     // Check if *any* of the canonical IDs are ignorable OR if it's categorized as 'essential'/'garnish'
                     // Actually, let's stick to the explicit set plus category check for robustness
                     const isIgnorable = canonicals.some(id =>
-                        ignorableIngredients.has(id) ||
-                        allIngredients.find(i => i.id === id)?.category === 'garnish' ||
-                        allIngredients.find(i => i.id === id)?.category === 'essential'
+                        ignorableIngredients.has(id)
                     );
 
                     if (!isIgnorable) {
@@ -234,11 +231,11 @@ export function MyBarPage({
                 {missingOneMatches.length > 0 && (
                     <>
                         <div className="flex items-center gap-4 mb-4">
-                            <div className="h-px bg-yellow-500/20 flex-1" />
-                            <h2 className="text-yellow-500/80 text-sm font-medium whitespace-nowrap">
+                            <div className="h-px bg-indigo-400/20 flex-1" />
+                            <h2 className="text-indigo-400 text-sm font-bold whitespace-nowrap">
                                 {lang === 'zh' ? `只缺一樣材料 (${missingOneMatches.length})` : `Missing 1 Ingredient (${missingOneMatches.length})`}
                             </h2>
-                            <div className="h-px bg-yellow-500/20 flex-1" />
+                            <div className="h-px bg-indigo-400/20 flex-1" />
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

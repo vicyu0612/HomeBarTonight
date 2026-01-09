@@ -69,8 +69,11 @@ export function RecipeCard({
 
     // Missing Ingredient Badge
     const MissingBadge = missingIngredient ? (
-        <div className="mt-auto flex items-center gap-1.5 text-yellow-400 bg-yellow-400/10 px-2 py-1.5 rounded-lg border border-yellow-400/20 w-fit">
-            <CircleHelp size={14} className="stroke-[2.5px]" />
+        <div className="mt-auto flex items-center gap-1.5 text-indigo-400 bg-indigo-400/10 px-2 py-1.5 rounded-lg border border-indigo-400/20 w-fit">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-[14px] h-[14px]">
+                <path d="M0 0h24v24H0z" fill="none" />
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" />
+            </svg>
             <span className="text-xs font-bold uppercase tracking-wider">
                 {missingIngredient}
             </span>

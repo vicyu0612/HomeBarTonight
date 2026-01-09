@@ -28,7 +28,7 @@ const ingredients = [
     { id: 'rum', name_en: 'Rum', name_zh: '蘭姆酒', category: 'base' },
     { id: 'brandy', name_en: 'Brandy', name_zh: '白蘭地', category: 'base' },
     { id: 'kaoliang', name_en: 'Kaoliang', name_zh: '高粱酒', category: 'base' }, // Added
-    { id: 'beer', name_en: 'Beer', name_zh: '啤酒', category: 'base' }, // Red Eye
+    { id: 'beer', name_en: 'Beer', name_zh: '啤酒', category: 'other_alc' }, // Red Eye
 
     // Other Alcohol
     { id: 'sake', name_en: 'Sake', name_zh: '清酒', category: 'other_alc' },
