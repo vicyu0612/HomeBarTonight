@@ -137,7 +137,7 @@ const ALIAS_MAP_ZH: Record<string, string> = {
     "紅酒 (便宜的就好)": "wine",
     "紅酒": "wine",
     "拉格啤酒": "beer", // Updated
-    "西打": "hard_cider", // Consolidating "西打" to "hard_cider" as requested
+    // "西打": "hard_cider", // Removed duplicate, mapped to apple_soda below
     "蘋果酒 (Somersby等)": "hard_cider",
     "蘋果酒": "hard_cider",
 
@@ -185,24 +185,23 @@ const ALIAS_MAP_ZH: Record<string, string> = {
     "通寧水": "tonic",
     "薑汁汽水": "ginger_ale",
     "可樂": "coke",
-    "檸檬氣泡水": "soda", // Merged
+    "檸檬氣泡水": "soda",
     "葡萄柚氣泡水": "grapefruit_soda",
-    "蘋果西打": "apple_soda",
     "柳橙汁": "orange_juice",
     "蔓越莓汁": "cranberry_juice",
     "番茄汁": "tomato_juice",
     "芭樂汁": "guava_juice",
     "檸檬汁": "lemon",
     "新鮮檸檬汁": "lemon",
-    "萊姆汁": "lemon", // Keep lemon for generic lime usually, but...
-    "莱姆汁": "lemon", // Merged to lemon/lime
+    "萊姆汁": "lemon",
+    "莱姆汁": "lemon",
     "檸檬": "lemon",
-    "萊姆": "lemon", // Merged
+    "萊姆": "lemon",
     "黃檸檬": "lemon",
     "小黃瓜": "cucumber",
-    "芹菜": "celery", // Added
-    "芹菜棒": "celery", // Added
-    "檸檬皮": "lemon", // Merged to lemon
+    "芹菜": "celery",
+    "芹菜棒": "celery",
+    "檸檬皮": "lemon",
     "薄荷葉": "mint",
     "薄荷": "mint",
     "方糖": "sugar",
@@ -211,33 +210,26 @@ const ALIAS_MAP_ZH: Record<string, string> = {
     "糖漿": "sugar",
     "砂糖": "sugar",
     "糖": "sugar",
-    "杏仁糖漿": "orgeat", // Added
+    "杏仁糖漿": "orgeat",
     "鹽": "salt",
     "鮮奶油": "cream",
     "苦精 (Angostura)": "bitters",
     "苦精": "bitters",
-    "伍斯特醬": "worcestershire", // Added
-    "辣椒醬": "hot_sauce", // Added
+    "伍斯特醬": "worcestershire",
+    "辣椒醬": "hot_sauce",
     "紅石榴糖漿": "grenadine",
     "麥香/阿薩姆奶茶": "tea",
     "麥香": "tea",
     "茶": "tea",
     "奶茶": "tea",
     "烏龍茶": "oolong_tea",
-    "綠茶": "green_tea", // Split
+    "綠茶": "green_tea",
     "綠茶 (瓶裝)": "green_tea",
     "濃縮咖啡 (熱)": "espresso",
     "濃縮咖啡": "espresso",
-    "咖啡": "espresso", // Merged
-    "熱咖啡": "espresso", // Merged
-    "蛋白": "egg", // Added
-
-    // Legacy Dash ID fixes
-    "能量飲料": "energy_drink",
-    "熱可可": "hot_chocolate",
-    "檸檬紅茶": "lemon_tea",
-    "野格": "jagermeister",
-    "野格利口酒": "jagermeister",
+    "咖啡": "espresso",
+    "熱咖啡": "espresso",
+    "蛋白": "egg"
 };
 
 const ALIAS_MAP_EN: Record<string, string> = {
