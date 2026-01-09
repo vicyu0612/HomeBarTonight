@@ -69,12 +69,11 @@ export function RecipeCard({
 
     // Missing Ingredient Badge
     const MissingBadge = missingIngredient ? (
-        <div className="mt-auto flex items-center gap-1.5 text-indigo-400 bg-indigo-400/10 px-2 py-1.5 rounded-lg border border-indigo-400/20 w-fit">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-[14px] h-[14px]">
-                <path d="M0 0h24v24H0z" fill="none" />
-                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" />
+        <div className="mt-auto flex items-center gap-1.5 text-indigo-400 bg-indigo-400/10 px-2.5 py-1.5 rounded-lg border border-indigo-400/20 w-fit">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-3.5 h-3.5">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />
             </svg>
-            <span className="text-xs font-bold uppercase tracking-wider">
+            <span className="text-xs font-bold uppercase tracking-wider leading-none pt-[1px]">
                 {missingIngredient}
             </span>
         </div>

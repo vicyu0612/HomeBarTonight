@@ -101,12 +101,14 @@ export function ExplorePage({
                     }}
                 />
 
+                {/* Title Removed
                 <div className={clsx(
                     "font-bold text-lg text-white transition-opacity duration-300",
                     isScrolled ? "opacity-100" : "opacity-0"
                 )}>
                     {lang === 'zh' ? '探索' : 'Explore'}
                 </div>
+                */}
             </div>
 
             {/* Content Container */}

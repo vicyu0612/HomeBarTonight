@@ -270,12 +270,14 @@ export function SettingsPage({ session, lang, setLang, onLogin, onLogout, onDele
                         WebkitMaskImage: 'linear-gradient(to bottom, black 0%, transparent 100%)'
                     }}
                 />
+                {/* Title Removed
                 <span className={clsx(
                     "font-bold text-white transition-opacity duration-300",
                     isScrolled ? "opacity-100" : "opacity-0"
                 )}>
                     {t.title}
                 </span>
+                */}
             </div>
 
             {/* Scrollable Content */}
