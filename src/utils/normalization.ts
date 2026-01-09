@@ -9,7 +9,7 @@ export const INGREDIENT_DB: Record<string, { en: string; zh: string }> = {
     'brandy': { en: 'Brandy', zh: '白蘭地' },
 
     'kaoliang': { en: 'Kaoliang', zh: '高粱酒' }, // Added
-    'white_wine': { en: 'White Wine', zh: '白葡萄酒' },
+    'white_wine': { en: 'White Wine', zh: '白酒' },
     'jagermeister': { en: 'Jägermeister', zh: '野格利口酒' },
     'beer': { en: 'Beer', zh: '啤酒' },
     // 'lager': { en: 'Lager', zh: '拉格啤酒' }, // Removed: merged to beer
@@ -20,6 +20,7 @@ export const INGREDIENT_DB: Record<string, { en: string; zh: string }> = {
     'champagne': { en: 'Champagne', zh: '香檳' },
     // 'cider': Merged to 'hard_cider'
     'hard_cider': { en: 'Apple Cider', zh: '蘋果酒' }, // Maps "西打" here too as requested
+    'prosecco': { en: 'Prosecco', zh: 'Prosecco氣泡酒' },
 
     // Liqueurs
     'liqueur': { en: 'Liqueur', zh: '利口酒' },
