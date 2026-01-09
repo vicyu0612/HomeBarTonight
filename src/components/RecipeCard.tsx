@@ -1,5 +1,5 @@
 import { motion, type HTMLMotionProps } from 'framer-motion';
-import { Heart, Martini } from 'lucide-react';
+import { Heart, Martini, CircleHelp } from 'lucide-react';
 import clsx from 'clsx';
 import type { Recipe } from '../data/recipes';
 
@@ -11,6 +11,7 @@ interface RecipeCardProps extends Omit<HTMLMotionProps<"div">, 'id'> {
     onClick: () => void;
     variant?: 'horizontal' | 'vertical';
     priority?: boolean;
+    missingIngredient?: string;
 }
 
 export function RecipeCard({
@@ -22,6 +23,7 @@ export function RecipeCard({
     className,
     variant = 'horizontal',
     priority = false,
+    missingIngredient,
     ...motionProps
 }: RecipeCardProps) {
     // Unified Heart Button Style
@@ -65,6 +67,16 @@ export function RecipeCard({
         </>
     );
 
+    // Missing Ingredient Badge
+    const MissingBadge = missingIngredient ? (
+        <div className="mt-auto flex items-center gap-1.5 text-yellow-400 bg-yellow-400/10 px-2 py-1.5 rounded-lg border border-yellow-400/20 w-fit">
+            <CircleHelp size={14} className="stroke-[2.5px]" />
+            <span className="text-xs font-bold uppercase tracking-wider">
+                {missingIngredient}
+            </span>
+        </div>
+    ) : null;
+
     if (variant === 'vertical') {
         return (
             <motion.div
@@ -88,21 +100,28 @@ export function RecipeCard({
                     <h3 className="text-white font-bold text-lg mb-1 leading-tight line-clamp-1">
                         {recipe.name[lang]}
                     </h3>
-                    <p className="text-zinc-400 text-xs line-clamp-2 mb-3 leading-relaxed">
-                        {recipe.description[lang]}
-                    </p>
 
-                    {/* Tags */}
-                    <div className="flex flex-wrap gap-1.5 mt-auto">
-                        {recipe.tags[lang].slice(0, 3).map((tag) => (
-                            <span
-                                key={tag}
-                                className="text-[10px] uppercase font-bold tracking-wider text-zinc-400 bg-white/5 px-2 py-0.5 rounded-md border border-white/5"
-                            >
-                                {tag}
-                            </span>
-                        ))}
-                    </div>
+                    {/* If Missing: Show missing badge. If Not: Show Desc */}
+                    {missingIngredient ? (
+                        <div className="mt-2">{MissingBadge}</div>
+                    ) : (
+                        <>
+                            <p className="text-zinc-400 text-xs line-clamp-2 mb-3 leading-relaxed">
+                                {recipe.description[lang]}
+                            </p>
+                            {/* Tags */}
+                            <div className="flex flex-wrap gap-1.5 mt-auto">
+                                {recipe.tags[lang].slice(0, 3).map((tag) => (
+                                    <span
+                                        key={tag}
+                                        className="text-[10px] uppercase font-bold tracking-wider text-zinc-400 bg-white/5 px-2 py-0.5 rounded-md border border-white/5"
+                                    >
+                                        {tag}
+                                    </span>
+                                ))}
+                            </div>
+                        </>
+                    )}
                 </div>
             </motion.div>
         );
@@ -133,20 +152,27 @@ export function RecipeCard({
                                 {HeartButton}
                             </div>
                         </div>
+
                         <p className="text-zinc-400 text-xs line-clamp-2 leading-relaxed pr-8 mb-auto">
                             {recipe.description[lang]}
                         </p>
                     </div>
 
-                    <div className="flex flex-wrap gap-1.5 content-end">
-                        {recipe.tags[lang].slice(0, 3).map((tag) => (
-                            <span
-                                key={tag}
-                                className="text-[10px] uppercase font-bold tracking-wider text-zinc-400 bg-white/5 px-2 py-0.5 rounded-md border border-white/5 group-hover:bg-white/10 group-hover:text-zinc-300 transition-colors"
-                            >
-                                {tag}
-                            </span>
-                        ))}
+                    <div className="flex flex-col justify-end h-full">
+                        {missingIngredient ? (
+                            MissingBadge
+                        ) : (
+                            <div className="flex flex-wrap gap-1.5 content-end">
+                                {recipe.tags[lang].slice(0, 3).map((tag) => (
+                                    <span
+                                        key={tag}
+                                        className="text-[10px] uppercase font-bold tracking-wider text-zinc-400 bg-white/5 px-2 py-0.5 rounded-md border border-white/5 group-hover:bg-white/10 group-hover:text-zinc-300 transition-colors"
+                                    >
+                                        {tag}
+                                    </span>
+                                ))}
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>

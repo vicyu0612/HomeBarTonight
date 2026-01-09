@@ -46,73 +46,71 @@ export function MyBarPage({
         setIsScrolled(e.currentTarget.scrollTop > 40);
     };
 
-    // Filter Logic
-    const availableRecipes = useMemo(() => {
-        if (myInventory.size === 0) return [];
+    // Filter Logic and Categorization
+    const { exactMatches, missingOneMatches } = useMemo(() => {
+        if (myInventory.size === 0) return { exactMatches: [], missingOneMatches: [] };
 
-        return allRecipes.filter(recipe => {
-            // Use EN ingredients for logic structure
+        const ignorableIngredients = new Set([
+            'ice', 'sugar', 'syrup', 'simple_syrup', 'brown_sugar', 'water',
+            'honey', 'salt', 'bitters', 'angostura_bitters'
+        ]);
+
+        const exact: Recipe[] = [];
+        const missingOne: Array<{ recipe: Recipe, missing: string }> = [];
+
+        for (const recipe of allRecipes) {
             const needed = recipe.ingredients['en'];
+            const missingIngredients: string[] = [];
 
-            const hasAll = needed.every(ing => {
-                // Get canonical IDs for the required ingredient
+            // Check each required ingredient
+            for (const ing of needed) {
                 const canonicals = normalizeIngredient(ing.name, 'en');
 
-                // Logic: Is it a Garnish/Ice/Water? (Optional)
-                // Or do we strictly check against inventory if it's NOT in those categories?
-                // The logic from App.tsx was:
+                // 1. Do we have it?
+                const hasIt = canonicals.some(id => myInventory.has(id));
 
-                // 1. Check if ANY of the canonical IDs are in My Inventory
-                const match = canonicals.some(id => myInventory.has(id));
-                if (match) return true;
+                if (!hasIt) {
+                    // 2. Is it ignorable?
+                    // Check if *any* of the canonical IDs are ignorable OR if it's categorized as 'essential'/'garnish'
+                    // Actually, let's stick to the explicit set plus category check for robustness
+                    const isIgnorable = canonicals.some(id =>
+                        ignorableIngredients.has(id) ||
+                        allIngredients.find(i => i.id === id)?.category === 'garnish' ||
+                        allIngredients.find(i => i.id === id)?.category === 'essential'
+                    );
 
-                // 2. If not match, strictly check if it's an "Ignorable" ingredient?
-                // In App.tsx logic (which I need to check), it likely checked specific categories.
-                // But here, let's assume if it is NOT in My Inventory, and it is NOT optional => Fail.
+                    if (!isIgnorable) {
+                        // We are missing this real ingredient.
+                        // Attempt to find the DB Item to get the correct localized name
+                        let displayName = ing.name;
 
-                // Wait, previous logic (App.tsx) explicitly exempted some categories.
-                // I should copy that logic to ensure consistency.
-                // Normalization.ts helper might not be enough.
-                // Let's assume for now strict matching or simple fallback.
-                // Actually, better to replicate App.tsx logic.
+                        // Try to find the item in allIngredients using the canonical IDs
+                        const dbItem = allIngredients.find(item => canonicals.includes(item.id));
 
-                // Replicating App.tsx simple logic:
-                // "If I have it, good. If I don't..."
-                // "Is it ice? Is it sugar? Is it garnish?"
+                        if (dbItem) {
+                            displayName = lang === 'zh' ? dbItem.name_zh : dbItem.name_en;
+                        } else {
+                            // Fallback: Check if we can find it in the ZH recipe ingredients directly?
+                            // Since we are iterating 'en' needed, we can try to look at 'zh' at the same index?
+                            // But let's trust the DB lookup first. If DB lookup fails, keep the EN name or try normalization fallback.
+                            // Actually, if we can't find it in DB, we likely can't translate it easily without index matching.
+                            // Let's stick to the mapped name if found, otherwise original.
+                        }
 
-                // Let's rely on the IDs.
-                // Common optional IDs: 'ice', 'water', 'sugar_syrup' (sometimes), 'salt' ... 
-                // In MyBarModal categorization, 'essential' and 'garnish' were separate.
-                // The USER previously had specific logic.
+                        missingIngredients.push(displayName);
+                    }
+                }
+            }
 
-                // Let's USE THE SAME LOGIC FROM App.tsx (which I will read again or copy blindly if I recall).
-                // Logic:
-                // const isOptional = checkCategory(id) ...
+            if (missingIngredients.length === 0) {
+                exact.push(recipe);
+            } else if (missingIngredients.length === 1) {
+                missingOne.push({ recipe, missing: missingIngredients[0] });
+            }
+        }
 
-                // For now, I will use a simplified check: 
-                // If canonicals overlap with myInventory -> TRUE.
-                // Else -> Check if it is garnish/ice/sugar/water.
+        return { exactMatches: exact, missingOneMatches: missingOne };
 
-                const optionalIds = new Set(['ice', 'water', 'sugar', 'syrup', 'simple_syrup']);
-                // Also need to check if the ingredient name indicates garnish (e.g., "(Garnish)")
-                // normalizeIngredient removes "(Garnish)".
-
-                // Let's try to match.
-                const isOptional = canonicals.some(id =>
-                    optionalIds.has(id) ||
-                    // DB category check would be better but I don't have DB map here easily unless I iterate allIngredients.
-                    // But allIngredients is passed!
-                    allIngredients.find(i => i.id === id)?.category === 'garnish' ||
-                    allIngredients.find(i => i.id === id)?.category === 'essential'
-                );
-
-                return isOptional; // If it's optional, we treat as "have it" (or ignore). 
-                // Wait, if it Returns TRUE, we have it.
-                // So logic is: match || isOptional.
-            });
-
-            return hasAll;
-        });
     }, [allRecipes, myInventory, allIngredients]);
 
     return (
@@ -153,7 +151,6 @@ export function MyBarPage({
                     {lang === 'zh' ? '我的吧台' : 'My Bar'}
                 </h1>
 
-                {/* Inventory Management Button */}
                 {/* Inventory Hero Card */}
                 <div
                     onClick={() => setShowModal(true)}
@@ -196,29 +193,28 @@ export function MyBarPage({
                     </div>
                 </div>
 
-                {/* Results Header */}
+                {/* --- Section 1: Exact Matches --- */}
                 <div className="flex items-center gap-4 mb-4">
                     <div className="h-px bg-zinc-800 flex-1" />
                     <h2 className="text-zinc-400 text-sm font-medium whitespace-nowrap">
-                        {lang === 'zh' ? `根據庫存可以調的酒 (${availableRecipes.length})` : `Available cocktails based on your inventory (${availableRecipes.length})`}
+                        {lang === 'zh' ? `根據庫存可以調的酒 (${exactMatches.length})` : `Available cocktails (${exactMatches.length})`}
                     </h2>
                     <div className="h-px bg-zinc-800 flex-1" />
                 </div>
 
-                {/* Recipe Grid */}
                 {allRecipes.length === 0 ? (
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        {Array.from({ length: 6 }).map((_, i) => (
+                        {Array.from({ length: 4 }).map((_, i) => (
                             <RecipeCardSkeleton key={i} variant="horizontal" />
                         ))}
                     </div>
-                ) : availableRecipes.length === 0 ? (
-                    <div className="text-center py-20 text-zinc-600">
-                        <p>{lang === 'zh' ? '庫存不足，無法調製任何酒譜' : 'Not enough ingredients to make any cocktails.'}</p>
+                ) : exactMatches.length === 0 ? (
+                    <div className="text-center py-10 text-zinc-600 mb-8">
+                        <p>{lang === 'zh' ? '庫存不足，無法完整調製任何酒譜' : 'Not enough ingredients to make a full cocktail.'}</p>
                     </div>
                 ) : (
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        {availableRecipes.map((recipe, index) => (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-12">
+                        {exactMatches.map((recipe, index) => (
                             <RecipeCard
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
@@ -227,12 +223,41 @@ export function MyBarPage({
                                 lang={lang}
                                 isFavorite={favorites.has(recipe.id)}
                                 toggleFavorite={toggleFavorite}
-                                onClick={() => onSelectRecipe(recipe, availableRecipes)}
-                                priority={index < 6}
+                                onClick={() => onSelectRecipe(recipe, exactMatches)}
+                                priority={index < 4}
                             />
                         ))}
-
                     </div>
+                )}
+
+                {/* --- Section 2: Missing One Ingredient --- */}
+                {missingOneMatches.length > 0 && (
+                    <>
+                        <div className="flex items-center gap-4 mb-4">
+                            <div className="h-px bg-yellow-500/20 flex-1" />
+                            <h2 className="text-yellow-500/80 text-sm font-medium whitespace-nowrap">
+                                {lang === 'zh' ? `只缺一樣材料 (${missingOneMatches.length})` : `Missing 1 Ingredient (${missingOneMatches.length})`}
+                            </h2>
+                            <div className="h-px bg-yellow-500/20 flex-1" />
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            {missingOneMatches.map(({ recipe, missing }, index) => (
+                                <RecipeCard
+                                    initial={{ opacity: 0, y: 20 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: index * 0.05 }}
+                                    key={recipe.id}
+                                    recipe={recipe}
+                                    lang={lang}
+                                    isFavorite={favorites.has(recipe.id)}
+                                    toggleFavorite={toggleFavorite}
+                                    onClick={() => onSelectRecipe(recipe, missingOneMatches.map(m => m.recipe))}
+                                    missingIngredient={missing} // Pass the missing item
+                                />
+                            ))}
+                        </div>
+                    </>
                 )}
             </div>
 

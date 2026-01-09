@@ -2826,7 +2826,7 @@ export const recipes: Recipe[] = [
         description: { en: 'Caffeine and alcohol. For when you need to be awake and buzzed.', zh: '咖啡因與酒精的雙重奏。給需要清醒又想微醺的你。' },
         specs: { alcohol: 5, sweetness: 1, ease: 10 },
         color: '#451a03',
-        image: 'https://uyamflgtvqndbjpbjito.supabase.co/storage/v1/object/public/cocktails/black-coffee-whiskey.png',
+        image: 'https://uyamflgtvqndbjpbjito.supabase.co/storage/v1/object/public/cocktails/black-coffee-whiskey.png?v=2',
         collections: ['cvs-hacks']
     }
 ];
