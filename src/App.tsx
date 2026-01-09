@@ -28,6 +28,11 @@ import { collections as fallbackCollections, type Collection } from './data/coll
 // Language Detection Helper
 const getSystemLang = (): 'en' | 'zh' => {
   try {
+    // 1. Check LocalStorage (User Preference)
+    const saved = localStorage.getItem('app_lang');
+    if (saved === 'en' || saved === 'zh') return saved;
+
+    // 2. Check System Lang
     const lang = navigator.language.toLowerCase();
     return lang.startsWith('zh') ? 'zh' : 'en';
   } catch (e) {
@@ -38,6 +43,12 @@ const getSystemLang = (): 'en' | 'zh' => {
 function App() {
   // Global State
   const [lang, setLang] = useState<'en' | 'zh'>(getSystemLang());
+
+  // Persist language choice
+  useEffect(() => {
+    localStorage.setItem('app_lang', lang);
+  }, [lang]);
+
   const [activeTab, setActiveTab] = useState<TabId>('explore');
   const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(null);
   const [currentList, setCurrentList] = useState<Recipe[]>([]);
