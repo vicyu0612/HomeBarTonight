@@ -165,7 +165,8 @@ export const recipes: Recipe[] = [
             ease: 6
         },
         color: '#84cc16', // Lime-500
-        image: 'https://uyamflgtvqndbjpbjito.supabase.co/storage/v1/object/public/cocktails/margarita.png'
+        image: 'https://uyamflgtvqndbjpbjito.supabase.co/storage/v1/object/public/cocktails/margarita.png',
+        collections: ['party-time']
     },
     {
         id: 'mojito',
@@ -1006,7 +1007,7 @@ export const recipes: Recipe[] = [
         },
         color: '#7f1d1d',
         image: 'https://uyamflgtvqndbjpbjito.supabase.co/storage/v1/object/public/cocktails/kalimotxo.png',
-        collections: ['cvs-hacks']
+        collections: ['cvs-hacks', 'party-time']
     },
     {
         id: 'screwdriver',
@@ -1142,7 +1143,7 @@ export const recipes: Recipe[] = [
         },
         color: '#3f2c2c', // Dark cola
         image: 'https://uyamflgtvqndbjpbjito.supabase.co/storage/v1/object/public/cocktails/rum-coke.png',
-        collections: ['cvs-hacks']
+        collections: ['cvs-hacks', 'party-time']
     },
     {
         id: 'white-russian',
@@ -1279,7 +1280,8 @@ export const recipes: Recipe[] = [
             ease: 4
         },
         color: '#f59e0b', // Amber-500
-        image: 'https://uyamflgtvqndbjpbjito.supabase.co/storage/v1/object/public/cocktails/b52.png'
+        image: 'https://uyamflgtvqndbjpbjito.supabase.co/storage/v1/object/public/cocktails/b52.png',
+        collections: ['party-time']
     },
 
     // CVS Beer Series
@@ -1371,7 +1373,7 @@ export const recipes: Recipe[] = [
         },
         color: '#fbbf24', // Amber-400
         image: 'https://uyamflgtvqndbjpbjito.supabase.co/storage/v1/object/public/cocktails/somaek.png',
-        collections: ['cvs-hacks']
+        collections: ['cvs-hacks', 'party-time']
     },
     {
         id: 'red-eye',
@@ -1595,7 +1597,7 @@ export const recipes: Recipe[] = [
         },
         color: '#3f2c2c', // Dark cola
         image: 'https://uyamflgtvqndbjpbjito.supabase.co/storage/v1/object/public/cocktails/tequila-coke.png',
-        collections: ['cvs-hacks']
+        collections: ['cvs-hacks', 'party-time']
     },
     {
         id: 'tequila-cider',
