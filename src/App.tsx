@@ -588,7 +588,7 @@ function App() {
                   className="absolute inset-0 z-50 bg-black h-full w-full overflow-hidden"
                 >
                   {(() => {
-                    const id = window.location.pathname.split('/').pop() || '';
+                    const id = window.location.pathname.replace(/\/$/, '').split('/').pop() || '';
                     return (
                       <div className="absolute inset-0 bg-black z-50">
                         <CollectionDetailPage
