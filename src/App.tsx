@@ -597,6 +597,7 @@ function App() {
                 >
                   {(() => {
                     const id = window.location.pathname.replace(/\/$/, '').split('/').pop() || '';
+                    if (!id) return null; // Guard: If root path or empty ID, don't render detail
                     return (
                       <div className="absolute inset-0 bg-black z-50">
                         <CollectionDetailPage
