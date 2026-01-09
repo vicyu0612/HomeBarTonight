@@ -12,10 +12,12 @@ export const INGREDIENT_DB: Record<string, { en: string; zh: string }> = {
     'beer': { en: 'Beer', zh: '啤酒' },
     // 'lager': { en: 'Lager', zh: '拉格啤酒' }, // Removed: merged to beer
     'wine': { en: 'Red Wine', zh: '紅酒' },
+    // 'red-wine': Removed, merged to 'wine'
     'soju': { en: 'Soju', zh: '燒酒' },
     'sake': { en: 'Sake', zh: '清酒' },
     'champagne': { en: 'Champagne', zh: '香檳' },
-    'hard_cider': { en: 'Apple Cider', zh: '蘋果酒' },
+    // 'cider': Merged to 'hard_cider'
+    'hard_cider': { en: 'Apple Cider', zh: '蘋果酒' }, // Maps "西打" here too as requested
 
     // Liqueurs
     'liqueur': { en: 'Liqueur', zh: '利口酒' },
@@ -34,22 +36,23 @@ export const INGREDIENT_DB: Record<string, { en: string; zh: string }> = {
 
     // Mixers & Others
     // Mixers & Others
-    'soda': { en: 'Soda Water', zh: '氣泡水' },
+    'soda': { en: 'Soda Water', zh: '氣泡水' }, // Merged Lemon Soda here
     'tonic': { en: 'Tonic Water', zh: '通寧水' },
     'coke': { en: 'Coke', zh: '可樂' },
     'sprite': { en: 'Sprite', zh: '雪碧' },
     'ginger_ale': { en: 'Ginger Ale', zh: '薑汁汽水' },
-    'lemon_soda': { en: 'Lemon Soda', zh: '檸檬氣泡水' },
+    // 'lemon_soda': { en: 'Lemon Soda', zh: '檸檬氣泡水' }, // Merged to soda
     'grapefruit_soda': { en: 'Grapefruit Soda', zh: '葡萄柚汽水' },
     'apple_soda': { en: 'Apple Sidra', zh: '蘋果西打' },
-    'juice': { en: 'Juice', zh: '果汁' },
+    // 'juice': { en: 'Juice', zh: '果汁' }, // Removed as requested
     'orange_juice': { en: 'Orange Juice', zh: '柳橙汁' },
     'cranberry_juice': { en: 'Cranberry Juice', zh: '蔓越莓汁' }, // Added
     'tomato_juice': { en: 'Tomato Juice', zh: '番茄汁' },
     'guava_juice': { en: 'Guava Juice', zh: '芭樂汁' },
     'tea': { en: 'Black Tea', zh: '紅茶' },
-    'oolong_tea': { en: 'Green Tea', zh: '綠茶' },
-    'coffee': { en: 'Coffee', zh: '咖啡' },
+    'oolong_tea': { en: 'Oolong Tea', zh: '烏龍茶' }, // Reverted split
+    'green_tea': { en: 'Green Tea', zh: '綠茶' }, // Added split
+    // 'coffee': { en: 'Coffee', zh: '咖啡' }, // Merged to Espresso
     'espresso': { en: 'Espresso', zh: '濃縮咖啡' },
     'milk': { en: 'Milk', zh: '牛奶' },
     'calpis': { en: 'Calpis', zh: '可爾必思' },
@@ -57,32 +60,42 @@ export const INGREDIENT_DB: Record<string, { en: string; zh: string }> = {
 
     'grenadine': { en: 'Grenadine', zh: '紅石榴糖漿' },
     'orgeat': { en: 'Orgeat', zh: '杏仁糖漿' }, // Added
-    'lime_cordial': { en: 'Lime Cordial', zh: '莱姆汁 (Cordial)' }, // Added
+    // 'lime_cordial': { en: 'Lime Cordial', zh: '莱姆汁 (Cordial)' }, // Removed, covered by Lemon/Lime
     'melon_popsicle': { en: 'Melon Popsicle', zh: '哈密瓜冰棒' },
     'kaoliang': { en: 'Kaoliang Liquor', zh: '高粱酒' }, // Added
     'sarsaparilla': { en: 'Sarsaparilla', zh: '沙士' }, // Added
     'grape_juice': { en: 'Grape Juice', zh: '葡萄汁' }, // Added
     'aloe': { en: 'Aloe Drink', zh: '蘆薈飲' }, // Added
-    'water': { en: 'Water', zh: '水' },
+    // 'water': { en: 'Water', zh: '水' }, // Removed as requested
+    'hot_chocolate': { en: 'Hot Chocolate', zh: '熱可可' }, // Added
+    'lemon_tea': { en: 'Lemon Tea', zh: '檸檬紅茶' }, // Added
+    'energy_drink': { en: 'Energy Drink', zh: '能量飲料' }, // Added
 
     // Essentials
     'ice': { en: 'Ice', zh: '冰塊' },
     'sugar': { en: 'Sugar', zh: '糖' },
     'salt': { en: 'Salt', zh: '鹽' },
     'bitters': { en: 'Bitters', zh: '苦精' },
-    'worcestershire': { en: 'Worcestershire', zh: '伍斯特醬' }, // Added
-    'hot_sauce': { en: 'Tabasco', zh: '辣椒醬' }, // Added
-    'lemon': { en: 'Lemon', zh: '檸檬' },
-    'lime': { en: 'Lime', zh: '萊姆' },
+    'worcestershire': { en: 'Worcestershire', zh: '伍斯特醬' },
+    'hot_sauce': { en: 'Tabasco', zh: '辣椒醬' },
+    'lemon': { en: 'Lemon/Lime', zh: '檸檬/萊姆' }, // Renamed
+    // 'lemon_peel': Merged to 'lemon'
+    // 'lime': Merged to 'lemon'
+    // 'lime': { en: 'Lime', zh: '萊姆' }, 
     'mint': { en: 'Mint', zh: '薄荷' },
     'cucumber': { en: 'Cucumber', zh: '小黃瓜' },
     'celery': { en: 'Celery', zh: '芹菜' }, // Added
-    'cream': { en: 'Heavy Cream', zh: '鮮奶油' },
+    'cream': { en: 'Heavy Cream', zh: '鮮奶油' }, // Already essential
+    'butter': { en: 'Butter', zh: '奶油(Butter)' }, // Added if needed, or check if user meant this?
     'honey': { en: 'Honey', zh: '蜂蜜' },
-    'egg': { en: 'Egg', zh: '蛋' },
-    'lemon_peel': { en: 'Lemon Peel', zh: '檸檬皮' },
+    'egg': { en: 'Egg', zh: '蛋' }, // Covers egg yolk
     'olive': { en: 'Olive', zh: '橄欖' },
     'nutmeg': { en: 'Nutmeg', zh: '豆蔻' },
+    'marshmallow': { en: 'Marshmallow', zh: '棉花糖' },
+
+    // Missing Spirits
+    'jagermeister': { en: 'Jägermeister', zh: '野格利口酒' },
+    'peach_puree': { en: 'Peach Puree', zh: '白桃果泥' },
 };
 
 // Reverse maps for lookup
@@ -106,8 +119,10 @@ const ALIAS_MAP_ZH: Record<string, string> = {
     "黑麥威士忌": "whiskey",
     "琴酒": "gin",
     "伏特加": "vodka",
+    "檸檬伏特加": "vodka", // Added
     "燒酒": "soju",
     "韓國燒酒": "soju",
+    "原味燒酒": "soju", // Added
     "韓國燒酒 (原味)": "soju",
     "燒酒或伏特加": "vodka",
     "銀龍舌蘭": "tequila",
@@ -118,11 +133,23 @@ const ALIAS_MAP_ZH: Record<string, string> = {
     "陳年蘭姆酒": "rum",
     "干邑白蘭地": "brandy",
     "白蘭地": "brandy",
+    "白蘭地/蘭姆酒": "brandy", // Added
     "紅酒 (便宜的就好)": "wine",
     "紅酒": "wine",
     "拉格啤酒": "beer", // Updated
+    "西打": "hard_cider", // Consolidating "西打" to "hard_cider" as requested
     "蘋果酒 (Somersby等)": "hard_cider",
     "蘋果酒": "hard_cider",
+
+    // New mappings
+    "野格": "jagermeister",
+    "野格利口酒": "jagermeister",
+    "熱可可": "hot_chocolate",
+    "檸檬紅茶": "lemon_tea",
+    "能量飲料": "energy_drink",
+    "白桃果泥": "peach_puree",
+    "棉花糖": "marshmallow",
+    "蛋黃": "egg", // Added for Egg Yolk mapping
 
     "不甜香艾酒": "dry_vermouth",
     "香艾酒": "vermouth",
@@ -158,23 +185,24 @@ const ALIAS_MAP_ZH: Record<string, string> = {
     "通寧水": "tonic",
     "薑汁汽水": "ginger_ale",
     "可樂": "coke",
+    "檸檬氣泡水": "soda", // Merged
+    "葡萄柚氣泡水": "grapefruit_soda",
+    "蘋果西打": "apple_soda",
     "柳橙汁": "orange_juice",
-    "蔓越莓汁": "cranberry_juice", // Added
+    "蔓越莓汁": "cranberry_juice",
     "番茄汁": "tomato_juice",
-    "番茄汁 (可果美)": "tomato_juice",
     "芭樂汁": "guava_juice",
-    "芭樂汁 (辦桌那種)": "guava_juice",
     "檸檬汁": "lemon",
     "新鮮檸檬汁": "lemon",
     "萊姆汁": "lemon", // Keep lemon for generic lime usually, but...
-    "莱姆汁": "lime_cordial", // Distinguish Cordial if strictly matched
+    "莱姆汁": "lemon", // Merged to lemon/lime
     "檸檬": "lemon",
-    "萊姆": "lemon",
+    "萊姆": "lemon", // Merged
     "黃檸檬": "lemon",
     "小黃瓜": "cucumber",
     "芹菜": "celery", // Added
     "芹菜棒": "celery", // Added
-    "檸檬皮": "lemon_peel",
+    "檸檬皮": "lemon", // Merged to lemon
     "薄荷葉": "mint",
     "薄荷": "mint",
     "方糖": "sugar",
@@ -195,13 +223,21 @@ const ALIAS_MAP_ZH: Record<string, string> = {
     "麥香": "tea",
     "茶": "tea",
     "奶茶": "tea",
-    "烏龍茶或綠茶 (瓶裝)": "oolong_tea",
     "烏龍茶": "oolong_tea",
-    "綠茶": "oolong_tea",
-    "綠茶 (瓶裝)": "oolong_tea",
+    "綠茶": "green_tea", // Split
+    "綠茶 (瓶裝)": "green_tea",
     "濃縮咖啡 (熱)": "espresso",
     "濃縮咖啡": "espresso",
+    "咖啡": "espresso", // Merged
+    "熱咖啡": "espresso", // Merged
     "蛋白": "egg", // Added
+
+    // Legacy Dash ID fixes
+    "能量飲料": "energy_drink",
+    "熱可可": "hot_chocolate",
+    "檸檬紅茶": "lemon_tea",
+    "野格": "jagermeister",
+    "野格利口酒": "jagermeister",
 };
 
 const ALIAS_MAP_EN: Record<string, string> = {
@@ -228,9 +264,20 @@ const ALIAS_MAP_EN: Record<string, string> = {
     "lager": "beer", // Updated
     "beer": "beer",
     "tequila cider": "hard_cider",
-    "cider": "hard_cider",
+    "cider": "hard_cider", // Consolidating
     "apple cider": "hard_cider",
     "somersby": "hard_cider",
+    "jagermeister": "jagermeister",
+    "jager": "jagermeister",
+    "red bull": "energy_drink",
+    "energy drink": "energy_drink",
+    "hot chocolate": "hot_chocolate",
+    "lemon tea": "lemon_tea",
+    "lemon iced tea": "lemon_tea",
+    "peach puree": "peach_puree",
+    "marshmallows": "marshmallow",
+    "marshmallow": "marshmallow",
+    "egg yolk": "egg", // Added for Egg Yolk mapping
 
     "dry vermouth": "dry_vermouth",
     "sweet vermouth": "vermouth", // Added
@@ -280,16 +327,18 @@ const ALIAS_MAP_EN: Record<string, string> = {
     "guava juice": "guava_juice",
     "oolong tea": "oolong_tea",
     "oolong": "oolong_tea",
-    "green tea": "oolong_tea",
+    "green tea": "green_tea", // Split
     "espresso": "espresso",
     "espresso (fresh)": "espresso", // Added
+    "coffee": "espresso", // Merged
+    "hot coffee": "espresso", // Merged
 
     "lime juice": "lemon", // Standard mapping
     "fresh lime juice": "lemon",
     "lemon juice": "lemon",
-    "lime": "lemon",
+    "lime": "lemon", // Merged
     "lemon": "lemon",
-    "lime cordial": "lime_cordial", // Added
+    "lime cordial": "lemon", // Merged to lemon/lime tag
     "lemon twist": "lemon_peel",
     "lemon peel": "lemon_peel",
     "cucumber": "cucumber",
@@ -380,8 +429,9 @@ export function normalizeIngredient(name: string, lang: 'en' | 'zh'): string[] {
                 else if (p.includes('燒酒')) id = 'soju';
                 else if (p.includes('可可')) id = 'cocoa_liqueur';
                 else if (p.includes('麥香') || p.includes('奶茶') || p.includes('紅茶') || p.includes('茶')) id = 'tea';
-                else if (p.includes('綠茶') || p.includes('烏龍')) id = 'oolong_tea';
-                else if (p.includes('可爾必思')) id = 'calpis';
+                else if (p.includes('綠茶')) id = 'green_tea'; // Split
+                else if (p.includes('烏龍')) id = 'oolong_tea';
+                else if (p.includes('咖啡') || p.includes('濃縮')) id = 'espresso'; // Merged
                 else if (p.includes('養樂多')) id = 'yakult';
                 else if (p.includes('沙士')) id = 'sarsaparilla'; // Added
                 else if (p.includes('雪碧')) id = 'sprite';
@@ -429,14 +479,15 @@ export function normalizeIngredient(name: string, lang: 'en' | 'zh'): string[] {
                 else if (lowerP.includes('beer')) id = 'beer';
                 else if (lowerP.includes('shochu') || lowerP.includes('soju')) id = 'soju';
                 else if (lowerP.includes('black tea') || lowerP.includes('tea')) id = 'tea';
-                else if (lowerP.includes('oolong') || lowerP.includes('green tea')) id = 'oolong_tea';
+                else if (lowerP.includes('oolong')) id = 'oolong_tea';
+                else if (lowerP.includes('green tea')) id = 'green_tea'; // Split
                 else if (lowerP.includes('cider')) id = 'hard_cider';
 
                 // Specific CC fix for EN
                 if (lowerP.includes('cc lemon') || lowerP.includes('lemon soda')) id = 'lemon_soda';
                 if (lowerP.includes('melona') || lowerP.includes('melon popsicle')) id = 'melon_popsicle';
-                if (lowerP.includes('twist')) id = 'lemon_peel';
-                if (lowerP.includes('peel')) id = 'lemon_peel';
+                if (lowerP.includes('twist')) id = 'lemon'; // Merged
+                if (lowerP.includes('peel')) id = 'lemon'; // Merged
                 if (lowerP.includes('assam') || lowerP.includes('black tea')) id = 'tea';
                 if (lowerP.includes('concentrate')) id = 'calpis';
                 if (lowerP.includes('grape juice')) id = 'grape_juice'; // Added

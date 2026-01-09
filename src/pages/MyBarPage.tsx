@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { MyBarModal, type IngredientItem } from '../components/MyBarModal';
 import { ShakerIcon } from '../components/ShakerIcon';
 import clsx from 'clsx';
@@ -28,7 +28,18 @@ export function MyBarPage({
     favorites,
     toggleFavorite
 }: MyBarPageProps) {
-    const [showModal, setShowModal] = useState(false);
+    // Modal Persistence
+    const [showModal, setShowModal] = useState(() => {
+        try {
+            return localStorage.getItem('myBarModalOpen') === 'true';
+        } catch { return false; }
+    });
+
+    useEffect(() => {
+        if (showModal) localStorage.setItem('myBarModalOpen', 'true');
+        else localStorage.removeItem('myBarModalOpen');
+    }, [showModal]);
+
     const [isScrolled, setIsScrolled] = useState(false);
 
     const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {

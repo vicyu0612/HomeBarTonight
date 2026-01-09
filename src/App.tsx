@@ -49,7 +49,22 @@ function App() {
     localStorage.setItem('app_lang', lang);
   }, [lang]);
 
-  const [activeTab, setActiveTab] = useState<TabId>('explore');
+  // Tab Persistence
+  const [activeTab, setActiveTab] = useState<TabId>(() => {
+    try {
+      const saved = localStorage.getItem('activeTab');
+      // Fix: 'my_bar' matches TabBar id, 'collection' is also valid for persistence
+      if (saved && ['explore', 'cocktails', 'my_bar', 'favorites', 'settings', 'collection'].includes(saved)) {
+        return saved as TabId;
+      }
+      return 'explore';
+    } catch { return 'explore'; }
+  });
+
+  useEffect(() => {
+    localStorage.setItem('activeTab', activeTab);
+  }, [activeTab]);
+
   const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(null);
   const [currentList, setCurrentList] = useState<Recipe[]>([]);
   /* Removed unused activeCollectionId */
@@ -141,6 +156,39 @@ function App() {
 
     return () => subscription.unsubscribe();
   }, []);
+
+  // --- Persistence Logic for Modals ---
+
+  // 1. Recipe Detail Modal Persistence
+  const [initialRecipeId] = useState(() => localStorage.getItem('selectedRecipeId'));
+
+  // Sync selectedRecipe to localStorage
+  useEffect(() => {
+    if (selectedRecipe) {
+      localStorage.setItem('selectedRecipeId', selectedRecipe.id);
+    } else {
+      localStorage.removeItem('selectedRecipeId');
+    }
+  }, [selectedRecipe]);
+
+  // (Removed conflicting restoration effect)
+
+  // Better approach for restoration effect:
+  // We only want to attempt restoration if we HAVEN'T interacted yet?
+  // Let's use a ref or a separate state "hasRestored" to prevent re-opening.
+  const [hasRestoredRecipe, setHasRestoredRecipe] = useState(false);
+
+  useEffect(() => {
+    if (!initialRecipeId || hasRestoredRecipe) return;
+
+    if (allRecipes.length > 0) {
+      const found = allRecipes.find(r => r.id === initialRecipeId);
+      if (found) {
+        setSelectedRecipe(found);
+      }
+      setHasRestoredRecipe(true); // Mark as done regardless found or not to stop trying
+    }
+  }, [allRecipes, initialRecipeId, hasRestoredRecipe]);
 
   // Listen for Deep Links (Auth Callback)
   useEffect(() => {
