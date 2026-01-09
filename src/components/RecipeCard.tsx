@@ -88,7 +88,7 @@ export function RecipeCard({
                     <h3 className="text-white font-bold text-lg mb-1 leading-tight line-clamp-1">
                         {recipe.name[lang]}
                     </h3>
-                    <p className="text-zinc-400 text-xs line-clamp-2 mb-3 flex-1">
+                    <p className="text-zinc-400 text-xs line-clamp-2 mb-3 leading-relaxed">
                         {recipe.description[lang]}
                     </p>
 
@@ -133,7 +133,7 @@ export function RecipeCard({
                                 {HeartButton}
                             </div>
                         </div>
-                        <p className="text-zinc-400 text-xs line-clamp-2 leading-tight pr-0 h-8">
+                        <p className="text-zinc-400 text-xs line-clamp-2 leading-relaxed pr-1 mb-auto">
                             {recipe.description[lang]}
                         </p>
                     </div>
