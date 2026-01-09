@@ -125,7 +125,7 @@ export function RecipeCard({
 
                 <div className="flex-1 min-w-0 flex flex-col h-[120px] justify-between">
                     <div>
-                        <div className="flex justify-between items-start mb-0.5">
+                        <div className="flex justify-between items-center mb-0.5">
                             <h3 className="text-white font-bold text-lg leading-tight truncate pr-2">
                                 {recipe.name[lang]}
                             </h3>
@@ -133,7 +133,7 @@ export function RecipeCard({
                                 {HeartButton}
                             </div>
                         </div>
-                        <p className="text-zinc-400 text-xs line-clamp-2 leading-relaxed pr-1 mb-auto">
+                        <p className="text-zinc-400 text-xs line-clamp-2 leading-relaxed pr-8 mb-auto">
                             {recipe.description[lang]}
                         </p>
                     </div>
