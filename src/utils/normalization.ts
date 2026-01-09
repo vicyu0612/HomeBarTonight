@@ -61,6 +61,7 @@ export const INGREDIENT_DB: Record<string, { en: string; zh: string }> = {
     'yakult': { en: 'Yakult', zh: '養樂多' },
     'milk_tea': { en: 'Milk Tea', zh: '奶茶' },
     'ginger_tea': { en: 'Ginger Tea', zh: '薑茶' },
+    'ginger_beer': { en: 'Ginger Beer', zh: '薑汁啤酒' },
     'peach_juice': { en: 'Peach Juice', zh: '水蜜桃汁' },
     'grass_jelly': { en: 'Grass Jelly', zh: '燒仙草' },
     'barley_tea': { en: 'Barley Tea', zh: '麥仔茶' },
@@ -159,6 +160,8 @@ const ALIAS_MAP_ZH: Record<string, string> = {
     "野格利口酒": "jagermeister",
     "熱可可": "hot_chocolate",
     "檸檬紅茶": "lemon_tea",
+    "熱薑茶": "ginger_tea",
+    "薑汁啤酒": "ginger_beer",
     "能量飲料": "energy_drink",
     "白桃果泥": "peach_puree",
     "棉花糖": "marshmallow",
@@ -279,6 +282,7 @@ const ALIAS_MAP_EN: Record<string, string> = {
     "red wine": "wine",
     "lager beer": "beer", // Updated
     "lager": "beer", // Updated
+    "ginger beer": "ginger_beer",
     "beer": "beer",
     "tequila cider": "hard_cider",
     "cider": "hard_cider", // Consolidating
@@ -347,6 +351,7 @@ const ALIAS_MAP_EN: Record<string, string> = {
     "assam": "tea",
     "black tea": "tea",
     "minechine": "tea",
+    "hot ginger tea": "ginger_tea",
     "apple juice": "juice",
     "orange juice": "orange_juice",
     "cranberry juice": "cranberry_juice", // Added
@@ -455,6 +460,8 @@ export function normalizeIngredient(name: string, lang: 'en' | 'zh'): string[] {
                 else if (p.includes('香艾酒')) id = 'vermouth';
                 else if (p.includes('燒酒')) id = 'soju';
                 else if (p.includes('可可')) id = 'cocoa_liqueur';
+                else if (p.includes('薑茶')) id = 'ginger_tea';
+                else if (p.includes('薑汁啤酒')) id = 'ginger_beer';
                 else if (p.includes('麥香') || p.includes('奶茶') || p.includes('紅茶') || p.includes('茶')) id = 'tea';
                 else if (p.includes('綠茶')) id = 'green_tea'; // Split
                 else if (p.includes('烏龍')) id = 'oolong_tea';
@@ -507,9 +514,11 @@ export function normalizeIngredient(name: string, lang: 'en' | 'zh'): string[] {
                 else if (lowerP.includes('yakult')) id = 'yakult';
                 else if (lowerP.includes('sarsaparilla') || lowerP.includes('root beer')) id = 'sarsaparilla'; // Added
                 else if (lowerP.includes('sprite') || lowerP.includes('7-up')) id = 'sprite';
+                else if (lowerP.includes('ginger beer')) id = 'ginger_beer';
                 else if (lowerP.includes('lager')) id = 'beer';
                 else if (lowerP.includes('beer')) id = 'beer';
                 else if (lowerP.includes('shochu') || lowerP.includes('soju')) id = 'soju';
+                else if (lowerP.includes('ginger tea')) id = 'ginger_tea';
                 else if (lowerP.includes('black tea') || lowerP.includes('tea')) id = 'tea';
                 else if (lowerP.includes('oolong')) id = 'oolong_tea';
                 else if (lowerP.includes('green tea')) id = 'green_tea'; // Split
