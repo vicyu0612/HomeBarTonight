@@ -10,7 +10,7 @@ export const INGREDIENT_DB: Record<string, { en: string; zh: string }> = {
 
     'kaoliang': { en: 'Kaoliang', zh: '高粱酒' }, // Added
     'white_wine': { en: 'White Wine', zh: '白葡萄酒' },
-    'jagermeister': { en: 'Jagermeister', zh: '野格' },
+    'jagermeister': { en: 'Jägermeister', zh: '野格利口酒' },
     'beer': { en: 'Beer', zh: '啤酒' },
     // 'lager': { en: 'Lager', zh: '拉格啤酒' }, // Removed: merged to beer
     'wine': { en: 'Red Wine', zh: '紅酒' },
@@ -70,7 +70,6 @@ export const INGREDIENT_DB: Record<string, { en: string; zh: string }> = {
     'orgeat': { en: 'Orgeat', zh: '杏仁糖漿' }, // Added
     // 'lime_cordial': { en: 'Lime Cordial', zh: '莱姆汁 (Cordial)' }, // Removed, covered by Lemon/Lime
     'melon_popsicle': { en: 'Melon Popsicle', zh: '哈密瓜冰棒' },
-    'kaoliang': { en: 'Kaoliang Liquor', zh: '高粱酒' }, // Added
     'sarsaparilla': { en: 'Sarsaparilla', zh: '沙士' }, // Added
     'grape_juice': { en: 'Grape Juice', zh: '葡萄汁' }, // Added
     'aloe': { en: 'Aloe Drink', zh: '蘆薈飲' }, // Added
@@ -106,9 +105,6 @@ export const INGREDIENT_DB: Record<string, { en: string; zh: string }> = {
     'olive': { en: 'Olive', zh: '橄欖' },
     'nutmeg': { en: 'Nutmeg', zh: '豆蔻' },
     'marshmallow': { en: 'Marshmallow', zh: '棉花糖' },
-
-    // Missing Spirits
-    'jagermeister': { en: 'Jägermeister', zh: '野格利口酒' },
     'peach_puree': { en: 'Peach Puree', zh: '白桃果泥' },
 };
 

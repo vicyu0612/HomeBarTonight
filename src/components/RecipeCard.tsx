@@ -1,5 +1,5 @@
 import { motion, type HTMLMotionProps } from 'framer-motion';
-import { Heart, Martini, CircleHelp } from 'lucide-react';
+import { Heart, Martini } from 'lucide-react';
 import clsx from 'clsx';
 import type { Recipe } from '../data/recipes';
 
