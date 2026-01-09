@@ -2828,5 +2828,145 @@ export const recipes: Recipe[] = [
         color: '#451a03',
         image: 'https://uyamflgtvqndbjpbjito.supabase.co/storage/v1/object/public/cocktails/black-coffee-whiskey.png?v=2',
         collections: ['cvs-hacks']
+    },
+    {
+        id: 'whiskey-hot-milk-tea',
+        name: { en: 'Whiskey Hot Milk Tea', zh: '威士忌熱奶茶' },
+        type: 'cvs',
+        baseSpirit: ['whiskey'],
+        ingredients: {
+            en: [{ name: 'Whiskey', amount: '30ml' }, { name: 'Hot Milk Tea', amount: 'Top up' }],
+            zh: [{ name: '威士忌', amount: '30ml' }, { name: '熱奶茶', amount: '加滿' }]
+        },
+        steps: {
+            en: ['Heat milk tea.', 'Add whiskey.', 'Stir gently.'],
+            zh: ['加熱奶茶。', '加入威士忌。', '輕輕攪拌。']
+        },
+        tags: { en: ['cvs', 'hot', 'cozy'], zh: ['超商', '熱飲', '暖心'] },
+        description: { en: 'A warm hug in a mug. The creamy tea softens the whiskey bite perfectly.', zh: '冬日裡的一個溫暖擁抱。奶茶的滑順完美中和了威士忌的辛辣。' },
+        specs: { alcohol: 4, sweetness: 4, ease: 10 },
+        color: '#d6d3d1',
+        image: 'https://uyamflgtvqndbjpbjito.supabase.co/storage/v1/object/public/cocktails/whiskey-hot-milk-tea.png',
+        collections: ['cvs-hacks', 'winter-warmer']
+    },
+    {
+        id: 'hot-gin-ginger',
+        name: { en: 'Hot Gin Ginger', zh: '琴酒熱薑茶' },
+        type: 'cvs',
+        baseSpirit: ['gin'],
+        ingredients: {
+            en: [{ name: 'Gin', amount: '45ml' }, { name: 'Hot Ginger Tea', amount: 'Top up' }],
+            zh: [{ name: '琴酒', amount: '45ml' }, { name: '熱薑茶', amount: '加滿' }]
+        },
+        steps: {
+            en: ['Brew hot ginger tea.', 'Pour gin into mug.', 'Top with ginger tea.'],
+            zh: ['泡熱薑茶。', '杯中倒入琴酒。', '加滿薑茶。']
+        },
+        tags: { en: ['cvs', 'hot', 'spicy'], zh: ['超商', '熱飲', '辛辣'] },
+        description: { en: 'Spicy ginger meets botanicals. Wards off the cold instantly.', zh: '辛辣薑味遇上草本香氣。瞬間驅寒的絕佳選擇。' },
+        specs: { alcohol: 5, sweetness: 3, ease: 10 },
+        color: '#fef3c7',
+        image: 'https://uyamflgtvqndbjpbjito.supabase.co/storage/v1/object/public/cocktails/hot-gin-ginger.png',
+        collections: ['cvs-hacks', 'winter-warmer']
+    },
+    {
+        id: 'hot-plum-sake',
+        name: { en: 'Hot Plum Sake', zh: '熱梅子清酒' },
+        type: 'cvs',
+        baseSpirit: ['sake'],
+        ingredients: {
+            en: [{ name: 'Sake', amount: '100ml' }, { name: 'Sour Plum', amount: '1' }],
+            zh: [{ name: '清酒', amount: '100ml' }, { name: '話梅', amount: '1顆' }]
+        },
+        steps: {
+            en: ['Heat sake.', 'Add sour plum and let it steep.'],
+            zh: ['加熱清酒。', '加入話梅浸泡。']
+        },
+        tags: { en: ['cvs', 'hot', 'traditional'], zh: ['超商', '熱飲', '傳統'] },
+        description: { en: 'Savory and sweet comfort. The plum adds a depth to the warm rice wine.', zh: '鹹甜交織的舒適感。話梅為溫熱的清酒增添了深度。' },
+        specs: { alcohol: 5, sweetness: 2, ease: 10 },
+        color: '#fef9c3',
+        image: 'https://uyamflgtvqndbjpbjito.supabase.co/storage/v1/object/public/cocktails/hot-plum-sake.png',
+        collections: ['cvs-hacks', 'winter-warmer']
+    },
+    {
+        id: 'warm-apple-whiskey',
+        name: { en: 'Warm Apple Whiskey', zh: '暖心蘋果威士忌' },
+        type: 'cvs',
+        baseSpirit: ['whiskey'],
+        ingredients: {
+            en: [{ name: 'Whiskey', amount: '45ml' }, { name: 'Hot Black Tea', amount: 'Top up' }, { name: 'Honey', amount: '1 tsp' }],
+            zh: [{ name: '威士忌', amount: '45ml' }, { name: '熱紅茶', amount: '加滿' }, { name: '蜂蜜', amount: '1匙' }]
+        },
+        steps: {
+            en: ['Brew rich black tea.', 'Mix whiskey and honey in mug.', 'Top with tea.'],
+            zh: ['泡濃郁紅茶。', '杯中混合威士忌與蜂蜜。', '加滿紅茶。']
+        },
+        tags: { en: ['cvs', 'hot', 'fruity'], zh: ['超商', '熱飲', '果香'] },
+        description: { en: 'Tea and whiskey balance perfectly. Add honey for a soothing touch.', zh: '茶香與酒香的完美平衡。加入蜂蜜更加溫潤順口。' },
+        specs: { alcohol: 5, sweetness: 3, ease: 9 },
+        color: '#b45309',
+        image: 'https://uyamflgtvqndbjpbjito.supabase.co/storage/v1/object/public/cocktails/warm-apple-whiskey.png',
+        collections: ['cvs-hacks', 'winter-warmer']
+    },
+    {
+        id: 'hot-white-wine-peach',
+        name: { en: 'Hot White Wine Peach', zh: '熱白酒水蜜桃' },
+        type: 'cvs',
+        baseSpirit: ['white_wine'],
+        ingredients: {
+            en: [{ name: 'White Wine', amount: '100ml' }, { name: 'Peach Juice', amount: '50ml' }],
+            zh: [{ name: '白葡萄酒', amount: '100ml' }, { name: '水蜜桃汁', amount: '50ml' }]
+        },
+        steps: {
+            en: ['Mix wine and juice.', 'Heat gently (do not boil).'],
+            zh: ['混合白酒與果汁。', '輕輕加熱（勿沸騰）。']
+        },
+        tags: { en: ['cvs', 'hot', 'elegant'], zh: ['超商', '熱飲', '優雅'] },
+        description: { en: 'Fruity and aromatic. Heating releases the peach fragrance.', zh: '果香四溢。加熱後水蜜桃的香氣更加迷人。' },
+        specs: { alcohol: 4, sweetness: 4, ease: 9 },
+        color: '#fbcfe8',
+        image: 'https://uyamflgtvqndbjpbjito.supabase.co/storage/v1/object/public/cocktails/hot-white-wine-peach.png',
+        collections: ['cvs-hacks', 'winter-warmer']
+    },
+    {
+        id: 'grass-jelly-jagermeister',
+        name: { en: 'Grass Jelly Jagermeister', zh: '燒仙草野格' },
+        type: 'cvs',
+        baseSpirit: ['jagermeister'],
+        ingredients: {
+            en: [{ name: 'Jagermeister', amount: '30ml' }, { name: 'Hot Grass Jelly', amount: '1 Bowl' }],
+            zh: [{ name: '野格', amount: '30ml' }, { name: '熱燒仙草', amount: '1碗' }]
+        },
+        steps: {
+            en: ['Prepare hot grass jelly.', 'Pour Jagermeister in.', 'Enjoy the herbal fusion.'],
+            zh: ['準備熱燒仙草。', '倒入野格。', '享受藥草的融合。']
+        },
+        tags: { en: ['cvs', 'hot', 'herbal'], zh: ['超商', '熱飲', '藥草'] },
+        description: { en: 'A herbal bomb. The Jager herbs blend surprisingly well with grass jelly.', zh: '藥草炸彈。野格的草本味與燒仙草意外地搭。' },
+        specs: { alcohol: 4, sweetness: 4, ease: 10 },
+        color: '#18181b',
+        image: 'https://uyamflgtvqndbjpbjito.supabase.co/storage/v1/object/public/cocktails/grass-jelly-jagermeister.png',
+        collections: ['cvs-hacks', 'winter-warmer']
+    },
+    {
+        id: 'sake-barley-tea',
+        name: { en: 'Sake Barley Tea', zh: '清酒麥仔茶' },
+        type: 'cvs',
+        baseSpirit: ['sake'],
+        ingredients: {
+            en: [{ name: 'Sake', amount: '60ml' }, { name: 'Barley Tea', amount: 'Top up' }],
+            zh: [{ name: '清酒', amount: '60ml' }, { name: '麥仔茶', amount: '加滿' }]
+        },
+        steps: {
+            en: ['Heat barley tea.', 'Add sake.', 'Sip warm.'],
+            zh: ['加熱麥仔茶。', '加入清酒。', '趁熱飲用。']
+        },
+        tags: { en: ['cvs', 'hot', 'grain'], zh: ['超商', '熱飲', '穀物'] },
+        description: { en: 'Double grain power. Toasty barley meets rice wine warmth.', zh: '雙重穀物力量。烤大麥香氣遇上清酒的溫潤。' },
+        specs: { alcohol: 4, sweetness: 2, ease: 10 },
+        color: '#a16207',
+        image: 'https://uyamflgtvqndbjpbjito.supabase.co/storage/v1/object/public/cocktails/sake-barley-tea.png',
+        collections: ['cvs-hacks', 'winter-warmer']
     }
 ];

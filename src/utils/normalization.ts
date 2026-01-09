@@ -8,7 +8,9 @@ export const INGREDIENT_DB: Record<string, { en: string; zh: string }> = {
     'tequila': { en: 'Tequila', zh: '龍舌蘭' },
     'brandy': { en: 'Brandy', zh: '白蘭地' },
 
-    // Other Alcohol
+    'kaoliang': { en: 'Kaoliang', zh: '高粱酒' }, // Added
+    'white_wine': { en: 'White Wine', zh: '白葡萄酒' },
+    'jagermeister': { en: 'Jagermeister', zh: '野格' },
     'beer': { en: 'Beer', zh: '啤酒' },
     // 'lager': { en: 'Lager', zh: '拉格啤酒' }, // Removed: merged to beer
     'wine': { en: 'Red Wine', zh: '紅酒' },
@@ -57,6 +59,11 @@ export const INGREDIENT_DB: Record<string, { en: string; zh: string }> = {
     'milk': { en: 'Milk', zh: '牛奶' },
     'calpis': { en: 'Calpis', zh: '可爾必思' },
     'yakult': { en: 'Yakult', zh: '養樂多' },
+    'milk_tea': { en: 'Milk Tea', zh: '奶茶' },
+    'ginger_tea': { en: 'Ginger Tea', zh: '薑茶' },
+    'peach_juice': { en: 'Peach Juice', zh: '水蜜桃汁' },
+    'grass_jelly': { en: 'Grass Jelly', zh: '燒仙草' },
+    'barley_tea': { en: 'Barley Tea', zh: '麥仔茶' },
 
     'grenadine': { en: 'Grenadine', zh: '紅石榴糖漿' },
     'orgeat': { en: 'Orgeat', zh: '杏仁糖漿' }, // Added

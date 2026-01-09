@@ -27,7 +27,15 @@ export const collections: Collection[] = [
         title: { en: 'Winter Warmers', zh: '過年暖心特輯' },
         subtitle: { en: 'Cozy up with these hot cocktails', zh: '寒流來襲？來杯熱酒暖暖身' },
         type: 'curated',
-        recipeIds: ['hot-toddy', 'mulled-wine', 'irish-coffee', 'hot-buttered-rum', 'eggnog', 'baileys-hot-chocolate'], // IDs we just added
+        recipeIds: [
+            'whiskey-hot-milk-tea',
+            'hot-gin-ginger',
+            'hot-plum-sake',
+            'warm-apple-whiskey',
+            'hot-white-wine-peach',
+            'grass-jelly-jagermeister',
+            'sake-barley-tea'
+        ],
         themeColor: 'from-orange-600 via-red-600 to-rose-900',
         coverImage: '/cocktails/cny_mahjong.png',
         description: {
