@@ -6,13 +6,8 @@ import { Capacitor } from '@capacitor/core';
 
 // API Keys provided by user
 const API_KEYS = {
-    ios: 'appl_YOUR_IOS_API_KEY', // TODO: User provided test key, checking if platform specific needed or just one.
-    // User provided single key: test_jlvZKDfNrrmgYsytgHfiSOVqRdJ. 
-    // Usually keys are platform specific, but for now we will use the provided test key for both 
-    // or placeholder if specifics are needed. Assuming the user provided key is the test key they want to use.
-    // Let's use the provided key for both for now to be safe, or clarify.
-    // Actually, RC keys are usually specific. Let's use the provided test key for now.
-    default: 'test_jlvZKDfNrrmgYsytgHfiSOVqRdJ'
+    ios: 'appl_RSGAMXbtbUxctQmOMjFRXvUEJnx',
+    default: 'appl_RSGAMXbtbUxctQmOMjFRXvUEJnx'
 };
 
 const ENTITLEMENT_ID = 'HomeBarTonight Pro';
@@ -57,7 +52,7 @@ export const useSubscription = (): SubscriptionState => {
 
             if (!isConfigured) {
                 // Using the provided test key for both platforms as requested/implied
-                await Purchases.configure({ apiKey: API_KEYS.default });
+                await Purchases.configure({ apiKey: appl_SvpeEeTLLBqhbSjioAQLKjROJXY });
                 isConfigured = true;
             }
 
