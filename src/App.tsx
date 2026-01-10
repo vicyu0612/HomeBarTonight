@@ -125,7 +125,8 @@ function App() {
         setAllRecipes(recipeData.map((r: any) => ({
           id: r.id, name: r.name, type: r.type, baseSpirit: r.base_spirit,
           ingredients: r.ingredients, steps: r.steps, tags: r.tags,
-          description: r.description, specs: r.specs, color: r.color, image: r.image,
+          description: r.description, specs: r.specs, color: r.color,
+          image: r.image ? `${r.image}?v=${new Date().getTime()}` : (r.image || ""), // Cache busting & Type Safety
           collections: r.collections // Important: Include collections tags for filtering
         })));
       }
@@ -467,41 +468,25 @@ function App() {
 
   // Helper function to filter recipes based on collection rules
   const filterRecipes = useMemo(() => (collection: Collection, recipes: Recipe[]): Recipe[] => {
-    // 1. Curated List (IDs) - REMOVED per user request (Dynamic Rules Only)
-    // if (collection.recipeIds && collection.recipeIds.length > 0) { ... }
-
-
     // 2. Dynamic JSON Rules (DB)
     if (collection.filterRules) {
       const rules = collection.filterRules;
-      console.log(`Filtering [${collection.id}] with rules:`, rules);
 
       // Handle "CVS" special case
       if ('type' in rules && rules.type === 'cvs') {
-        // Updated Logic: Check the recipe.type directly, or legacy ID check as fallback
-        const results = recipes.filter(r => r.type === 'cvs');
-        console.log(`[${collection.id}] Results (type=cvs): ${results.length}`);
-        return results;
+        return recipes.filter(r => r.type === 'cvs');
       }
 
       // Handle "Party/Tag" special case
       if ('tag' in rules) {
-        const results = recipes.filter(r => r.tags && r.tags.en && r.tags.en.includes(rules.tag));
-        console.log(`[${collection.id}] Results: ${results.length}`);
-        return results;
+        return recipes.filter(r => r.tags && r.tags.en && r.tags.en.includes(rules.tag));
       }
 
       // Handle "Collection" tag rule (New Standard)
       if ('collection' in rules) {
-        // Debug Log
-        console.log(`[${collection.id}] Applying collection rule: "${rules.collection}"`);
-        const results = recipes.filter(r => {
-          const hasTag = r.collections && r.collections.includes(rules.collection);
-          if (!hasTag && r.id === 'vodka-yakult') console.log('Vodka Yakult tags:', r.collections);
-          return hasTag;
+        return recipes.filter(r => {
+          return r.collections && r.collections.includes(rules.collection);
         });
-        console.log(`[${collection.id}] Found ${results.length} recipes.`);
-        return results;
       }
 
       // Handle Generic Array Rules

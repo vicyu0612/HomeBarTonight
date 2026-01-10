@@ -17,12 +17,12 @@ if (!SUPABASE_URL || !SUPABASE_KEY) {
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY)
 
-// Absolute path to the generated v5 image
-const IMAGE_PATH = '/Users/vic-yu/.gemini/antigravity/brain/c9e52b82-590f-4189-8586-0f3bae5b6f67/grass_jelly_jagermeister_v6_1768004474266.png'
-const RECIPE_ID = 'grass-jelly-jagermeister'
+// Absolute path to the generated v2 image
+const IMAGE_PATH = '/Users/vic-yu/.gemini/antigravity/brain/c9e52b82-590f-4189-8586-0f3bae5b6f67/oolong_gin_v2_1768004829445.png'
+const RECIPE_ID = 'oolong-gin'
 
 async function uploadImage() {
-    console.log('Starting grass jelly image upload...')
+    console.log('Starting Oolong Gin image upload...')
 
     if (!fs.existsSync(IMAGE_PATH)) {
         console.error(`File not found: ${IMAGE_PATH}`)

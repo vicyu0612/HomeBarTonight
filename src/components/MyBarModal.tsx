@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X } from 'lucide-react';
+import { X, Search } from 'lucide-react';
 import clsx from 'clsx';
 
 // Define Ingredient interface matching DB schema
@@ -30,6 +30,8 @@ export function MyBarModal({
     allIngredients
 }: MyBarModalProps) {
     const [isScrolled, setIsScrolled] = useState(false);
+    const [searchQuery, setSearchQuery] = useState('');
+    const [showClearConfirm, setShowClearConfirm] = useState(false);
 
     const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
         setIsScrolled(e.currentTarget.scrollTop > 20);
@@ -46,9 +48,19 @@ export function MyBarModal({
             garnish: [] as string[],
         };
 
+        // Filter First if query exists
+        let filteredList = allIngredients;
+        if (searchQuery.trim()) {
+            const lowerQ = searchQuery.toLowerCase();
+            filteredList = allIngredients.filter(i =>
+                i.name_en.toLowerCase().includes(lowerQ) ||
+                i.name_zh.includes(lowerQ)
+            );
+        }
+
         // Sort ingredients alphabetically or by ID? Let's use DB order (usually insert order) or Name?
         // Let's sort by Name for better UX
-        const sorted = [...allIngredients].sort((a, b) => {
+        const sorted = [...filteredList].sort((a, b) => {
             const nameA = lang === 'zh' ? a.name_zh : a.name_en;
             const nameB = lang === 'zh' ? b.name_zh : b.name_en;
             return nameA.localeCompare(nameB);
@@ -64,7 +76,7 @@ export function MyBarModal({
         });
 
         return cats;
-    }, [allIngredients, lang]);
+    }, [allIngredients, lang, searchQuery]);
 
     // Dynamic Label Helper
     const getLabel = (id: string) => {
@@ -142,7 +154,7 @@ export function MyBarModal({
                             <div className="flex items-center gap-2 relative z-10">
                                 {myInventory.size > 0 && (
                                     <button
-                                        onClick={() => setMyInventory(new Set())}
+                                        onClick={() => setShowClearConfirm(true)}
                                         className="h-10 px-4 py-2 rounded-full bg-red-500/10 text-red-400 hover:bg-red-500/20 text-xs font-bold transition-colors border border-red-500/20"
                                     >
                                         {lang === 'zh' ? '全部清除' : 'Clear All'}
@@ -163,15 +175,31 @@ export function MyBarModal({
                             onScroll={handleScroll}
                         >
                             {/* Large Title */}
-                            <div>
-                                <h2 className="text-2xl font-bold text-white mb-1">
+                            {/* Header Group (Title + Search) */}
+                            <div className="space-y-4">
+                                <h2 className="text-2xl font-bold text-white">
                                     {lang === 'zh' ? '我的庫存' : 'My Inventory'}
                                 </h2>
-                                <p className="text-zinc-400 text-sm">
-                                    {lang === 'zh'
-                                        ? `已選擇 ${myInventory.size} 項材料`
-                                        : `${myInventory.size} ingredients selected`}
-                                </p>
+
+                                {/* Search Bar */}
+                                <div className="relative">
+                                    <Search className="absolute left-4 top-3.5 text-white z-10" size={20} />
+                                    <input
+                                        type="text"
+                                        placeholder={lang === 'zh' ? '搜尋成分...' : 'Search ingredients...'}
+                                        value={searchQuery}
+                                        onChange={e => setSearchQuery(e.target.value)}
+                                        className="w-full bg-zinc-800/40 backdrop-blur-xl border border-white/10 rounded-full py-3 pl-12 pr-10 text-white placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 h-[50px]"
+                                    />
+                                    {searchQuery && (
+                                        <button
+                                            onClick={() => setSearchQuery('')}
+                                            className="absolute right-3 top-3.5 p-0.5 rounded-full bg-white text-black hover:bg-zinc-200 transition-colors z-10"
+                                        >
+                                            <X size={16} />
+                                        </button>
+                                    )}
+                                </div>
                             </div>
 
                             {/* Helper to render sections */}
@@ -239,6 +267,56 @@ export function MyBarModal({
                             </button>
                         </div>
                     </motion.div>
+
+                    {/* Confirmation Modal */}
+                    <AnimatePresence>
+                        {showClearConfirm && (
+                            <motion.div
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                exit={{ opacity: 0 }}
+                                className="fixed inset-0 z-[150] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    setShowClearConfirm(false);
+                                }}
+                            >
+                                <motion.div
+                                    initial={{ scale: 0.9, opacity: 0 }}
+                                    animate={{ scale: 1, opacity: 1 }}
+                                    exit={{ scale: 0.9, opacity: 0 }}
+                                    className="bg-zinc-900/90 backdrop-blur-xl border border-white/10 rounded-2xl p-6 w-full max-w-xs shadow-2xl relative"
+                                    onClick={e => e.stopPropagation()}
+                                >
+                                    <h3 className="text-lg font-bold text-white text-center">
+                                        {lang === 'zh' ? '移除所有材料' : 'Remove all ingredients'}
+                                    </h3>
+                                    <p className="text-zinc-400 text-sm mt-3 text-center leading-relaxed">
+                                        {lang === 'zh'
+                                            ? '這將移除您的所有庫存材料。您可以隨時將它們加回來。'
+                                            : 'This will remove all ingredients from your inventory. You can add them back anytime.'}
+                                    </p>
+                                    <div className="flex gap-3 mt-6">
+                                        <button
+                                            onClick={() => setShowClearConfirm(false)}
+                                            className="flex-1 py-3 rounded-xl bg-zinc-800 text-white font-medium hover:bg-zinc-700 transition-colors text-sm"
+                                        >
+                                            {lang === 'zh' ? '取消' : 'Cancel'}
+                                        </button>
+                                        <button
+                                            onClick={() => {
+                                                setMyInventory(new Set());
+                                                setShowClearConfirm(false);
+                                            }}
+                                            className="flex-1 py-3 rounded-xl bg-red-500 text-white font-bold hover:bg-red-600 transition-colors text-sm shadow-lg shadow-red-500/20"
+                                        >
+                                            {lang === 'zh' ? '全部清除' : 'Clear all'}
+                                        </button>
+                                    </div>
+                                </motion.div>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
                 </motion.div>
             )
             }

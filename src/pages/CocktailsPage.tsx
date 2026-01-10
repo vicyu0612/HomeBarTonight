@@ -62,7 +62,7 @@ export function CocktailsPage({ allRecipes, favorites, toggleFavorite, onSelectR
     const tabs: ('cvs' | 'classic')[] = ['cvs', 'classic'];
 
     const t = {
-        title: lang === 'zh' ? '酒譜' : 'Cocktails',
+        title: lang === 'zh' ? '調酒' : 'Cocktails',
         searchPlaceholder: lang === 'zh' ? '搜尋調酒或材料...' : 'Cocktails or ingredients...',
         tabs: {
             all: lang === 'zh' ? '全部' : 'All',
@@ -74,7 +74,7 @@ export function CocktailsPage({ allRecipes, favorites, toggleFavorite, onSelectR
             gin: 'Gin', vodka: 'Vodka', rum: 'Rum', tequila: 'Tequila', whiskey: 'Whiskey',
             brandy: 'Brandy', wine: 'Wine', liqueur: 'Liqueur', beer: 'Beer'
         },
-        noResults: lang === 'zh' ? '找不到相關酒譜' : 'No drinks found.',
+        noResults: lang === 'zh' ? '找不到相關調酒' : 'No drinks found.',
         clear: lang === 'zh' ? '清除篩選' : 'Clear filters'
     };
 
@@ -189,7 +189,7 @@ export function CocktailsPage({ allRecipes, favorites, toggleFavorite, onSelectR
                         {searchQuery && (
                             <button
                                 onClick={() => setSearchQuery('')}
-                                className="absolute right-3 top-3.5 p-1 text-zinc-500 hover:text-white"
+                                className="absolute right-3 top-3.5 p-0.5 rounded-full bg-white text-black hover:bg-zinc-200 transition-colors z-10"
                             >
                                 <X size={16} />
                             </button>

@@ -14,7 +14,7 @@ interface TabBarProps {
 export function TabBar({ activeTab, onTabChange, lang }: TabBarProps) {
     const tabs = [
         { id: 'explore', icon: Compass, label: lang === 'zh' ? '探索' : 'Explore' },
-        { id: 'cocktails', icon: Wine, label: lang === 'zh' ? '酒譜' : 'Cocktails' },
+        { id: 'cocktails', icon: Wine, label: lang === 'zh' ? '調酒' : 'Cocktails' },
         { id: 'my_bar', icon: ShakerIcon, label: lang === 'zh' ? '我的吧台' : 'My Bar' },
         { id: 'favorites', icon: Heart, label: lang === 'zh' ? '我的最愛' : 'Favorites' },
         { id: 'settings', icon: Settings, label: lang === 'zh' ? '設定' : 'Settings' },
