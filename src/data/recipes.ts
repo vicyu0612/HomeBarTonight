@@ -2365,7 +2365,10 @@ export const recipes: Recipe[] = [
             zh: ['所有烈酒與檸檬汁加入裝滿冰的長杯。', '注入可樂。', '攪拌。']
         },
         tags: { en: ['strong', 'party', 'classic'], zh: ['烈', '派對', '經典'] },
-        description: { en: 'Looks like tea, hits like a truck.', zh: '看起來像茶，喝起來像被卡車撞。' },
+        description: {
+            en: 'Named like a harmless refresher, but packed with firepower. Innocent as tea on the outside, but a riot of four spirits on the inside—designed to challenge your limits.',
+            zh: '一杯名字聽起來優雅無害，實則火力全開的混酒藝術。外表清純如茶，內在卻是四種基酒的狂歡，專門用來挑戰你的酒量極限。'
+        },
         specs: { alcohol: 9, sweetness: 6, ease: 8 },
         color: '#a16207',
         image: 'https://uyamflgtvqndbjpbjito.supabase.co/storage/v1/object/public/cocktails/long-island.png',
