@@ -108,7 +108,7 @@ export function MyBarPage({
 
         return { exactMatches: exact, missingOneMatches: missingOne };
 
-    }, [allRecipes, myInventory, allIngredients]);
+    }, [allRecipes, myInventory, allIngredients, lang]);
 
     return (
         <div className="h-full relative flex flex-col">
