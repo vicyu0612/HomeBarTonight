@@ -52,7 +52,7 @@ export const useSubscription = (): SubscriptionState => {
 
             if (!isConfigured) {
                 // Using the provided test key for both platforms as requested/implied
-                await Purchases.configure({ apiKey: appl_SvpeEeTLLBqhbSjioAQLKjROJXY });
+                await Purchases.configure({ apiKey: API_KEYS.default });
                 isConfigured = true;
             }
 
