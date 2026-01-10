@@ -21,7 +21,7 @@ export function TabBar({ activeTab, onTabChange, lang }: TabBarProps) {
     ] as const;
 
     return (
-        <div className="fixed bottom-4 left-0 right-0 z-50 px-4 pb-0 pt-2 pointer-events-none">
+        <div className="fixed bottom-4 left-1/2 -translate-x-1/2 w-full max-w-[1024px] z-50 px-4 pb-0 pt-2 pointer-events-none">
             <nav className="relative mx-auto max-w-md bg-black/60 backdrop-blur-2xl saturate-150 border border-white/10 rounded-full shadow-2xl flex items-center p-1.5 overflow-visible pointer-events-auto min-h-[64px]">
                 {/* Glass reflection effect */}
                 <div className="absolute inset-0 bg-gradient-to-b from-white/5 to-white/0 pointer-events-none rounded-full" />

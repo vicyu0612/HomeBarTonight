@@ -14,6 +14,8 @@
     "@capacitor/assets": "^3.0.5",
     "@capacitor/browser": "^8.0.0",
     "@capacitor/core": "^8.0.0",
+    "@revenuecat/purchases-capacitor": "^12.0.2",
+    "@revenuecat/purchases-capacitor-ui": "^12.0.2",
     "@supabase/supabase-js": "^2.89.0",
     "clsx": "^2.1.1",
     "framer-motion": "^12.24.7",

@@ -9,6 +9,7 @@ export interface Collection {
     filterRules?: FilterRules; // JSONB from DB
     filter?: (recipe: Recipe) => boolean; // Legacy/Fallback local function
     coverImage?: string;
+    coverImageEn?: string; // Localized cover image for English
     themeColor?: string; // CSS gradient classes
     description?: { en: string; zh: string };
     sortOrder?: number;

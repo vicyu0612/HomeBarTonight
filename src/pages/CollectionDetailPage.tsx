@@ -42,25 +42,28 @@ export function CollectionDetailPage({
     useEffect(() => {
         if (!collectionId || !supabase) return;
 
-        // Optimistic check: if we have local, use it first (already rendered), then update if DB differs
-        // Actually, just fetch silently.
         const fetchMeta = async () => {
             if (!supabase) return;
             const { data } = await supabase
-                .from('collections_meta')
-                .select('cover_image')
+                .from('collections')
+                .select('cover_image, cover_image_en')
                 .eq('id', collectionId)
                 .single();
 
-            if (data?.cover_image) {
-                setDynamicCover(data.cover_image);
+            if (data) {
+                // If lang is en and we have en image, use it. Otherwise default.
+                if (lang === 'en' && data.cover_image_en) {
+                    setDynamicCover(data.cover_image_en);
+                } else if (data.cover_image) {
+                    setDynamicCover(data.cover_image);
+                }
             }
         };
         fetchMeta();
-    }, [collectionId]);
+    }, [collectionId, lang]); // Add lang dependency
 
-    // Effective Cover Image
-    const effectiveCover = dynamicCover || collection?.coverImage;
+    // Effective Cover Image: Priority Dynamic -> Local (Lang aware) -> Local Default
+    const effectiveCover = dynamicCover || (lang === 'en' && collection?.coverImageEn ? collection.coverImageEn : collection?.coverImage);
 
     // Filter recipes based on collection type using helper
     const collectionRecipes = collection ? filterRecipes(collection, allRecipes) : [];

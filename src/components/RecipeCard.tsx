@@ -1,5 +1,5 @@
 import { motion, type HTMLMotionProps } from 'framer-motion';
-import { Heart, Martini } from 'lucide-react';
+import { Heart, Martini, Crown } from 'lucide-react';
 import clsx from 'clsx';
 import type { Recipe } from '../data/recipes';
 
@@ -12,6 +12,7 @@ interface RecipeCardProps extends Omit<HTMLMotionProps<"div">, 'id'> {
     variant?: 'horizontal' | 'vertical';
     priority?: boolean;
     missingIngredient?: string;
+    isLocked?: boolean;
 }
 
 export function RecipeCard({
@@ -24,6 +25,7 @@ export function RecipeCard({
     variant = 'horizontal',
     priority = false,
     missingIngredient,
+    isLocked,
     ...motionProps
 }: RecipeCardProps) {
     // Unified Heart Button Style
@@ -95,6 +97,11 @@ export function RecipeCard({
                     <div className="absolute top-2 right-2 z-10">
                         {HeartButton}
                     </div>
+                    {isLocked && (
+                        <div className="absolute top-2 left-2 z-10 w-6 h-6 flex items-center justify-center bg-black/60 backdrop-blur-md rounded-full text-yellow-500 border border-yellow-500/30 shadow-lg">
+                            <Crown size={14} strokeWidth={2.5} />
+                        </div>
+                    )}
                 </div>
 
                 {/* Content Area */}
@@ -134,50 +141,55 @@ export function RecipeCard({
         <motion.div
             onClick={onClick}
             className={clsx(
-                "group bg-zinc-800/30 backdrop-blur-md border border-white/10 shadow-lg rounded-2xl overflow-hidden active:scale-[0.98] transition-all hover:bg-zinc-800/50 hover:border-white/20",
+                "group bg-zinc-800/30 backdrop-blur-md border border-white/10 shadow-lg rounded-2xl overflow-hidden active:scale-[0.98] transition-all hover:bg-zinc-800/50 hover:border-white/20 flex p-3 gap-4",
                 className
             )}
             {...motionProps}
         >
-            <div className="flex p-3 gap-4">
-                <div className="w-[120px] h-[120px] rounded-xl bg-zinc-700/20 shrink-0 overflow-hidden relative">
-                    {ImageContent}
+            {/* Image Section */}
+            <div className="w-[120px] h-[120px] shrink-0 relative rounded-xl bg-zinc-700/20 overflow-hidden">
+                {ImageContent}
+                {isLocked && (
+                    <div className="absolute top-1.5 left-1.5 z-10 w-6 h-6 flex items-center justify-center bg-black/60 backdrop-blur-md rounded-full text-yellow-500 border border-yellow-500/30 shadow-lg">
+                        <Crown size={14} strokeWidth={2.5} />
+                    </div>
+                )}
+            </div>
+
+            <div className="flex-1 min-w-0 flex flex-col h-[120px] justify-between">
+                <div>
+                    <div className="flex justify-between items-center mb-0.5">
+                        <h3 className="text-white font-bold text-lg leading-tight truncate pr-2">
+                            {recipe.name[lang]}
+                        </h3>
+                        <div className="-mr-1 -mt-1">
+                            {HeartButton}
+                        </div>
+                    </div>
+
+                    <p className="text-zinc-400 text-xs line-clamp-2 leading-relaxed pr-8 mb-auto">
+                        {recipe.description[lang]}
+                    </p>
                 </div>
 
-                <div className="flex-1 min-w-0 flex flex-col h-[120px] justify-between">
-                    <div>
-                        <div className="flex justify-between items-center mb-0.5">
-                            <h3 className="text-white font-bold text-lg leading-tight truncate pr-2">
-                                {recipe.name[lang]}
-                            </h3>
-                            <div className="-mr-1 -mt-1">
-                                {HeartButton}
-                            </div>
+                <div className="flex flex-col justify-end h-full">
+                    {missingIngredient ? (
+                        MissingBadge
+                    ) : (
+                        <div className="flex flex-wrap gap-1.5 content-end">
+                            {recipe.tags[lang].slice(0, 3).map((tag) => (
+                                <span
+                                    key={tag}
+                                    className="text-[10px] uppercase font-bold tracking-wider text-zinc-400 bg-white/5 px-2 py-0.5 rounded-md border border-white/5 group-hover:bg-white/10 group-hover:text-zinc-300 transition-colors"
+                                >
+                                    {tag}
+                                </span>
+                            ))}
                         </div>
-
-                        <p className="text-zinc-400 text-xs line-clamp-2 leading-relaxed pr-8 mb-auto">
-                            {recipe.description[lang]}
-                        </p>
-                    </div>
-
-                    <div className="flex flex-col justify-end h-full">
-                        {missingIngredient ? (
-                            MissingBadge
-                        ) : (
-                            <div className="flex flex-wrap gap-1.5 content-end">
-                                {recipe.tags[lang].slice(0, 3).map((tag) => (
-                                    <span
-                                        key={tag}
-                                        className="text-[10px] uppercase font-bold tracking-wider text-zinc-400 bg-white/5 px-2 py-0.5 rounded-md border border-white/5 group-hover:bg-white/10 group-hover:text-zinc-300 transition-colors"
-                                    >
-                                        {tag}
-                                    </span>
-                                ))}
-                            </div>
-                        )}
-                    </div>
+                    )}
                 </div>
             </div>
-        </motion.div>
+
+        </motion.div >
     );
 }

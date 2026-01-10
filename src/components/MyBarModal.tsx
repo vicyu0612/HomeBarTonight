@@ -123,7 +123,7 @@ export function MyBarModal({
                         initial={{ scale: 0.95, opacity: 0 }}
                         animate={{ scale: 1, opacity: 1 }}
                         exit={{ scale: 0.95, opacity: 0 }}
-                        className="bg-black/40 backdrop-blur-2xl w-full h-[100dvh] md:h-auto md:max-w-2xl md:max-h-[85vh] rounded-none md:rounded-3xl shadow-[0_0_50px_rgba(0,0,0,0.5),inset_0_0.5px_0_rgba(255,255,255,0.1)] overflow-hidden flex flex-col border-0 md:border-[0.5px] border-white/10"
+                        className="bg-black/40 backdrop-blur-2xl w-full h-full md:h-auto md:max-w-2xl md:max-h-[85vh] md:rounded-3xl shadow-[0_0_50px_rgba(0,0,0,0.5),inset_0_0.5px_0_rgba(255,255,255,0.1)] overflow-hidden flex flex-col border-0 md:border-[0.5px] border-white/10"
                         onClick={e => e.stopPropagation()}
                     >
                         <div className={clsx(

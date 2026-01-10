@@ -22,6 +22,7 @@ export interface Recipe {
     color: string;
     image: string;
     collections?: string[];
+    is_premium?: boolean;
 }
 
 export const recipes: Recipe[] = [
@@ -71,7 +72,8 @@ export const recipes: Recipe[] = [
             ease: 3
         },
         color: '#ea580c',
-        image: 'https://uyamflgtvqndbjpbjito.supabase.co/storage/v1/object/public/cocktails/old-fashioned.png'
+        image: 'https://uyamflgtvqndbjpbjito.supabase.co/storage/v1/object/public/cocktails/old-fashioned.png',
+        is_premium: true // Premium Content
     },
     {
         id: 'gin-tonic',
@@ -109,16 +111,17 @@ export const recipes: Recipe[] = [
             zh: ['清爽', '酸', '氣泡']
         },
         description: {
-            en: 'Simple, refreshing, and perfect for any occasion.',
-            zh: '簡單、清爽，適合任何場合。'
+            en: 'A refreshing highball cocktail made with gin and tonic water.',
+            zh: '一款清爽的高球雞尾酒，由琴酒和通寧水調製而成。'
         },
         specs: {
-            alcohol: 5,
-            sweetness: 5,
-            ease: 9
+            alcohol: 4,
+            sweetness: 6,
+            ease: 1
         },
-        color: '#22d3ee',
-        image: 'https://uyamflgtvqndbjpbjito.supabase.co/storage/v1/object/public/cocktails/gin-tonic.png'
+        color: '#e4e4e7',
+        image: 'https://uyamflgtvqndbjpbjito.supabase.co/storage/v1/object/public/cocktails/gin-tonic.png',
+        is_premium: true // Premium
     },
     {
         id: 'margarita',

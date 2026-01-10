@@ -3,6 +3,8 @@ import { motion, useScroll, useTransform, useMotionTemplate } from 'framer-motio
 import { Heart, X, Flame, GlassWater, Smile, Wine, ChevronLeft, ChevronRight } from 'lucide-react';
 import clsx from 'clsx';
 import { useSwipeBack } from './hooks/useSwipeBack';
+import { Paywall } from './components/Paywall';
+import { useSubscription } from './hooks/useSubscription';
 
 interface SpecBarProps {
     value: number;
@@ -66,7 +68,15 @@ export const RecipeDetailModal = ({ recipe, onClose, isFavorite, onToggleFavorit
     const { scrollY } = useScroll({ container: scrollRef });
     const imageBlur = useTransform(scrollY, [0, 300], [0, 12]);
     const imageScale = useTransform(scrollY, [0, 300], [1, 1.1]);
+
     const overlayOpacity = useTransform(scrollY, [0, 300], [0, 0.6]);
+
+    const { isPro } = useSubscription();
+    // Logic: If premium and not pro, isLocked is true.
+    const isLocked = recipe.is_premium && !isPro;
+
+    // ... existing UI logic ...
+
 
     return (
         <div className="w-full h-full bg-zinc-900 relative flex flex-col">
@@ -142,7 +152,16 @@ export const RecipeDetailModal = ({ recipe, onClose, isFavorite, onToggleFavorit
                     <div className="h-[50vh] w-full" onClick={onClose} />
 
                     {/* Content Sheet */}
-                    <div className="min-h-[60vh] bg-black/40 backdrop-blur-2xl rounded-t-[2.5rem] p-8 pb-32 border-t-[0.5px] border-white/10 relative shadow-[0_-10px_40px_rgba(0,0,0,0.5),inset_0_0.5px_0_rgba(255,255,255,0.1)]">
+                    <div className={clsx(
+                        "min-h-[60vh] bg-black/40 backdrop-blur-2xl rounded-t-[2.5rem] p-8 pb-32 border-t-[0.5px] border-white/10 relative shadow-[0_-10px_40px_rgba(0,0,0,0.5),inset_0_0.5px_0_rgba(255,255,255,0.1)]",
+                        isLocked && "overflow-hidden h-[60vh]"
+                    )}>
+                        {isLocked && (
+                            <div className="absolute inset-0 z-50 rounded-t-[2.5rem] overflow-hidden bg-black/60 backdrop-blur-md">
+                                <Paywall onClose={onClose} />
+                            </div>
+                        )}
+
                         {/* Drag handle hint */}
                         <div className="w-12 h-1.5 bg-white/20 rounded-full mx-auto mb-8" />
 

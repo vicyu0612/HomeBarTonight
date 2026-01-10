@@ -8,6 +8,7 @@ import clsx from 'clsx';
 import { ShakerIcon } from '../components/ShakerIcon';
 import { RecipeCard } from '../components/RecipeCard';
 import { RecipeCardSkeleton } from '../components/RecipeCardSkeleton';
+import { useSubscription } from '../hooks/useSubscription';
 
 interface CocktailsPageProps {
     allRecipes: Recipe[];
@@ -19,6 +20,8 @@ interface CocktailsPageProps {
 }
 
 export function CocktailsPage({ allRecipes, favorites, toggleFavorite, onSelectRecipe, lang, onShake }: CocktailsPageProps) {
+    const { isPro } = useSubscription();
+
     // State Initialization with URL Search Params
     const [selectedCategories, setSelectedCategories] = useState<Set<'classic' | 'cvs'>>(() => {
         const params = new URLSearchParams(window.location.search);
@@ -235,7 +238,7 @@ export function CocktailsPage({ allRecipes, favorites, toggleFavorite, onSelectR
                             animate={{ y: 0 }}
                             exit={{ y: '100%' }}
                             transition={{ type: "spring", damping: 25, stiffness: 200 }}
-                            className="fixed bottom-0 left-0 right-0 z-[101] bg-black/40 backdrop-blur-2xl rounded-t-[2.5rem] border-t-[0.5px] border-white/10 shadow-[0_-10px_40px_rgba(0,0,0,0.5),inset_0_0.5px_0_rgba(255,255,255,0.1)] p-6 pb-12 mx-auto max-w-[1024px]"
+                            className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[1024px] z-[101] bg-black/40 backdrop-blur-2xl rounded-t-[2.5rem] border-t-[0.5px] border-white/10 shadow-[0_-10px_40px_rgba(0,0,0,0.5),inset_0_0.5px_0_rgba(255,255,255,0.1)] p-6 pb-12 mx-auto"
                         >
                             <div className="flex justify-between items-center mb-6">
                                 <h3 className="text-2xl font-bold text-white">{lang === 'zh' ? '篩選' : 'Filters'}</h3>
@@ -345,6 +348,7 @@ export function CocktailsPage({ allRecipes, favorites, toggleFavorite, onSelectR
                                 toggleFavorite={toggleFavorite}
                                 onClick={() => onSelectRecipe(recipe, filteredRecipes)}
                                 priority={index < 6}
+                                isLocked={recipe.is_premium && !isPro}
                             />
                         ))}
                     </div >

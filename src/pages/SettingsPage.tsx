@@ -3,6 +3,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useState } from 'react';
 import type { Session } from '@supabase/supabase-js';
 import clsx from 'clsx';
+import { useSubscription } from '../hooks/useSubscription';
+import { Star } from 'lucide-react';
 
 interface SettingsPageProps {
     session: Session | null;
@@ -23,6 +25,7 @@ const GoogleIcon = () => (
 );
 
 export function SettingsPage({ session, lang, setLang, onLogin, onLogout, onDeleteAccount }: SettingsPageProps) {
+    const { presentCustomerCenter } = useSubscription();
     const [view, setView] = useState<'main' | 'account'>('main');
     const [showLanguageSheet, setShowLanguageSheet] = useState(false);
     const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
@@ -59,6 +62,10 @@ export function SettingsPage({ session, lang, setLang, onLogin, onLogout, onDele
             title: lang === 'zh' ? '關於' : 'About',
             support: lang === 'zh' ? '支援' : 'Support',
             privacy: lang === 'zh' ? '隱私政策' : 'Privacy Policy'
+        },
+        subscription: {
+            title: lang === 'zh' ? '訂閱' : 'Subscription',
+            manage: lang === 'zh' ? '管理訂閱' : 'Manage Subscription'
         }
     };
 
@@ -91,6 +98,7 @@ export function SettingsPage({ session, lang, setLang, onLogin, onLogout, onDele
     if (view === 'account' && session) {
         return (
             <div key="account-view" className="h-full w-full bg-black relative">
+                {/* Floating Header */}
                 {/* Floating Header */}
                 {/* Floating Header */}
                 <div className={clsx(
@@ -355,6 +363,21 @@ export function SettingsPage({ session, lang, setLang, onLogin, onLogout, onDele
                             <div className="flex items-center gap-3">
                                 <Globe size={20} className="text-zinc-400" />
                                 <span className="text-white font-medium">{t.language.current}</span>
+                            </div>
+                            <ChevronRight size={20} className="text-zinc-500" />
+                        </button>
+                    </section>
+
+                    {/* Subscription Management */}
+                    <section>
+                        <h2 className="text-zinc-500 text-sm font-medium mb-3 ml-1">{t.subscription.title}</h2>
+                        <button
+                            onClick={() => presentCustomerCenter()}
+                            className="w-full bg-zinc-900/50 backdrop-blur-md border border-white/10 rounded-2xl p-4 flex items-center justify-between hover:bg-white/5 transition-colors"
+                        >
+                            <div className="flex items-center gap-3">
+                                <Star size={20} className="text-yellow-500" />
+                                <span className="text-white font-medium">{t.subscription.manage}</span>
                             </div>
                             <ChevronRight size={20} className="text-zinc-500" />
                         </button>

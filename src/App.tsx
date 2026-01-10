@@ -127,7 +127,8 @@ function App() {
           ingredients: r.ingredients, steps: r.steps, tags: r.tags,
           description: r.description, specs: r.specs, color: r.color,
           image: r.image ? `${r.image}?v=${new Date().getTime()}` : (r.image || ""), // Cache busting & Type Safety
-          collections: r.collections // Important: Include collections tags for filtering
+          collections: r.collections, // Important: Include collections tags for filtering
+          is_premium: r.is_premium // Map premium status from DB
         })));
       }
       if (supabase) {
@@ -154,6 +155,7 @@ function App() {
             recipeIds: c.recipe_ids,
             filterRules: c.filter_rules,
             coverImage: c.cover_image,
+            coverImageEn: c.cover_image_en, // Localized image
             themeColor: c.theme_color,
             description: c.description,
             sortOrder: c.sort_order,
@@ -543,12 +545,10 @@ function App() {
 
   return (
     <div
-      className="fixed inset-0 w-full h-[100dvh] overflow-hidden bg-black text-white font-sans selection:bg-indigo-500/30 flex flex-col"
+      className="fixed inset-0 w-full h-[100dvh] overflow-hidden bg-black text-white font-sans selection:bg-indigo-500/30 flex flex-col items-center"
     >
-
-      {/* Main Content Area */}
-      {/* Main Content Area */}
-      <main className="flex-1 min-h-0 overflow-hidden relative max-w-5xl mx-auto w-full">
+      {/* Main Content Area - Constrained Width */}
+      <main className="flex-1 min-h-0 overflow-hidden relative w-full max-w-[1024px] mx-auto bg-black shadow-2xl md:border-x md:border-white/5">
         <Suspense fallback={
           <div className="w-full h-full flex items-center justify-center bg-black">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-500"></div>
@@ -658,10 +658,10 @@ function App() {
         </Suspense>
       </main>
 
-      {/* Tab Bar */}
-      < TabBar activeTab={activeTab} onTabChange={setActiveTab} lang={lang} />
+      {/* Tab Bar - Fixed at bottom, constrained to width */}
+      <TabBar activeTab={activeTab} onTabChange={setActiveTab} lang={lang} />
 
-      {/* Overlays: Shaker & Detail Modal */}
+      {/* Overlays: Shaker & Detail Modal (Root Level) */}
       <AnimatePresence>
         {
           isShaking && (
@@ -697,8 +697,8 @@ function App() {
             dragConstraints={{ left: 0, right: 0 }}
             dragElastic={false}
           >
-            {/* Desktop Modal Wrapper */}
-            <div className="w-full h-full md:w-full md:max-w-2xl md:h-[90vh] md:rounded-2xl md:overflow-hidden md:shadow-2xl md:bg-black md:border md:border-white/10 relative">
+            {/* Desktop Modal Wrapper - Constrained Size */}
+            <div className="w-full h-full md:w-full md:max-w-[1024px] md:h-[90vh] md:rounded-2xl md:overflow-hidden md:shadow-2xl md:bg-black md:border md:border-white/10 relative">
               <RecipeDetailModal
                 recipe={selectedRecipe}
                 onClose={() => setSelectedRecipe(null)}
@@ -730,6 +730,7 @@ function App() {
       </AnimatePresence>
     </div >
   );
+
 }
 
 export default App;

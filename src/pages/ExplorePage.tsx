@@ -4,6 +4,7 @@ import type { Collection } from '../data/collections';
 import type { Recipe } from '../data/recipes';
 import { RecipeCard } from '../components/RecipeCard';
 import { RecipeCardSkeleton } from '../components/RecipeCardSkeleton';
+import { useSubscription } from '../hooks/useSubscription';
 import clsx from 'clsx';
 
 interface FeaturedBanner {
@@ -38,6 +39,7 @@ export function ExplorePage({
     toggleFavorite,
     favorites
 }: ExplorePageProps) {
+    const { isPro } = useSubscription();
     const [isScrolled, setIsScrolled] = useState(false);
     // const [featuredBanner, setFeaturedBanner] = useState<FeaturedBanner | null>(null);
     const featuredBanner = null as FeaturedBanner | null;
@@ -81,9 +83,9 @@ export function ExplorePage({
             className="h-full w-full overflow-y-auto bg-black no-scrollbar touch-pan-y"
             onScroll={handleScroll}
         >
-            {/* Sticky Header... (keep) */}
+            {/* Fixed Header (Constrained) */}
             <div className={clsx(
-                "fixed top-0 left-0 right-0 z-30 flex justify-center items-center transition-all duration-300",
+                "fixed top-0 left-1/2 -translate-x-1/2 w-full max-w-[1024px] z-30 flex justify-center items-center transition-all duration-300",
                 "h-[calc(3rem+env(safe-area-inset-top))] px-4 pb-2 pt-[calc(0.5rem+env(safe-area-inset-top))]"
             )}>
                 {/* ... (keep background) */}
@@ -134,9 +136,9 @@ export function ExplorePage({
                             !heroCollection.coverImage && heroCollection.themeColor
                         )}
                     >
-                        {heroCollection.coverImage && (
+                        {(lang === 'en' && heroCollection.coverImageEn ? heroCollection.coverImageEn : heroCollection.coverImage) && (
                             <img
-                                src={heroCollection.coverImage}
+                                src={lang === 'en' && heroCollection.coverImageEn ? heroCollection.coverImageEn : heroCollection.coverImage}
                                 alt="Hero Cover"
                                 className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                             />
@@ -204,6 +206,7 @@ export function ExplorePage({
                                                 lang={lang}
                                                 variant="vertical"
                                                 priority={sectionIndex < 2 && index < 3}
+                                                isLocked={recipe.is_premium && !isPro}
                                             />
                                         </div>
                                     ))

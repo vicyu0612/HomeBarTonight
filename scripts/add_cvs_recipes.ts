@@ -28,7 +28,7 @@ const newRecipes = [
         },
         steps: {
             en: ['Fill a highball glass with ice.', 'Add whiskey.', 'Top with Oolong tea and stir.'],
-            zh: ['在海波杯中裝滿冰塊。', '倒入威士忌。', '加滿烏龍茶並攪拌均勻。']
+            zh: ['在Highball杯中裝滿冰塊。', '倒入威士忌。', '加滿烏龍茶並攪拌均勻。']
         },
         tags: { en: ['cvs', 'easy', 'tea'], zh: ['超商', '簡單', '茶'] },
         description: {
@@ -94,7 +94,7 @@ const newRecipes = [
         },
         steps: {
             en: ['Build in a highball glass with ice.', 'Add gin and top with sports drink.', 'Garnish with lemon.'],
-            zh: ['在海波杯中加入冰塊。', '加入琴酒並倒滿運動飲料。', '擠入檸檬汁並裝飾。']
+            zh: ['在Highball杯中加入冰塊。', '加入琴酒並倒滿運動飲料。', '擠入檸檬汁並裝飾。']
         },
         tags: { en: ['cvs', 'refreshing', 'hydration'], zh: ['超商', '清爽', '補水'] },
         description: {
