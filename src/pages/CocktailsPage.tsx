@@ -108,11 +108,15 @@ export function CocktailsPage({ allRecipes, favorites, toggleFavorite, onSelectR
 
             // Search filter
             if (!searchQuery) return categoryMatch && spiritMatch;
-            const q = searchQuery.toLowerCase();
-            const matchName = recipe.name.en.toLowerCase().includes(q) || recipe.name.zh.toLowerCase().includes(q);
-            const matchIng = recipe.ingredients.en.some(i => i.name.toLowerCase().includes(q)) ||
-                recipe.ingredients.zh.some(i => i.name.toLowerCase().includes(q));
-            const searchMatch = matchName || matchIng;
+
+            // Split query into words and require all words to match (fuzzy multi-word search)
+            const searchWords = searchQuery.toLowerCase().split(/\s+/).filter(w => w.length > 0);
+            const nameText = `${recipe.name.en} ${recipe.name.zh}`.toLowerCase();
+            const ingText = [...recipe.ingredients.en, ...recipe.ingredients.zh].map(i => i.name.toLowerCase()).join(' ');
+            const searchableText = `${nameText} ${ingText}`;
+
+            const searchMatch = searchWords.every(word => searchableText.includes(word));
+
 
             return categoryMatch && spiritMatch && searchMatch;
         });
