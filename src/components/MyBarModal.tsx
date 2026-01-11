@@ -189,7 +189,7 @@ export function MyBarModal({
                                         placeholder={lang === 'zh' ? '搜尋成分...' : 'Search ingredients...'}
                                         value={searchQuery}
                                         onChange={e => setSearchQuery(e.target.value)}
-                                        className="w-full bg-zinc-800/40 backdrop-blur-xl border border-white/10 rounded-full py-3 pl-12 pr-10 text-white placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 h-[50px]"
+                                        className="w-full bg-zinc-800/40 backdrop-blur-xl border border-white/10 rounded-full py-3 pl-12 pr-10 text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 h-[50px]"
                                     />
                                     {searchQuery && (
                                         <button

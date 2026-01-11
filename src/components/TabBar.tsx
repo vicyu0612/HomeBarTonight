@@ -50,12 +50,12 @@ export function TabBar({ activeTab, onTabChange, lang }: TabBarProps) {
                                 strokeWidth={isActive ? 2.5 : 2}
                                 className={clsx(
                                     "relative z-10 transition-colors duration-300 drop-shadow-sm",
-                                    isActive ? "text-white" : "text-zinc-500 group-hover:text-zinc-300"
+                                    isActive ? "text-white" : "text-white/70"
                                 )}
                             />
                             <span className={clsx(
                                 "relative z-10 text-[10px] font-medium transition-colors duration-300",
-                                isActive ? "text-white" : "text-zinc-500"
+                                isActive ? "text-white" : "text-white/70"
                             )}>
                                 {tab.label}
                             </span>
