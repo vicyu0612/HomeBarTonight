@@ -55,7 +55,7 @@ export function SettingsPage({ session, lang, setLang, onLogin, onLogout, onDele
             hiddenEmail: lang === 'zh' ? '隱藏的電子郵件' : 'Hidden Email'
         },
         language: {
-            title: lang === 'zh' ? '當前語言' : 'Current Language',
+            title: lang === 'zh' ? '語言' : 'Language',
             current: lang === 'zh' ? '中文' : 'English'
         },
         about: {
@@ -348,24 +348,14 @@ export function SettingsPage({ session, lang, setLang, onLogin, onLogout, onDele
                                     </div>
                                     <span>{lang === 'zh' ? '使用 Google 帳號登入' : 'Sign in with Google'}</span>
                                 </button>
+
+                                <p className="text-center text-zinc-500 text-xs mt-3 px-4">
+                                    {lang === 'zh'
+                                        ? '同步您的最愛酒譜與吧台庫存至雲端'
+                                        : 'Sync your favorites and bar inventory across devices'}
+                                </p>
                             </div>
                         )}
-                    </section>
-
-                    {/* Language Section */}
-                    {/* ... (Kept existing language and about sections) ... */}
-                    <section>
-                        <h2 className="text-zinc-500 text-sm font-medium mb-3 ml-1">{t.language.title}</h2>
-                        <button
-                            onClick={() => setShowLanguageSheet(true)}
-                            className="w-full bg-zinc-900/50 backdrop-blur-md border border-white/10 rounded-2xl p-4 flex items-center justify-between hover:bg-white/5 transition-colors"
-                        >
-                            <div className="flex items-center gap-3">
-                                <Globe size={20} className="text-zinc-400" />
-                                <span className="text-white font-medium">{t.language.current}</span>
-                            </div>
-                            <ChevronRight size={20} className="text-zinc-500" />
-                        </button>
                     </section>
 
                     {/* Subscription Management */}
@@ -378,6 +368,21 @@ export function SettingsPage({ session, lang, setLang, onLogin, onLogout, onDele
                             <div className="flex items-center gap-3">
                                 <Star size={20} className="text-yellow-500" />
                                 <span className="text-white font-medium">{t.subscription.manage}</span>
+                            </div>
+                            <ChevronRight size={20} className="text-zinc-500" />
+                        </button>
+                    </section>
+
+                    {/* Language Section */}
+                    <section>
+                        <h2 className="text-zinc-500 text-sm font-medium mb-3 ml-1">{t.language.title}</h2>
+                        <button
+                            onClick={() => setShowLanguageSheet(true)}
+                            className="w-full bg-zinc-900/50 backdrop-blur-md border border-white/10 rounded-2xl p-4 flex items-center justify-between hover:bg-white/5 transition-colors"
+                        >
+                            <div className="flex items-center gap-3">
+                                <Globe size={20} className="text-zinc-400" />
+                                <span className="text-white font-medium">{t.language.current}</span>
                             </div>
                             <ChevronRight size={20} className="text-zinc-500" />
                         </button>

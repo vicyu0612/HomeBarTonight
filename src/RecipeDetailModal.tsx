@@ -96,19 +96,16 @@ export const RecipeDetailModal = ({ recipe, onClose, isFavorite, onToggleFavorit
                         className="w-full h-full object-cover"
                         style={{ filter: useMotionTemplate`blur(${imageBlur}px)`, scale: imageScale }}
                     />
-                    <motion.div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-zinc-900" />
+                    <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-transparent" />
                     <motion.div className="absolute inset-0 bg-black" style={{ opacity: overlayOpacity }} />
                 </motion.div>
 
                 {/* Header Actions */}
-                <div className="absolute top-0 left-0 right-0 z-30 pl-6 pb-6 pr-4 pt-16 sm:pt-10 flex justify-end gap-3 items-start pointer-events-none">
+                <div className="absolute top-0 left-0 right-0 z-30 pl-6 pr-4 pt-16 sm:pt-10 flex justify-end gap-3 items-start pointer-events-none">
                     {onToggleFavorite && (
                         <button
                             onClick={() => onToggleFavorite(recipe.id)}
-                            className={clsx(
-                                "pointer-events-auto p-3 rounded-full transition-all active:scale-95 shadow-lg",
-                                "bg-black/30 backdrop-blur-md text-white border border-white/10 hover:bg-black/50" // Unified Style
-                            )}
+                            className="p-3 rounded-full bg-black/30 backdrop-blur-md text-white border border-white/10 shadow-lg hover:bg-black/50 active:scale-95 transition-all pointer-events-auto"
                         >
                             <Heart
                                 size={24}
@@ -119,7 +116,7 @@ export const RecipeDetailModal = ({ recipe, onClose, isFavorite, onToggleFavorit
 
                     <button
                         onClick={onClose}
-                        className="pointer-events-auto p-3 rounded-full bg-black/30 backdrop-blur-md text-white border border-white/10 transition-all active:scale-95 shadow-lg hover:bg-black/50"
+                        className="p-3 rounded-full bg-black/30 backdrop-blur-md text-white border border-white/10 shadow-lg hover:bg-black/50 active:scale-95 transition-all pointer-events-auto"
                     >
                         <X size={24} />
                     </button>
