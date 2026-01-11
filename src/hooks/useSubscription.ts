@@ -87,7 +87,10 @@ export const useSubscription = (): SubscriptionState => {
                 displayCloseButton: true,
             });
 
-            if ((result as unknown) === PAYWALL_RESULT.PURCHASED || (result as unknown) === PAYWALL_RESULT.RESTORED) {
+            // The result is an object with a 'result' property containing the PAYWALL_RESULT enum value
+            const paywallResult = (result as { result?: PAYWALL_RESULT }).result;
+
+            if (paywallResult === PAYWALL_RESULT.PURCHASED || paywallResult === PAYWALL_RESULT.RESTORED) {
                 await updateCustomerInfo();
             }
         } catch (e) {
