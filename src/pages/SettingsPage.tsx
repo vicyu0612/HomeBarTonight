@@ -1,10 +1,10 @@
-import { HelpCircle, ChevronRight, X, FileText, Globe, ArrowLeft, LogOut, Trash2 } from 'lucide-react';
+import { HelpCircle, ChevronRight, X, FileText, Globe, ArrowLeft, LogOut, Trash2, RefreshCw, Star, Check } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState } from 'react';
 import type { Session } from '@supabase/supabase-js';
 import clsx from 'clsx';
 import { useSubscription } from '../hooks/useSubscription';
-import { Star } from 'lucide-react';
+
 
 interface SettingsPageProps {
     session: Session | null;
@@ -25,11 +25,12 @@ const GoogleIcon = () => (
 );
 
 export function SettingsPage({ session, lang, setLang, onLogin, onLogout, onDeleteAccount }: SettingsPageProps) {
-    const { presentCustomerCenter } = useSubscription();
+    const { presentCustomerCenter, restorePurchases } = useSubscription();
     const [view, setView] = useState<'main' | 'account'>('main');
     const [showLanguageSheet, setShowLanguageSheet] = useState(false);
     const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+    const [restoreAlert, setRestoreAlert] = useState<{ visible: boolean, title: string, message: string }>({ visible: false, title: '', message: '' });
     const [isScrolled, setIsScrolled] = useState(false);
 
     const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
@@ -56,7 +57,8 @@ export function SettingsPage({ session, lang, setLang, onLogin, onLogout, onDele
         },
         language: {
             title: lang === 'zh' ? '語言' : 'Language',
-            current: lang === 'zh' ? '中文' : 'English'
+            current: lang === 'zh' ? '中文' : 'English',
+            select: lang === 'zh' ? '選擇語言' : 'Select Language'
         },
         about: {
             title: lang === 'zh' ? '關於' : 'About',
@@ -65,7 +67,8 @@ export function SettingsPage({ session, lang, setLang, onLogin, onLogout, onDele
         },
         subscription: {
             title: lang === 'zh' ? '訂閱' : 'Subscription',
-            manage: lang === 'zh' ? '管理訂閱' : 'Manage Subscription'
+            manage: lang === 'zh' ? '管理訂閱' : 'Manage Subscription',
+            restore: lang === 'zh' ? '恢復購買' : 'Restore Purchases'
         }
     };
 
@@ -361,16 +364,52 @@ export function SettingsPage({ session, lang, setLang, onLogin, onLogout, onDele
                     {/* Subscription Management */}
                     <section>
                         <h2 className="text-zinc-500 text-sm font-medium mb-3 ml-1">{t.subscription.title}</h2>
-                        <button
-                            onClick={() => presentCustomerCenter()}
-                            className="w-full bg-zinc-900/50 backdrop-blur-md border border-white/10 rounded-2xl p-4 flex items-center justify-between hover:bg-white/5 transition-colors"
-                        >
-                            <div className="flex items-center gap-3">
-                                <Star size={20} className="text-yellow-500" />
-                                <span className="text-white font-medium">{t.subscription.manage}</span>
-                            </div>
-                            <ChevronRight size={20} className="text-zinc-500" />
-                        </button>
+                        <div className="bg-zinc-900/50 backdrop-blur-md border border-white/10 rounded-2xl overflow-hidden divide-y divide-white/5">
+                            <button
+                                onClick={() => presentCustomerCenter()}
+                                className="w-full p-4 flex items-center justify-between hover:bg-white/5 transition-colors"
+                            >
+                                <div className="flex items-center gap-3">
+                                    <Star size={20} className="text-yellow-400" />
+                                    <span className="text-white font-medium">{t.subscription.manage}</span>
+                                </div>
+                                <ChevronRight size={20} className="text-zinc-500" />
+                            </button>
+                            <button
+                                onClick={async () => {
+                                    const info = await restorePurchases();
+                                    if (info) {
+                                        const isPro = info.entitlements.all['HomeBarTonight Pro']?.isActive;
+                                        if (isPro) {
+                                            setRestoreAlert({
+                                                visible: true,
+                                                title: lang === 'zh' ? '購買已恢復' : 'Purchases Restored',
+                                                message: lang === 'zh' ? '您的訂閱已成功恢復' : 'Your subscription has been successfully restored'
+                                            });
+                                        } else {
+                                            setRestoreAlert({
+                                                visible: true,
+                                                title: lang === 'zh' ? '恢復購買失敗' : 'Restore Purchases Failed',
+                                                message: lang === 'zh' ? '您目前沒有有效的訂閱' : 'You don\'t have an active subscription'
+                                            });
+                                        }
+                                    } else {
+                                        setRestoreAlert({
+                                            visible: true,
+                                            title: lang === 'zh' ? '恢復失敗' : 'Restore Failed',
+                                            message: lang === 'zh' ? '請稍後再試' : 'Please try again later'
+                                        });
+                                    }
+                                }}
+                                className="w-full p-4 flex items-center justify-between hover:bg-white/5 transition-colors"
+                            >
+                                <div className="flex items-center gap-3">
+                                    <RefreshCw size={20} className="text-zinc-400" />
+                                    <span className="text-white font-medium">{lang === 'zh' ? '恢復購買' : 'Restore Purchases'}</span>
+                                </div>
+                                <ChevronRight size={20} className="text-zinc-500" />
+                            </button>
+                        </div>
                     </section>
 
                     {/* Language Section */}
@@ -415,63 +454,95 @@ export function SettingsPage({ session, lang, setLang, onLogin, onLogout, onDele
                         </div>
                     </section>
                 </div>
-            </div>
 
+            </div>
             {/* Language Action Sheet */}
             <AnimatePresence>
                 {showLanguageSheet && (
-                    <>
+                    <div className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center sm:p-4">
                         <motion.div
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
                             onClick={() => setShowLanguageSheet(false)}
-                            className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[100]"
+                            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
                         />
                         <motion.div
-                            initial={{ y: '100%' }}
+                            initial={{ y: "100%" }}
                             animate={{ y: 0 }}
-                            exit={{ y: '100%' }}
+                            exit={{ y: "100%" }}
                             transition={{ type: "spring", damping: 25, stiffness: 200 }}
-                            className="fixed bottom-0 left-0 right-0 z-[101] bg-black/40 backdrop-blur-2xl rounded-t-[2.5rem] border-t-[0.5px] border-white/10 shadow-[0_-10px_40px_rgba(0,0,0,0.5),inset_0_0.5px_0_rgba(255,255,255,0.1)] p-6 pb-12 mx-auto max-w-[1024px]"
+                            className="relative w-full sm:max-w-md bg-zinc-900 border-t sm:border border-white/10 rounded-t-3xl sm:rounded-2xl p-6 shadow-2xl pb-[calc(1.5rem+env(safe-area-inset-bottom))]"
                         >
                             <div className="flex justify-between items-center mb-6">
-                                <h3 className="text-xl font-bold text-white">{t.language.title}</h3>
-                                <button onClick={() => setShowLanguageSheet(false)} className="p-2 bg-zinc-800 rounded-full text-zinc-400 hover:text-white">
-                                    <X size={20} />
+                                <h3 className="text-xl font-bold text-white">{t.language.select}</h3>
+                                <button
+                                    onClick={() => setShowLanguageSheet(false)}
+                                    className="p-2 -mr-2 text-zinc-400 hover:text-white transition-colors"
+                                >
+                                    <X size={24} />
                                 </button>
                             </div>
-
                             <div className="space-y-3">
-                                {[
-                                    { code: 'system', label: lang === 'zh' ? '跟隨系統' : 'System Default' },
-                                    { code: 'zh', label: '中文 (繁體)' },
-                                    { code: 'en', label: 'English' }
-                                ].map((opt) => (
-                                    <button
-                                        key={opt.code}
-                                        onClick={() => {
-                                            if (opt.code === 'system') {
-                                                const sys = navigator.language.toLowerCase().startsWith('zh') ? 'zh' : 'en';
-                                                setLang(sys as 'en' | 'zh');
-                                            } else {
-                                                setLang(opt.code as 'en' | 'zh');
-                                            }
-                                            setShowLanguageSheet(false);
-                                        }}
-                                        className={clsx(
-                                            "w-full p-4 rounded-xl font-medium text-left transition-all border",
-                                            (opt.code === 'system' ? false : lang === opt.code)
-                                                ? "bg-white text-black border-white"
-                                                : "bg-zinc-800 text-zinc-300 border-transparent hover:bg-zinc-700"
-                                        )}
-                                    >
-                                        {opt.label}
-                                    </button>
-                                ))}
+                                <button
+                                    onClick={() => {
+                                        setLang('en');
+                                        setShowLanguageSheet(false);
+                                    }}
+                                    className={clsx(
+                                        "w-full p-4 rounded-xl flex items-center justify-between transition-colors",
+                                        lang === 'en' ? "bg-white text-black" : "bg-zinc-800 text-zinc-300 hover:bg-zinc-700"
+                                    )}
+                                >
+                                    <span className="font-medium">English</span>
+                                    {lang === 'en' && <Check size={20} />}
+                                </button>
+                                <button
+                                    onClick={() => {
+                                        setLang('zh');
+                                        setShowLanguageSheet(false);
+                                    }}
+                                    className={clsx(
+                                        "w-full p-4 rounded-xl flex items-center justify-between transition-colors",
+                                        lang === 'zh' ? "bg-white text-black" : "bg-zinc-800 text-zinc-300 hover:bg-zinc-700"
+                                    )}
+                                >
+                                    <span className="font-medium">繁體中文</span>
+                                    {lang === 'zh' && <Check size={20} />}
+                                </button>
                             </div>
                         </motion.div>
-                    </>
+                    </div>
+                )}
+            </AnimatePresence>
+
+            <AnimatePresence>
+                {/* Restore Alert Modal */}
+                {restoreAlert.visible && (
+                    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            onClick={() => setRestoreAlert(prev => ({ ...prev, visible: false }))}
+                            className="absolute inset-0 bg-black/80 backdrop-blur-sm"
+                        />
+                        <motion.div
+                            initial={{ scale: 0.9, opacity: 0 }}
+                            animate={{ scale: 1, opacity: 1 }}
+                            exit={{ scale: 0.9, opacity: 0 }}
+                            className="relative bg-zinc-900 border border-white/10 rounded-2xl p-6 w-full max-w-sm shadow-2xl flex flex-col items-center text-center"
+                        >
+                            <h3 className="text-xl font-bold text-white mb-2">{restoreAlert.title}</h3>
+                            <p className="text-zinc-400 mb-6 leading-relaxed whitespace-pre-line">{restoreAlert.message}</p>
+                            <button
+                                onClick={() => setRestoreAlert(prev => ({ ...prev, visible: false }))}
+                                className="w-full py-3 rounded-xl bg-white text-black font-bold hover:bg-zinc-200 transition-colors"
+                            >
+                                {lang === 'zh' ? '好的' : 'OK'}
+                            </button>
+                        </motion.div>
+                    </div>
                 )}
             </AnimatePresence>
 
@@ -515,6 +586,6 @@ export function SettingsPage({ session, lang, setLang, onLogin, onLogout, onDele
                     </div>
                 )}
             </AnimatePresence>
-        </div>
+        </div >
     );
 }

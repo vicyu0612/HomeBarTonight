@@ -155,7 +155,7 @@ export function MyBarModal({
                                 {myInventory.size > 0 && (
                                     <button
                                         onClick={() => setShowClearConfirm(true)}
-                                        className="h-10 px-4 py-2 rounded-full bg-red-500/10 text-red-400 hover:bg-red-500/20 text-xs font-bold transition-colors border border-red-500/20"
+                                        className="h-10 px-4 py-2 rounded-full bg-red-500/10 backdrop-blur-md border border-red-500/20 text-red-400 hover:bg-red-500/20 active:scale-95 text-xs font-bold transition-all"
                                     >
                                         {lang === 'zh' ? '全部清除' : 'Clear All'}
                                     </button>

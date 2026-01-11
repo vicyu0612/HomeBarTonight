@@ -253,7 +253,7 @@ export function CocktailsPage({ allRecipes, favorites, toggleFavorite, onSelectR
                                                 setSelectedCategories(new Set());
                                                 setSelectedSpirits(new Set());
                                             }}
-                                            className="px-4 py-2 rounded-full bg-red-500/10 text-red-400 hover:bg-red-500/20 text-xs font-bold transition-colors border border-red-500/20"
+                                            className="px-4 py-2 rounded-full bg-red-500/10 backdrop-blur-md border border-red-500/20 text-red-400 hover:bg-red-500/20 active:scale-95 text-xs font-bold transition-all"
                                         >
                                             {lang === 'zh' ? '全部清除' : 'Clear All'}
                                         </button>
