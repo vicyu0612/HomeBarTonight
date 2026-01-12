@@ -2,6 +2,7 @@ import { motion, type HTMLMotionProps } from 'framer-motion';
 import { Heart, Martini, Crown } from 'lucide-react';
 import clsx from 'clsx';
 import type { Recipe } from '../data/recipes';
+import { forwardRef } from 'react';
 
 interface RecipeCardProps extends Omit<HTMLMotionProps<"div">, 'id'> {
     recipe: Recipe;
@@ -15,7 +16,7 @@ interface RecipeCardProps extends Omit<HTMLMotionProps<"div">, 'id'> {
     isLocked?: boolean;
 }
 
-export function RecipeCard({
+export const RecipeCard = forwardRef<HTMLDivElement, RecipeCardProps>(({
     recipe,
     lang,
     isFavorite,
@@ -27,7 +28,7 @@ export function RecipeCard({
     missingIngredient,
     isLocked,
     ...motionProps
-}: RecipeCardProps) {
+}, ref) => {
     // Unified Heart Button Style
     const HeartButton = (
         <button
@@ -84,6 +85,7 @@ export function RecipeCard({
     if (variant === 'vertical') {
         return (
             <motion.div
+                ref={ref}
                 onClick={onClick}
                 className={clsx(
                     "group bg-zinc-800/30 backdrop-blur-md border border-white/10 shadow-lg rounded-2xl overflow-hidden active:scale-[0.98] transition-all hover:bg-zinc-800/50 hover:border-white/20 h-full flex flex-col",
@@ -139,6 +141,7 @@ export function RecipeCard({
     // Default Horizontal Layout
     return (
         <motion.div
+            ref={ref}
             onClick={onClick}
             className={clsx(
                 "group bg-zinc-800/30 backdrop-blur-md border border-white/10 shadow-lg rounded-2xl overflow-hidden active:scale-[0.98] transition-all hover:bg-zinc-800/50 hover:border-white/20 flex p-3 gap-4",
@@ -192,4 +195,5 @@ export function RecipeCard({
 
         </motion.div >
     );
-}
+});
+RecipeCard.displayName = 'RecipeCard';
