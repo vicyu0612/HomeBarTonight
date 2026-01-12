@@ -123,7 +123,7 @@ export function RecipeCard({
                                 {recipe.tags[lang].slice(0, 3).map((tag) => (
                                     <span
                                         key={tag}
-                                        className="inline-flex items-center text-[10px] uppercase font-bold tracking-wider text-zinc-400 bg-white/5 px-2 py-1 leading-none rounded-md border border-white/5"
+                                        className="inline-flex items-center justify-center text-[10px] uppercase font-bold tracking-wider text-zinc-400 bg-white/5 px-2 h-[20px] rounded-md border border-white/5"
                                     >
                                         {tag}
                                     </span>
@@ -180,7 +180,7 @@ export function RecipeCard({
                             {recipe.tags[lang].slice(0, 5).map((tag) => (
                                 <span
                                     key={tag}
-                                    className="inline-flex items-center text-[10px] uppercase font-bold tracking-wider text-zinc-400 bg-white/5 px-2 py-1 leading-none rounded-md border border-white/5 group-hover:bg-white/10 group-hover:text-zinc-300 transition-colors"
+                                    className="inline-flex items-center justify-center text-[10px] uppercase font-bold tracking-wider text-zinc-400 bg-white/5 px-2 h-[20px] rounded-md border border-white/5 group-hover:bg-white/10 group-hover:text-zinc-300 transition-colors"
                                 >
                                     {tag}
                                 </span>

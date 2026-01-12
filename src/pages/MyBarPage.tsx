@@ -7,8 +7,8 @@ import { normalizeIngredient } from '../utils/normalization';
 import { RecipeCard } from '../components/RecipeCard';
 import { RecipeCardSkeleton } from '../components/RecipeCardSkeleton';
 import { useSubscription } from '../hooks/useSubscription';
-import { Lock, Crown } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { LockedContentCard } from '../components/LockedContentCard';
 
 interface MyBarPageProps {
     allRecipes: Recipe[];
@@ -103,8 +103,13 @@ export function MyBarPage({
     }, [allRecipes, myInventory, allIngredients, lang]);
 
     // Derived Lists based on Subscription
+    const displayedExactMatches = isPro ? exactMatches : exactMatches.slice(0, 2);
+    const hiddenExactCount = Math.max(0, exactMatches.length - 2);
+
     const displayedMissing = isPro ? missingOneMatches : missingOneMatches.slice(0, 2);
-    const hiddenCount = Math.max(0, missingOneMatches.length - 2);
+    const hiddenMissingCount = Math.max(0, missingOneMatches.length - 2);
+
+
 
     return (
         <div className="h-full relative flex flex-col">
@@ -194,7 +199,7 @@ export function MyBarPage({
                                 />
                             )}
                             <span className="relative drop-shadow-sm">
-                                {lang === 'zh' ? `可調製調酒 (${exactMatches.length})` : `Available (${exactMatches.length})`}
+                                {lang === 'zh' ? `可調製酒譜 (${exactMatches.length})` : `Available (${exactMatches.length})`}
                             </span>
                         </button>
 
@@ -237,7 +242,7 @@ export function MyBarPage({
                             </div>
                         ) : (
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pb-10">
-                                {exactMatches.map((recipe, index) => (
+                                {displayedExactMatches.map((recipe, index) => (
                                     <RecipeCard
                                         key={recipe.id}
                                         recipe={recipe}
@@ -249,6 +254,28 @@ export function MyBarPage({
                                         isLocked={recipe.is_premium && !isPro}
                                     />
                                 ))}
+
+                                {/* Locked State Call to Action for Available */}
+                                {!isPro && hiddenExactCount > 0 && (
+                                    <div className="md:col-span-2">
+                                        <LockedContentCard
+                                            lang={lang}
+                                            onUnlock={presentPaywall}
+                                            title={{
+                                                zh: `還有 ${hiddenExactCount} 款可調製酒譜等待解鎖`,
+                                                en: `Unlock ${hiddenExactCount} Ready-to-Make Recipes`
+                                            }}
+                                            description={{
+                                                zh: '訂閱Premium，查看所有您現在就能調製的酒譜，不錯過任何微醺時刻！',
+                                                en: 'Subscribe to Premium to see all recipes you can make with your current ingredients! Don\'t miss out!'
+                                            }}
+                                            buttonText={{
+                                                zh: '立即解鎖查看完整清單',
+                                                en: 'Unlock to View Full List'
+                                            }}
+                                        />
+                                    </div>
+                                )}
                             </div>
                         )
                     ) : (
@@ -277,49 +304,23 @@ export function MyBarPage({
                                     </div>
 
                                     {/* Locked State Call to Action */}
-                                    {!isPro && hiddenCount > 0 && (
-                                        <motion.div
-                                            initial={{ opacity: 0, y: 20 }}
-                                            animate={{ opacity: 1, y: 0 }}
-                                            className="relative mt-2 p-6 rounded-2xl overflow-hidden text-center group border border-white/10"
-                                        >
-                                            {/* Background Image */}
-                                            <div className="absolute inset-0">
-                                                <img
-                                                    src="/assets/locked_content_bg.png"
-                                                    alt="Premium Unlocked"
-                                                    className="w-full h-full object-cover scale-[1.2] transition-transform duration-700 group-hover:scale-[1.25]"
-                                                />
-                                                {/* Gradient Overlay for Text Readability - Dark Purple Accent */}
-                                                <div className="absolute inset-0 bg-gradient-to-b from-indigo-950/95 to-purple-900/30" />
-                                            </div>
-
-                                            <div className="relative z-10 flex flex-col items-center gap-3">
-                                                <div className="w-12 h-12 rounded-full bg-indigo-500/20 backdrop-blur-sm flex items-center justify-center text-indigo-300 mb-1 border border-indigo-500/30">
-                                                    <Lock size={24} />
-                                                </div>
-
-                                                <h3 className="text-xl font-bold text-white drop-shadow-md">
-                                                    {lang === 'zh'
-                                                        ? `還有 ${hiddenCount} 款推薦酒譜等待解鎖`
-                                                        : `Unlock ${hiddenCount} Recommended Recipes`}
-                                                </h3>
-
-                                                <p className="text-white text-sm max-w-[90%] mx-auto mb-2 leading-relaxed drop-shadow-sm font-medium">
-                                                    {lang === 'zh'
-                                                        ? '訂閱Premium，查看所有只缺一樣材料的酒譜建議，不再錯過任何可能性！'
-                                                        : "Subscribe to Premium to see all recipes missing just one ingredient. Don't miss out on any possibilities!"}
-                                                </p>
-
-                                                <button
-                                                    onClick={presentPaywall}
-                                                    className="px-8 py-3 rounded-full bg-white text-indigo-900 font-bold text-sm shadow-xl hover:bg-indigo-50 transition-colors flex items-center gap-2"
-                                                >
-                                                    <Crown size={16} className="text-amber-500" />
-                                                    {lang === 'zh' ? '立即解鎖查看完整清單' : 'Unlock to View Full List'}
-                                                </button>
-                                            </div>
-                                        </motion.div>
+                                    {!isPro && hiddenMissingCount > 0 && (
+                                        <LockedContentCard
+                                            lang={lang}
+                                            onUnlock={presentPaywall}
+                                            title={{
+                                                zh: `還有 ${hiddenMissingCount} 款推薦酒譜等待解鎖`,
+                                                en: `Unlock ${hiddenMissingCount} Recommended Recipes`
+                                            }}
+                                            description={{
+                                                zh: '訂閱Premium，查看所有只缺一樣材料的酒譜建議，不再錯過任何可能性！',
+                                                en: "Subscribe to Premium to see all recipes missing just one ingredient. Don't miss out on any possibilities!"
+                                            }}
+                                            buttonText={{
+                                                zh: '立即解鎖查看完整清單',
+                                                en: 'Unlock to View Full List'
+                                            }}
+                                        />
                                     )}
                                 </>
                             )}
