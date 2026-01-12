@@ -240,7 +240,12 @@ export function MyBarPage({
                             <div className="flex flex-col items-center justify-center py-16 text-zinc-500">
                                 <ShakerIcon size={48} className="mb-4 opacity-20" />
                                 <p>{lang === 'zh' ? '庫存不足，無法完整調製任何酒譜' : 'Not enough ingredients.'}</p>
-                                <p className="text-xs mt-2">{lang === 'zh' ? '試試新增更多材料？' : 'Try adding more ingredients.'}</p>
+                                <button
+                                    onClick={() => setShowModal(true)}
+                                    className="text-xs mt-2 text-indigo-400 underline underline-offset-4 hover:text-indigo-300 transition-colors"
+                                >
+                                    {lang === 'zh' ? '試試新增更多材料？' : 'Try adding more ingredients?'}
+                                </button>
                             </div>
                         ) : (
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pb-10">
