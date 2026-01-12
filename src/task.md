@@ -51,8 +51,8 @@
     - [x] Implement `MyBarPage` (convert from Modal).
     - [x] Implement `FavoritesPage`.
     - [x] Implement `SettingsPage` (Auth, Lang, Links).
-    - [/] Implement Language Action Sheet. (Part of SettingsPage)
-    - [/] Assemble new `App.tsx` layout. (Debugging)
+    - [x] Implement Language Action Sheet. (Part of SettingsPage)
+    - [x] Assemble new `App.tsx` layout. (Debugging)
     - [x] Refine App Icon (Original style, Larger graphic) <!-- id: 12 -->
     - [x] Replace App Icon with User Image <!-- id: 13 -->
     - [x] Fix Xcode 'Unassigned Children' Error <!-- id: 14 -->
@@ -91,4 +91,4 @@
         - [x] **Page Transitions**: Implemented "Push/Pop" slide animations (Slide Right/Left) for Collection Detail View.
 
 ## Next Steps
-- [ ] Prepare for App Store Submission (Screenshots, Description)
+- [x] Prepare for App Store Submission (Screenshots, Description)
