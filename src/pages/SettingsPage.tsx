@@ -1,4 +1,4 @@
-import { HelpCircle, ChevronRight, X, FileText, Globe, ArrowLeft, LogOut, Trash2, RefreshCw, Star, Check } from 'lucide-react';
+import { HelpCircle, ChevronRight, X, FileText, Globe, ArrowLeft, LogOut, Trash2, RefreshCw, Check, Crown } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState } from 'react';
 import type { Session } from '@supabase/supabase-js';
@@ -25,7 +25,7 @@ const GoogleIcon = () => (
 );
 
 export function SettingsPage({ session, lang, setLang, onLogin, onLogout, onDeleteAccount }: SettingsPageProps) {
-    const { presentCustomerCenter, restorePurchases } = useSubscription();
+    const { presentCustomerCenter, restorePurchases, isPro, presentPaywall } = useSubscription();
     const [view, setView] = useState<'main' | 'account'>('main');
     const [showLanguageSheet, setShowLanguageSheet] = useState(false);
     const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
@@ -68,7 +68,8 @@ export function SettingsPage({ session, lang, setLang, onLogin, onLogout, onDele
         subscription: {
             title: lang === 'zh' ? '訂閱' : 'Subscription',
             manage: lang === 'zh' ? '管理訂閱' : 'Manage Subscription',
-            restore: lang === 'zh' ? '恢復購買' : 'Restore Purchases'
+            restore: lang === 'zh' ? '恢復購買' : 'Restore Purchases',
+            join: lang === 'zh' ? '訂閱 HomeBarTonight Premium' : 'Join HomeBarTonight Premium'
         }
     };
 
@@ -365,16 +366,29 @@ export function SettingsPage({ session, lang, setLang, onLogin, onLogout, onDele
                     <section>
                         <h2 className="text-zinc-500 text-sm font-medium mb-3 ml-1">{t.subscription.title}</h2>
                         <div className="bg-zinc-900/50 backdrop-blur-md border border-white/10 rounded-2xl overflow-hidden divide-y divide-white/5">
-                            <button
-                                onClick={() => presentCustomerCenter()}
-                                className="w-full p-4 flex items-center justify-between hover:bg-white/5 transition-colors"
-                            >
-                                <div className="flex items-center gap-3">
-                                    <Star size={20} className="text-yellow-400" />
-                                    <span className="text-white font-medium">{t.subscription.manage}</span>
-                                </div>
-                                <ChevronRight size={20} className="text-zinc-500" />
-                            </button>
+                            {!isPro ? (
+                                <button
+                                    onClick={() => presentPaywall()}
+                                    className="w-full p-4 flex items-center justify-between hover:bg-white/5 transition-colors group"
+                                >
+                                    <div className="flex items-center gap-3">
+                                        <Crown size={20} className="text-yellow-400 group-hover:scale-110 transition-transform" />
+                                        <span className="text-yellow-400 font-bold tracking-wide">{t.subscription.join}</span>
+                                    </div>
+                                    <ChevronRight size={20} className="text-yellow-400/50" />
+                                </button>
+                            ) : (
+                                <button
+                                    onClick={() => presentCustomerCenter()}
+                                    className="w-full p-4 flex items-center justify-between hover:bg-white/5 transition-colors"
+                                >
+                                    <div className="flex items-center gap-3">
+                                        <Crown size={20} className="text-zinc-400" />
+                                        <span className="text-white font-medium">{t.subscription.manage}</span>
+                                    </div>
+                                    <ChevronRight size={20} className="text-zinc-500" />
+                                </button>
+                            )}
                             <button
                                 onClick={async () => {
                                     const info = await restorePurchases();
@@ -475,10 +489,10 @@ export function SettingsPage({ session, lang, setLang, onLogin, onLogout, onDele
                             className="relative w-full sm:max-w-md bg-zinc-900 border-t sm:border border-white/10 rounded-t-3xl sm:rounded-2xl p-6 shadow-2xl pb-[calc(1.5rem+env(safe-area-inset-bottom))]"
                         >
                             <div className="flex justify-between items-center mb-6">
-                                <h3 className="text-xl font-bold text-white">{t.language.select}</h3>
+                                <h3 className="text-2xl font-bold text-white">{t.language.select}</h3>
                                 <button
                                     onClick={() => setShowLanguageSheet(false)}
-                                    className="p-2 -mr-2 text-zinc-400 hover:text-white transition-colors"
+                                    className="p-2 rounded-full bg-black/30 backdrop-blur-md text-white border border-white/10 shadow-lg hover:bg-black/50 active:scale-95 transition-all"
                                 >
                                     <X size={24} />
                                 </button>

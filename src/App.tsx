@@ -44,10 +44,11 @@ function App() {
   // Global State
   const [lang, setLang] = useState<'en' | 'zh'>(getSystemLang());
 
-  // Persist language choice
-  useEffect(() => {
-    localStorage.setItem('app_lang', lang);
-  }, [lang]);
+  // Only persist language when explicitly changed by user
+  const handleSetLang = (newLang: 'en' | 'zh') => {
+    setLang(newLang);
+    localStorage.setItem('app_lang', newLang);
+  };
 
   // Tab Persistence
   const [activeTab, setActiveTab] = useState<TabId>(() => {
@@ -649,7 +650,7 @@ function App() {
             <SettingsPage
               session={session}
               lang={lang}
-              setLang={setLang}
+              setLang={handleSetLang}
               onLogin={handleLogin}
               onLogout={handleLogout}
               onDeleteAccount={handleDeleteAccount}

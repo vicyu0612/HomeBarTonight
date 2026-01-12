@@ -227,10 +227,10 @@ export const RecipeDetailModal = ({ recipe, onClose, isFavorite, onToggleFavorit
                                         {i !== recipe.steps[lang].length - 1 && (
                                             <div className="absolute left-[11px] top-8 bottom-[-24px] w-[2px] bg-white/10" />
                                         )}
-                                        <div className="w-6 h-6 rounded-full bg-indigo-500 flex items-center justify-center text-xs font-bold text-white shrink-0 shadow-[0_0_15px_rgba(99,102,241,0.5)] z-10">
+                                        <div className="w-6 h-6 rounded-full bg-indigo-500 flex items-center justify-center text-xs font-bold text-white shrink-0 shadow-[0_0_15px_rgba(99,102,241,0.5)] z-10 mt-0.5">
                                             {i + 1}
                                         </div>
-                                        <p className="text-zinc-300 text-base leading-relaxed pt-0.5">{step}</p>
+                                        <p className="text-zinc-300 text-base leading-relaxed">{step}</p>
                                     </div>
                                 ))}
                             </div>

@@ -205,13 +205,13 @@ export function CocktailsPage({ allRecipes, favorites, toggleFavorite, onSelectR
                     {/* Shake Button */}
                     <button
                         onClick={onShake}
-                        className="w-[50px] h-[50px] rounded-full bg-zinc-800/40 flex items-center justify-center border border-white/10 text-white active:scale-95 transition-all shrink-0 hover:bg-zinc-700"
+                        className="w-[50px] h-[50px] rounded-full bg-zinc-800/40 backdrop-blur-xl flex items-center justify-center border border-white/10 text-white active:scale-95 transition-all shrink-0 hover:bg-zinc-700"
                     >
                         <ShakerIcon />
                     </button>
                     <button
                         onClick={() => setShowFilter(true)}
-                        className="relative w-[50px] h-[50px] rounded-full bg-zinc-800/40 flex items-center justify-center border border-white/10 text-white hover:bg-zinc-700 transition-colors shrink-0"
+                        className="relative w-[50px] h-[50px] rounded-full bg-zinc-800/40 backdrop-blur-xl flex items-center justify-center border border-white/10 text-white hover:bg-zinc-700 transition-colors shrink-0"
                     >
                         <SlidersHorizontal size={20} />
                         {activeFilterCount > 0 && (

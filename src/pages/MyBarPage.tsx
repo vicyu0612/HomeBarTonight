@@ -7,7 +7,7 @@ import { normalizeIngredient } from '../utils/normalization';
 import { RecipeCard } from '../components/RecipeCard';
 import { RecipeCardSkeleton } from '../components/RecipeCardSkeleton';
 import { useSubscription } from '../hooks/useSubscription';
-import { Lock, Sparkles } from 'lucide-react';
+import { Lock, Crown } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 interface MyBarPageProps {
@@ -239,9 +239,6 @@ export function MyBarPage({
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pb-10">
                                 {exactMatches.map((recipe, index) => (
                                     <RecipeCard
-                                        initial={{ opacity: 0, scale: 0.95 }}
-                                        animate={{ opacity: 1, scale: 1 }}
-                                        transition={{ delay: index * 0.05 }}
                                         key={recipe.id}
                                         recipe={recipe}
                                         lang={lang}
@@ -249,6 +246,7 @@ export function MyBarPage({
                                         toggleFavorite={toggleFavorite}
                                         onClick={() => onSelectRecipe(recipe, exactMatches)}
                                         priority={index < 4}
+                                        isLocked={recipe.is_premium && !isPro}
                                     />
                                 ))}
                             </div>
@@ -264,11 +262,8 @@ export function MyBarPage({
                                 <>
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                         {/* Show limited list if not Pro */}
-                                        {displayedMissing.map(({ recipe, missing }, index) => (
+                                        {displayedMissing.map(({ recipe, missing }) => (
                                             <RecipeCard
-                                                initial={{ opacity: 0, scale: 0.95 }}
-                                                animate={{ opacity: 1, scale: 1 }}
-                                                transition={{ delay: index * 0.05 }}
                                                 key={recipe.id}
                                                 recipe={recipe}
                                                 lang={lang}
@@ -276,6 +271,7 @@ export function MyBarPage({
                                                 toggleFavorite={toggleFavorite}
                                                 onClick={() => onSelectRecipe(recipe, missingOneMatches.map(m => m.recipe))}
                                                 missingIngredient={missing}
+                                                isLocked={recipe.is_premium && !isPro}
                                             />
                                         ))}
                                     </div>
@@ -285,39 +281,44 @@ export function MyBarPage({
                                         <motion.div
                                             initial={{ opacity: 0, y: 20 }}
                                             animate={{ opacity: 1, y: 0 }}
-                                            className="relative mt-2 p-6 rounded-2xl bg-gradient-to-br from-indigo-900/50 to-purple-900/50 border border-indigo-500/30 overflow-hidden text-center"
+                                            className="relative mt-2 p-6 rounded-2xl overflow-hidden text-center group border border-white/10"
                                         >
+                                            {/* Background Image */}
+                                            <div className="absolute inset-0">
+                                                <img
+                                                    src="/assets/locked_content_bg.png"
+                                                    alt="Premium Unlocked"
+                                                    className="w-full h-full object-cover scale-[1.2] transition-transform duration-700 group-hover:scale-[1.25]"
+                                                />
+                                                {/* Gradient Overlay for Text Readability - Dark Purple Accent */}
+                                                <div className="absolute inset-0 bg-gradient-to-b from-indigo-950/95 to-purple-900/30" />
+                                            </div>
+
                                             <div className="relative z-10 flex flex-col items-center gap-3">
-                                                <div className="w-12 h-12 rounded-full bg-indigo-500/20 flex items-center justify-center text-indigo-300 mb-1">
+                                                <div className="w-12 h-12 rounded-full bg-indigo-500/20 backdrop-blur-sm flex items-center justify-center text-indigo-300 mb-1 border border-indigo-500/30">
                                                     <Lock size={24} />
                                                 </div>
 
-                                                <h3 className="text-xl font-bold text-white">
+                                                <h3 className="text-xl font-bold text-white drop-shadow-md">
                                                     {lang === 'zh'
-                                                        ? `還有 ${hiddenCount} 款酒譜等待解鎖`
-                                                        : `Unlock ${hiddenCount} more recipes`}
+                                                        ? `還有 ${hiddenCount} 款推薦酒譜等待解鎖`
+                                                        : `Unlock ${hiddenCount} Recommended Recipes`}
                                                 </h3>
 
-                                                <p className="text-indigo-200/80 text-sm max-w-[80%] mx-auto mb-2 leading-relaxed">
+                                                <p className="text-white text-sm max-w-[90%] mx-auto mb-2 leading-relaxed drop-shadow-sm font-medium">
                                                     {lang === 'zh'
-                                                        ? '訂閱 Pro 版，查看所有只缺一樣材料的調酒建議，不再錯過任何可能性！'
-                                                        : 'Subscribe to Pro to see all missing-ingredient suggestions and never miss a drink!'}
+                                                        ? '訂閱Premium，查看所有只缺一樣材料的酒譜建議，不再錯過任何可能性！'
+                                                        : "Subscribe to Premium to see all recipes missing just one ingredient. Don't miss out on any possibilities!"}
                                                 </p>
 
                                                 <button
                                                     onClick={presentPaywall}
                                                     className="px-8 py-3 rounded-full bg-white text-indigo-900 font-bold text-sm shadow-xl hover:bg-indigo-50 transition-colors flex items-center gap-2"
                                                 >
-                                                    <Sparkles size={16} className="text-amber-500" />
-                                                    {lang === 'zh' ? '立即解鎖完整清單' : 'Unlock Full List Now'}
+                                                    <Crown size={16} className="text-amber-500" />
+                                                    {lang === 'zh' ? '立即解鎖查看完整清單' : 'Unlock to View Full List'}
                                                 </button>
                                             </div>
-
-                                            {/* Decorative Background Elements */}
-                                            <div className="absolute top-0 right-0 p-4 opacity-5 pointer-events-none">
-                                                <Lock size={120} />
-                                            </div>
-                                            <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent pointer-events-none" />
                                         </motion.div>
                                     )}
                                 </>
