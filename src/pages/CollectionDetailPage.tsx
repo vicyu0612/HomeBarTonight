@@ -1,6 +1,7 @@
 import { supabase } from '../supabaseClient';
 import { useEffect } from 'react';
 import { ArrowLeft } from 'lucide-react';
+import { PullToRefresh } from '../components/PullToRefresh';
 import type { Collection } from '../data/collections';
 import type { Recipe } from '../data/recipes';
 import { RecipeCard } from '../components/RecipeCard';
@@ -19,6 +20,7 @@ interface CollectionDetailPageProps {
     toggleFavorite: (id: string, e?: React.MouseEvent) => void;
     favorites: Set<string>;
     lang: 'en' | 'zh';
+    onRefresh?: () => Promise<void>;
 }
 
 export function CollectionDetailPage({
@@ -30,7 +32,8 @@ export function CollectionDetailPage({
     onSelectRecipe,
     toggleFavorite,
     favorites,
-    lang
+    lang,
+    onRefresh
 }: CollectionDetailPageProps) {
     useSwipeBack(onBack);
 
@@ -150,9 +153,10 @@ export function CollectionDetailPage({
             </div>
 
             {/* Scrollable Content */}
-            <div
+            <PullToRefresh
                 className="flex-1 overflow-y-auto no-scrollbar w-full h-full bg-black"
                 onScroll={handleScroll}
+                onRefresh={onRefresh || (async () => { })}
             >
 
 
@@ -227,7 +231,7 @@ export function CollectionDetailPage({
                         )}
                     </div>
                 </div>
-            </div>
-        </div>
+            </PullToRefresh>
+        </div >
     );
 }

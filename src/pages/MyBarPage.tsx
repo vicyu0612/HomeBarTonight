@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect, useRef } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { MyBarModal, type IngredientItem } from '../components/MyBarModal';
 import { ShakerIcon } from '../components/ShakerIcon';
 import clsx from 'clsx';
@@ -9,6 +9,7 @@ import { RecipeCardSkeleton } from '../components/RecipeCardSkeleton';
 import { useSubscription } from '../hooks/useSubscription';
 import { motion } from 'framer-motion';
 import { LockedContentCard } from '../components/LockedContentCard';
+import { PullToRefresh } from '../components/PullToRefresh';
 
 interface MyBarPageProps {
     allRecipes: Recipe[];
@@ -19,6 +20,7 @@ interface MyBarPageProps {
     onSelectRecipe: (recipe: Recipe, list?: Recipe[]) => void;
     favorites: Set<string>;
     toggleFavorite: (id: string, e?: React.MouseEvent) => void;
+    onRefresh?: () => Promise<void>;
 }
 
 export function MyBarPage({
@@ -29,7 +31,8 @@ export function MyBarPage({
     lang,
     onSelectRecipe,
     favorites,
-    toggleFavorite
+    toggleFavorite,
+    onRefresh
 }: MyBarPageProps) {
     const { isPro, presentPaywall } = useSubscription();
     // Modal Persistence
@@ -45,7 +48,6 @@ export function MyBarPage({
     }, [showModal]);
 
     const [activeTab, setActiveTab] = useState<'available' | 'missing'>('available');
-    const scrollRef = useRef<HTMLDivElement>(null);
 
     // Filter Logic and Categorization
     const { exactMatches, missingOneMatches } = useMemo(() => {
@@ -127,9 +129,9 @@ export function MyBarPage({
             />
 
             {/* Scrollable Content */}
-            <div
-                ref={scrollRef}
+            <PullToRefresh
                 className="flex-1 overflow-y-auto w-full no-scrollbar pb-24"
+                onRefresh={onRefresh || (async () => { })}
             >
                 {/* Header Content with Safe Area Padding */}
                 <div className="px-4 pt-[calc(3rem+env(safe-area-inset-top))]">
@@ -327,7 +329,7 @@ export function MyBarPage({
                         </div>
                     )}
                 </div>
-            </div>
+            </PullToRefresh>
 
             {/* Modal */}
             <MyBarModal
@@ -337,7 +339,8 @@ export function MyBarPage({
                 setMyInventory={setMyInventory}
                 lang={lang}
                 allIngredients={allIngredients}
+                onRefresh={onRefresh}
             />
-        </div>
+        </div >
     );
 }

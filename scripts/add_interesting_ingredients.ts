@@ -18,10 +18,7 @@ if (!supabaseUrl || !supabaseKey) {
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 const newIngredients = [
-    { id: 'winter_melon_tea', name_en: 'Winter Melon Tea', name_zh: '冬瓜茶', category: 'mixer' },
-    { id: 'pudding', name_en: 'Pudding', name_zh: '統一布丁', category: 'essential' }, // Treated as garnish/essential
-    { id: 'sarsaparilla', name_en: 'Sarsaparilla', name_zh: '黑松沙士', category: 'mixer' },
-    { id: 'salt', name_en: 'Salt', name_zh: '鹽', category: 'essential' }
+    { id: 'milk_tea', name_en: 'Milk Tea', name_zh: '奶茶', category: 'mixer' }
 ];
 
 async function addIngredients() {

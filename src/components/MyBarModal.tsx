@@ -11,6 +11,8 @@ export interface IngredientItem {
     category: 'base' | 'liqueur' | 'other_alc' | 'essential' | 'mixer' | 'garnish';
 }
 
+import { PullToRefresh } from './PullToRefresh';
+
 interface MyBarModalProps {
     isOpen: boolean;
     onClose: () => void;
@@ -19,6 +21,7 @@ interface MyBarModalProps {
     setMyInventory: (inventory: Set<string>) => void;
     lang: 'en' | 'zh';
     allIngredients: IngredientItem[]; // New Prop
+    onRefresh?: () => Promise<void>;
 }
 
 export function MyBarModal({
@@ -27,7 +30,8 @@ export function MyBarModal({
     myInventory,
     setMyInventory,
     lang,
-    allIngredients
+    allIngredients,
+    onRefresh
 }: MyBarModalProps) {
     const [isScrolled, setIsScrolled] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
@@ -56,6 +60,9 @@ export function MyBarModal({
                 i.name_en.toLowerCase().includes(lowerQ) ||
                 i.name_zh.includes(lowerQ)
             );
+        } else {
+            const debugIngs = allIngredients.filter(i => ['orgeat', 'grenadine', 'pudding'].includes(i.id));
+            console.log('[MyBarModal] Received Ingredients:', debugIngs);
         }
 
         // Sort ingredients alphabetically or by ID? Let's use DB order (usually insert order) or Name?
@@ -170,9 +177,10 @@ export function MyBarModal({
                         </div>
 
                         {/* Content */}
-                        <div
+                        <PullToRefresh
                             className="flex-1 overflow-y-auto px-4 space-y-8 custom-scrollbar pt-[calc(3rem+env(safe-area-inset-top))]"
                             onScroll={handleScroll}
+                            onRefresh={onRefresh || (async () => { })}
                         >
                             {/* Large Title */}
                             {/* Header Group (Title + Search) */}
@@ -250,7 +258,7 @@ export function MyBarModal({
                                 )
                             ))}
 
-                        </div>
+                        </PullToRefresh>
 
                         {/* Footer */}
                         <div className="p-6 border-t-[0.5px] border-white/10 bg-black/20 backdrop-blur-xl z-10">

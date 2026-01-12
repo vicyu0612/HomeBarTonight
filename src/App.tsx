@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo, lazy, Suspense } from 'react';
+import { useEffect, useState, useMemo, lazy, Suspense, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { recipes as localRecipes, type Recipe } from './data/recipes';
 import { supabase } from './supabaseClient';
@@ -111,65 +111,71 @@ function App() {
     localStorage.setItem('favorites', JSON.stringify(Array.from(favorites)));
   }, [favorites]);
 
+  // Fetch Data
+  const fetchData = useCallback(async () => {
+    if (!supabase) return;
+    const { data: recipeData } = await supabase.from('recipes').select('*').order('id', { ascending: true });
+    if (recipeData && recipeData.length > 0) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      setAllRecipes(recipeData.map((r: any) => ({
+        id: r.id, name: r.name, type: r.type, baseSpirit: r.base_spirit,
+        ingredients: r.ingredients, steps: r.steps, tags: r.tags,
+        description: r.description, specs: r.specs, color: r.color,
+        image: r.image ? `${r.image}?v=${new Date().getTime()}` : (r.image || ""), // Cache busting & Type Safety
+        collections: r.collections, // Important: Include collections tags for filtering
+        is_premium: r.is_premium // Map premium status from DB
+      })));
+    }
+    if (supabase) {
+      // Fetch Ingredients
+      const { data: ingData } = await supabase.from('ingredients').select('*');
+      if (ingData) {
+        setAllIngredients(ingData as IngredientItem[]);
+        // Debug Log
+        const debugIngs = ingData.filter((i: any) => ['orgeat', 'grenadine', 'pudding'].includes(i.id));
+        console.log('[App] Fetched Ingredients Debug:', debugIngs);
+      }
+
+      // Fetch Collections
+      const { data: colData } = await supabase
+        .from('collections')
+        .select('*')
+        .eq('is_active', true)
+        .order('sort_order', { ascending: true });
+
+      if (colData && colData.length > 0) {
+        console.log('[App] Fetched collections from Supabase:', colData);
+        // Map DB fields to Collection interface
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const mappedCollections: Collection[] = colData.map((c: any) => ({
+          id: c.id,
+          title: c.title,
+          subtitle: c.subtitle,
+          type: c.type,
+          recipeIds: c.recipe_ids,
+          filterRules: c.filter_rules,
+          coverImage: c.cover_image,
+          coverImageEn: c.cover_image_en, // Localized image
+          themeColor: c.theme_color,
+          description: c.description,
+          sortOrder: c.sort_order,
+          isActive: c.is_active
+        }));
+        setAllCollections(mappedCollections);
+      }
+    }
+  }, [supabase]);
+
   // --- Auth & Sync Logic ---
   useEffect(() => {
     if (!supabase) return;
     supabase.auth.getSession().then(({ data: { session } }) => setSession(session));
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => setSession(session));
 
-    // Fetch Data
-    const fetchData = async () => {
-      if (!supabase) return;
-      const { data: recipeData } = await supabase.from('recipes').select('*').order('id', { ascending: true });
-      if (recipeData && recipeData.length > 0) {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        setAllRecipes(recipeData.map((r: any) => ({
-          id: r.id, name: r.name, type: r.type, baseSpirit: r.base_spirit,
-          ingredients: r.ingredients, steps: r.steps, tags: r.tags,
-          description: r.description, specs: r.specs, color: r.color,
-          image: r.image ? `${r.image}?v=${new Date().getTime()}` : (r.image || ""), // Cache busting & Type Safety
-          collections: r.collections, // Important: Include collections tags for filtering
-          is_premium: r.is_premium // Map premium status from DB
-        })));
-      }
-      if (supabase) {
-        // Fetch Ingredients
-        const { data: ingData } = await supabase.from('ingredients').select('*');
-        if (ingData) setAllIngredients(ingData as IngredientItem[]);
-
-        // Fetch Collections
-        const { data: colData } = await supabase
-          .from('collections')
-          .select('*')
-          .eq('is_active', true)
-          .order('sort_order', { ascending: true });
-
-        if (colData && colData.length > 0) {
-          console.log('[App] Fetched collections from Supabase:', colData);
-          // Map DB fields to Collection interface
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          const mappedCollections: Collection[] = colData.map((c: any) => ({
-            id: c.id,
-            title: c.title,
-            subtitle: c.subtitle,
-            type: c.type,
-            recipeIds: c.recipe_ids,
-            filterRules: c.filter_rules,
-            coverImage: c.cover_image,
-            coverImageEn: c.cover_image_en, // Localized image
-            themeColor: c.theme_color,
-            description: c.description,
-            sortOrder: c.sort_order,
-            isActive: c.is_active
-          }));
-          setAllCollections(mappedCollections);
-        }
-      }
-    };
     fetchData();
 
     return () => subscription.unsubscribe();
-  }, []);
+  }, [supabase, fetchData]);
 
   // --- Persistence Logic for Modals ---
 
@@ -570,6 +576,7 @@ function App() {
               onSelectRecipe={handleSelectRecipe}
               toggleFavorite={toggleFavorite}
               favorites={favorites}
+              onRefresh={fetchData}
             />
 
             <AnimatePresence>
@@ -599,6 +606,7 @@ function App() {
                           favorites={favorites}
                           lang={lang}
                           filterRecipes={filterRecipes}
+                          onRefresh={fetchData}
                         />
                       </div>
                     );
@@ -617,6 +625,7 @@ function App() {
               onSelectRecipe={handleSelectRecipe}
               lang={lang}
               onShake={handleShake}
+              onRefresh={fetchData}
             />
           </div>
 
@@ -631,6 +640,7 @@ function App() {
               onSelectRecipe={handleSelectRecipe}
               favorites={favorites}
               toggleFavorite={toggleFavorite}
+              onRefresh={fetchData}
             />
           </div>
 
@@ -642,6 +652,7 @@ function App() {
               toggleFavorite={toggleFavorite}
               onSelectRecipe={handleSelectRecipe}
               lang={lang}
+              onRefresh={fetchData}
             />
           </div>
 

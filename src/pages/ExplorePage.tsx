@@ -5,6 +5,7 @@ import type { Recipe } from '../data/recipes';
 import { RecipeCard } from '../components/RecipeCard';
 import { RecipeCardSkeleton } from '../components/RecipeCardSkeleton';
 import { useSubscription } from '../hooks/useSubscription';
+import { PullToRefresh } from '../components/PullToRefresh';
 import clsx from 'clsx';
 
 interface FeaturedBanner {
@@ -20,13 +21,14 @@ interface FeaturedBanner {
 
 interface ExplorePageProps {
     lang: 'en' | 'zh';
-    onSelectCollection: (id: string) => void;
+    onSelectCollection?: (id: string) => void;
     allRecipes: Recipe[];
     allCollections: Collection[];
-    filterRecipes: (collection: Collection, recipes: Recipe[]) => Recipe[];
+    filterRecipes?: (collection: Collection, recipes: Recipe[]) => Recipe[];
     onSelectRecipe: (recipe: Recipe, list: Recipe[]) => void;
     toggleFavorite: (id: string, e?: React.MouseEvent) => void;
     favorites: Set<string>;
+    onRefresh?: () => Promise<void>;
 }
 
 export function ExplorePage({
@@ -37,7 +39,8 @@ export function ExplorePage({
     filterRecipes,
     onSelectRecipe,
     toggleFavorite,
-    favorites
+    favorites,
+    onRefresh
 }: ExplorePageProps) {
     const { isPro } = useSubscription();
     const [isScrolled, setIsScrolled] = useState(false);
@@ -53,6 +56,7 @@ export function ExplorePage({
     // Helper to get recipes using the passed filter helper
     // App.tsx filterRecipes now handles IDs, Rules, AND Legacy Function.
     const getPreviewRecipes = (collection: Collection) => {
+        if (!filterRecipes) return [];
         const recipes = filterRecipes(collection, allRecipes);
         return recipes.slice(0, 5);
     };
@@ -79,9 +83,10 @@ export function ExplorePage({
 
 
     return (
-        <div
-            className="h-full w-full overflow-y-auto bg-black no-scrollbar touch-pan-y"
+        <PullToRefresh
+            className="bg-black no-scrollbar touch-pan-y"
             onScroll={handleScroll}
+            onRefresh={onRefresh || (async () => { })}
         >
             {/* Fixed Header (Constrained) */}
             <div className={clsx(
@@ -129,7 +134,7 @@ export function ExplorePage({
                 {/* Hero Card */}
                 <div className="px-4 mb-10">
                     <div
-                        onClick={() => onSelectCollection(heroCollection.id)}
+                        onClick={() => onSelectCollection?.(heroCollection.id)}
                         className={clsx(
                             "relative w-full aspect-[3/2] md:aspect-[21/9] rounded-2xl overflow-hidden shadow-lg group cursor-pointer border border-white/10", // Updated Styles
                             !heroCollection.coverImage && "bg-gradient-to-br",
@@ -170,7 +175,7 @@ export function ExplorePage({
                             {/* Header */}
                             <div
                                 className="px-4 flex items-center justify-between cursor-pointer active:opacity-70 transition-opacity"
-                                onClick={() => onSelectCollection(collection.id)}
+                                onClick={() => onSelectCollection?.(collection.id)}
                             >
                                 <div>
                                     <h3 className="text-xl font-bold text-white">
@@ -213,7 +218,7 @@ export function ExplorePage({
                                 )}
                                 {/* See More Card (Vertical Style) */}
                                 <button
-                                    onClick={() => onSelectCollection(collection.id)}
+                                    onClick={() => onSelectCollection?.(collection.id)}
                                     className="snap-start shrink-0 w-[160px] rounded-2xl bg-zinc-900/50 border border-white/5 flex flex-col items-center justify-center gap-3 active:scale-95 transition-transform aspect-[3/4]"
                                 >
                                     <div className="w-12 h-12 rounded-full bg-zinc-800 flex items-center justify-center text-zinc-400">
@@ -229,6 +234,6 @@ export function ExplorePage({
                     ))}
                 </div>
             </div>
-        </div>
+        </PullToRefresh>
     );
 }

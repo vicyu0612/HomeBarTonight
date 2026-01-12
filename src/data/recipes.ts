@@ -1728,8 +1728,8 @@ export const recipes: Recipe[] = [
             zh: ['甜', '奶香', '療癒']
         },
         description: {
-            en: 'Bubble tea for the broken-hearted. Or just for a cozy night in. Sweet, creamy, and comforting.',
-            zh: '給傷心人的珍珠奶茶（雖然沒有珍珠）。甜、奶、療癒，在家買醉首選。'
+            en: "Transform your everyday milk tea into a sophisticated cocktail. Whether you prefer it hot or cold, this creamy blend creates the perfect 'adult' version of a classic comfort drink. Simple, soothing, and delicious.",
+            zh: '最適合台灣人的調酒，不論是超商奶茶還是手搖珍奶，你都可以變化出自己專屬的大人味奶茶。冰的熱的，都是療癒微醺好滋味。'
         },
         specs: {
             alcohol: 4,

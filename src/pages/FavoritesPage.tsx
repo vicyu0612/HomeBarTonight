@@ -1,5 +1,6 @@
 import { AnimatePresence } from 'framer-motion';
 import { Heart } from 'lucide-react';
+import { PullToRefresh } from '../components/PullToRefresh';
 import { RecipeCard } from '../components/RecipeCard';
 import { RecipeCardSkeleton } from '../components/RecipeCardSkeleton';
 import type { Recipe } from '../data/recipes';
@@ -13,9 +14,10 @@ interface FavoritesPageProps {
     toggleFavorite: (id: string, e?: React.MouseEvent) => void;
     onSelectRecipe: (recipe: Recipe, list?: Recipe[]) => void;
     lang: 'en' | 'zh';
+    onRefresh?: () => Promise<void>;
 }
 
-export function FavoritesPage({ recipes, favorites, toggleFavorite, onSelectRecipe, lang }: FavoritesPageProps) {
+export function FavoritesPage({ recipes, favorites, toggleFavorite, onSelectRecipe, lang, onRefresh }: FavoritesPageProps) {
     const favoriteRecipes = recipes.filter(r => favorites.has(r.id));
     const [isScrolled, setIsScrolled] = useState(false);
 
@@ -55,9 +57,10 @@ export function FavoritesPage({ recipes, favorites, toggleFavorite, onSelectReci
             </div>
 
             {/* Scrollable Content */}
-            <div
+            <PullToRefresh
                 className="flex-1 overflow-y-auto px-4 pb-24 no-scrollbar pt-[calc(3rem+env(safe-area-inset-top))]"
                 onScroll={handleScroll}
+                onRefresh={onRefresh || (async () => { })}
             >
                 <h1 className="text-3xl font-bold text-white mb-6 mt-2">
                     {lang === 'zh' ? '我的最愛' : 'Favorites'}
@@ -100,7 +103,7 @@ export function FavoritesPage({ recipes, favorites, toggleFavorite, onSelectReci
                         </AnimatePresence>
                     </div>
                 )}
-            </div>
+            </PullToRefresh>
         </div>
     );
 }

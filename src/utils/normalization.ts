@@ -66,6 +66,7 @@ export const INGREDIENT_DB: Record<string, { en: string; zh: string }> = {
     'peach_juice': { en: 'Peach Juice', zh: '水蜜桃汁' },
     'grass_jelly': { en: 'Grass Jelly', zh: '燒仙草' },
     'barley_tea': { en: 'Barley Tea', zh: '麥仔茶' },
+    'pudding': { en: 'Pudding', zh: '布丁' }, // Added explicit mapping
 
     'grenadine': { en: 'Grenadine', zh: '紅石榴糖漿' },
     'orgeat': { en: 'Orgeat', zh: '杏仁糖漿' }, // Added
@@ -246,7 +247,8 @@ const ALIAS_MAP_ZH: Record<string, string> = {
     "麥香/阿薩姆奶茶": "tea",
     "麥香": "tea",
     "茶": "tea",
-    "奶茶": "tea",
+    "奶茶": "milk_tea",
+    "熱奶茶": "milk_tea",
     "烏龍茶": "oolong_tea",
     "綠茶": "green_tea",
     "綠茶 (瓶裝)": "green_tea",
@@ -254,7 +256,11 @@ const ALIAS_MAP_ZH: Record<string, string> = {
     "濃縮咖啡": "espresso",
     "咖啡": "espresso",
     "熱咖啡": "espresso",
-    "蛋白": "egg"
+    "蛋白": "egg",
+    "統一布丁": "pudding",
+    "布丁": "pudding",
+    "uni-president pudding": "pudding",
+    "uni-president": "pudding"
 };
 
 const ALIAS_MAP_EN: Record<string, string> = {
@@ -306,6 +312,10 @@ const ALIAS_MAP_EN: Record<string, string> = {
     "black coffee": "black_coffee",
     "americano": "black_coffee",
     "egg yolk": "egg", // Added for Egg Yolk mapping
+    "pudding": "pudding",
+    "uni-president pudding": "pudding",
+    "grass jelly": "grass_jelly",
+    "hot grass jelly": "grass_jelly",
 
     "dry vermouth": "dry_vermouth",
     "sweet vermouth": "vermouth", // Added
@@ -344,7 +354,8 @@ const ALIAS_MAP_EN: Record<string, string> = {
     "coca-cola": "coke",
     "coke": "coke",
     "tea": "tea",
-    "milk tea": "tea",
+    "milk tea": "milk_tea",
+    "hot milk tea": "milk_tea",
     "assam": "tea",
     "black tea": "tea",
     "minechine": "tea",
@@ -459,7 +470,9 @@ export function normalizeIngredient(name: string, lang: 'en' | 'zh'): string[] {
                 else if (p.includes('可可')) id = 'cocoa_liqueur';
                 else if (p.includes('薑茶')) id = 'ginger_tea';
                 else if (p.includes('薑汁啤酒')) id = 'ginger_beer';
-                else if (p.includes('麥香') || p.includes('奶茶') || p.includes('紅茶') || p.includes('茶')) id = 'tea';
+                else if (p.includes('薑汁啤酒')) id = 'ginger_beer';
+                else if (p.includes('奶茶')) id = 'milk_tea';
+                else if (p.includes('麥香') || p.includes('紅茶') || p.includes('茶')) id = 'tea';
                 else if (p.includes('綠茶')) id = 'green_tea'; // Split
                 else if (p.includes('烏龍')) id = 'oolong_tea';
                 else if (p.includes('咖啡') || p.includes('濃縮')) id = 'espresso'; // Merged
@@ -516,6 +529,8 @@ export function normalizeIngredient(name: string, lang: 'en' | 'zh'): string[] {
                 else if (lowerP.includes('beer')) id = 'beer';
                 else if (lowerP.includes('shochu') || lowerP.includes('soju')) id = 'soju';
                 else if (lowerP.includes('ginger tea')) id = 'ginger_tea';
+                else if (lowerP.includes('ginger tea')) id = 'ginger_tea';
+                else if (lowerP.includes('milk tea')) id = 'milk_tea';
                 else if (lowerP.includes('black tea') || lowerP.includes('tea')) id = 'tea';
                 else if (lowerP.includes('oolong')) id = 'oolong_tea';
                 else if (lowerP.includes('green tea')) id = 'green_tea'; // Split

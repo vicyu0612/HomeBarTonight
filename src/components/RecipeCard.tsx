@@ -97,7 +97,7 @@ export function RecipeCard({
                     <div className="absolute top-2 right-2 z-10">
                         {HeartButton}
                     </div>
-                    {isLocked && (
+                    {recipe.is_premium && (
                         <div className="absolute top-2 left-2 z-10 w-6 h-6 flex items-center justify-center bg-black/60 backdrop-blur-md rounded-full text-yellow-500 border border-yellow-500/30 shadow-lg">
                             <Crown size={14} strokeWidth={2.5} />
                         </div>
@@ -149,7 +149,7 @@ export function RecipeCard({
             {/* Image Section */}
             <div className="w-[120px] h-[120px] shrink-0 relative rounded-xl bg-zinc-700/20 overflow-hidden">
                 {ImageContent}
-                {isLocked && (
+                {recipe.is_premium && (
                     <div className="absolute top-1.5 left-1.5 z-10 w-6 h-6 flex items-center justify-center bg-black/60 backdrop-blur-md rounded-full text-yellow-500 border border-yellow-500/30 shadow-lg">
                         <Crown size={14} strokeWidth={2.5} />
                     </div>

@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Search, X, Martini, SlidersHorizontal } from 'lucide-react';
 import type { Recipe } from '../data/recipes';
 import clsx from 'clsx';
+import { PullToRefresh } from '../components/PullToRefresh';
 
 // Shaker Icon Component
 import { ShakerIcon } from '../components/ShakerIcon';
@@ -17,9 +18,10 @@ interface CocktailsPageProps {
     onSelectRecipe: (recipe: Recipe, list?: Recipe[]) => void;
     lang: 'en' | 'zh';
     onShake: () => void;
+    onRefresh?: () => Promise<void>;
 }
 
-export function CocktailsPage({ allRecipes, favorites, toggleFavorite, onSelectRecipe, lang, onShake }: CocktailsPageProps) {
+export function CocktailsPage({ allRecipes, favorites, toggleFavorite, onSelectRecipe, lang, onShake, onRefresh }: CocktailsPageProps) {
     const { isPro } = useSubscription();
 
     // State Initialization with URL Search Params
@@ -150,11 +152,11 @@ export function CocktailsPage({ allRecipes, favorites, toggleFavorite, onSelectR
     };
 
     return (
-        <div
+        <PullToRefresh
             className="h-full overflow-y-auto no-scrollbar flex flex-col"
             onScroll={handleScroll}
+            onRefresh={onRefresh || (async () => { })}
         >
-            {/* Scroll Sentinel (Removed) */}
 
             {/* Header (Scrolls away) */}
             <div className="px-4 pb-4 pt-[calc(3rem+env(safe-area-inset-top))] flex justify-between items-center bg-transparent relative z-10">
@@ -221,9 +223,6 @@ export function CocktailsPage({ allRecipes, favorites, toggleFavorite, onSelectR
                         )}
                     </button>
                 </div>
-
-                {/* Category Tabs (Restored here) */}
-                {/* Category Tabs Moved to Filter */}
             </div>
 
             {/* Filter Sheet */}
@@ -355,7 +354,7 @@ export function CocktailsPage({ allRecipes, favorites, toggleFavorite, onSelectR
                                 isLocked={recipe.is_premium && !isPro}
                             />
                         ))}
-                    </div >
+                    </div>
                 ) : (
                     <div className="flex flex-col items-center justify-center py-20 text-zinc-500">
                         <Martini size={48} className="mb-4 opacity-50" />
@@ -364,9 +363,8 @@ export function CocktailsPage({ allRecipes, favorites, toggleFavorite, onSelectR
                             {lang === 'zh' ? '清除篩選' : 'Clear filters'}
                         </button>
                     </div>
-                )
-                }
-            </div >
-        </div >
+                )}
+            </div>
+        </PullToRefresh>
     );
 }
