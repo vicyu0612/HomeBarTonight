@@ -1,4 +1,5 @@
 import { useState, useMemo, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Search, X, Martini, SlidersHorizontal } from 'lucide-react';
 import type { Recipe } from '../data/recipes';
@@ -225,112 +226,115 @@ export function CocktailsPage({ allRecipes, favorites, toggleFavorite, onSelectR
                 </div>
             </div>
 
-            {/* Filter Sheet */}
-            <AnimatePresence>
-                {showFilter && (
-                    <>
-                        <motion.div
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            exit={{ opacity: 0 }}
-                            onClick={() => setShowFilter(false)}
-                            className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[100]"
-                        />
-                        <motion.div
-                            initial={{ y: '100%' }}
-                            animate={{ y: 0 }}
-                            exit={{ y: '100%' }}
-                            transition={{ type: "spring", damping: 25, stiffness: 200 }}
-                            className="fixed bottom-0 left-0 right-0 w-full max-w-[1024px] mx-auto z-[101] bg-black/40 backdrop-blur-2xl rounded-t-[2.5rem] border-t-[0.5px] border-white/10 shadow-[0_-10px_40px_rgba(0,0,0,0.5),inset_0_0.5px_0_rgba(255,255,255,0.1)] p-6 pb-12"
-                        >
-                            <div className="flex justify-between items-center mb-6">
-                                <h3 className="text-2xl font-bold text-white">{lang === 'zh' ? '篩選' : 'Filters'}</h3>
-                                <div className="flex gap-2">
-                                    {activeFilterCount > 0 && (
-                                        <button
-                                            onClick={() => {
-                                                setSelectedCategories(new Set());
-                                                setSelectedSpirits(new Set());
-                                            }}
-                                            className="px-4 py-2 rounded-full bg-red-500/10 backdrop-blur-md border border-red-500/20 text-red-400 hover:bg-red-500/20 active:scale-95 text-xs font-bold transition-all"
-                                        >
-                                            {lang === 'zh' ? '全部清除' : 'Clear All'}
+            {/* Filter Sheet - Rendered via Portal to escape stacking context */}
+            {createPortal(
+                <AnimatePresence>
+                    {showFilter && (
+                        <>
+                            <motion.div
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                exit={{ opacity: 0 }}
+                                onClick={() => setShowFilter(false)}
+                                className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[199]"
+                            />
+                            <motion.div
+                                initial={{ y: '100%' }}
+                                animate={{ y: 0 }}
+                                exit={{ y: '100%' }}
+                                transition={{ type: "spring", damping: 25, stiffness: 200 }}
+                                className="fixed bottom-0 left-0 right-0 w-full max-w-[1024px] mx-auto z-[200] bg-black/40 backdrop-blur-2xl rounded-t-[2.5rem] border-t-[0.5px] border-white/10 shadow-[0_-10px_40px_rgba(0,0,0,0.5),inset_0_0.5px_0_rgba(255,255,255,0.1)] p-6 pb-12"
+                            >
+                                <div className="flex justify-between items-center mb-6">
+                                    <h3 className="text-2xl font-bold text-white">{lang === 'zh' ? '篩選' : 'Filters'}</h3>
+                                    <div className="flex gap-2">
+                                        {activeFilterCount > 0 && (
+                                            <button
+                                                onClick={() => {
+                                                    setSelectedCategories(new Set());
+                                                    setSelectedSpirits(new Set());
+                                                }}
+                                                className="px-4 py-2 rounded-full bg-red-500/10 backdrop-blur-md border border-red-500/20 text-red-400 hover:bg-red-500/20 active:scale-95 text-xs font-bold transition-all"
+                                            >
+                                                {lang === 'zh' ? '全部清除' : 'Clear All'}
+                                            </button>
+                                        )}
+                                        <button onClick={() => setShowFilter(false)} className="p-2 rounded-full bg-black/30 backdrop-blur-md text-white border border-white/10 shadow-lg hover:bg-black/50 active:scale-95 transition-all">
+                                            <X size={24} />
                                         </button>
-                                    )}
-                                    <button onClick={() => setShowFilter(false)} className="p-2 rounded-full bg-black/30 backdrop-blur-md text-white border border-white/10 shadow-lg hover:bg-black/50 active:scale-95 transition-all">
-                                        <X size={24} />
-                                    </button>
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div className="space-y-6">
-                                {/* Category Section */}
-                                <div>
-                                    <h4 className="text-zinc-500 text-xs font-bold uppercase tracking-wider mb-3">
-                                        {lang === 'zh' ? '分類' : 'Category'}
-                                    </h4>
-                                    <div className="flex flex-wrap gap-2">
-                                        {tabs.map(tab => {
-                                            const labels = {
-                                                cvs: t.tabs.cvs,
-                                                classic: t.tabs.classic
-                                            };
-                                            return (
+                                <div className="space-y-6">
+                                    {/* Category Section */}
+                                    <div>
+                                        <h4 className="text-zinc-500 text-xs font-bold uppercase tracking-wider mb-3">
+                                            {lang === 'zh' ? '分類' : 'Category'}
+                                        </h4>
+                                        <div className="flex flex-wrap gap-2">
+                                            {tabs.map(tab => {
+                                                const labels = {
+                                                    cvs: t.tabs.cvs,
+                                                    classic: t.tabs.classic
+                                                };
+                                                return (
+                                                    <button
+                                                        key={tab}
+                                                        onClick={() => toggleCategory(tab)}
+                                                        className={clsx(
+                                                            "whitespace-nowrap px-4 py-2 rounded-full text-sm font-medium border transition-colors",
+                                                            selectedCategories.has(tab)
+                                                                ? "bg-indigo-500 text-white border-indigo-500 shadow-md shadow-indigo-500/20"
+                                                                : "bg-zinc-800/40 text-zinc-400 border-white/10 hover:bg-zinc-700"
+                                                        )}
+                                                    >
+                                                        {labels[tab]}
+                                                    </button>
+                                                );
+                                            })}
+                                        </div>
+                                    </div>
+                                    {/* Base Spirit Only */}
+                                    <div>
+                                        <h4 className="text-zinc-500 text-xs font-bold uppercase tracking-wider mb-3">
+                                            {lang === 'zh' ? '基酒' : 'Base Spirit'}
+                                        </h4>
+                                        <div className="flex flex-wrap gap-2">
+                                            {spirits.map(s => (
                                                 <button
-                                                    key={tab}
-                                                    onClick={() => toggleCategory(tab)}
+                                                    key={s.id}
+                                                    onClick={() => toggleSpirit(s.id)}
                                                     className={clsx(
                                                         "whitespace-nowrap px-4 py-2 rounded-full text-sm font-medium border transition-colors",
-                                                        selectedCategories.has(tab)
+                                                        selectedSpirits.has(s.id)
                                                             ? "bg-indigo-500 text-white border-indigo-500 shadow-md shadow-indigo-500/20"
                                                             : "bg-zinc-800/40 text-zinc-400 border-white/10 hover:bg-zinc-700"
                                                     )}
                                                 >
-                                                    {labels[tab]}
+                                                    {s.label}
                                                 </button>
-                                            );
-                                        })}
+                                            ))}
+                                        </div>
                                     </div>
-                                </div>
-                                {/* Base Spirit Only */}
-                                <div>
-                                    <h4 className="text-zinc-500 text-xs font-bold uppercase tracking-wider mb-3">
-                                        {lang === 'zh' ? '基酒' : 'Base Spirit'}
-                                    </h4>
-                                    <div className="flex flex-wrap gap-2">
-                                        {spirits.map(s => (
-                                            <button
-                                                key={s.id}
-                                                onClick={() => toggleSpirit(s.id)}
-                                                className={clsx(
-                                                    "whitespace-nowrap px-4 py-2 rounded-full text-sm font-medium border transition-colors",
-                                                    selectedSpirits.has(s.id)
-                                                        ? "bg-indigo-500 text-white border-indigo-500 shadow-md shadow-indigo-500/20"
-                                                        : "bg-zinc-800/40 text-zinc-400 border-white/10 hover:bg-zinc-700"
-                                                )}
-                                            >
-                                                {s.label}
-                                            </button>
-                                        ))}
-                                    </div>
-                                </div>
 
-                                <button
-                                    onClick={() => setShowFilter(false)}
-                                    className={clsx(
-                                        "w-full py-4 font-bold rounded-2xl mt-4 active:scale-[0.98] transition-all",
-                                        activeFilterCount > 0
-                                            ? "bg-indigo-500 text-white shadow-lg shadow-indigo-500/20"
-                                            : "bg-white text-black"
-                                    )}
-                                >
-                                    {lang === 'zh' ? `顯示 ${filteredRecipes.length} 個結果` : `Show ${filteredRecipes.length} Results`}
-                                </button>
-                            </div>
-                        </motion.div>
-                    </>
-                )}
-            </AnimatePresence>
+                                    <button
+                                        onClick={() => setShowFilter(false)}
+                                        className={clsx(
+                                            "w-full py-4 font-bold rounded-2xl mt-4 active:scale-[0.98] transition-all",
+                                            activeFilterCount > 0
+                                                ? "bg-indigo-500 text-white shadow-lg shadow-indigo-500/20"
+                                                : "bg-white text-black"
+                                        )}
+                                    >
+                                        {lang === 'zh' ? `顯示 ${filteredRecipes.length} 個結果` : `Show ${filteredRecipes.length} Results`}
+                                    </button>
+                                </div>
+                            </motion.div>
+                        </>
+                    )}
+                </AnimatePresence>,
+                document.body
+            )}
 
             {/* Recipe Grid */}
             <div className="px-4 flex-1 pt-4 pb-24">

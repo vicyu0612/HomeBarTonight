@@ -473,20 +473,20 @@ export function SettingsPage({ session, lang, setLang, onLogin, onLogout, onDele
             {/* Language Action Sheet */}
             <AnimatePresence>
                 {showLanguageSheet && (
-                    <div className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center sm:p-4">
+                    <>
                         <motion.div
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
                             onClick={() => setShowLanguageSheet(false)}
-                            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+                            className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[199]"
                         />
                         <motion.div
                             initial={{ y: "100%" }}
                             animate={{ y: 0 }}
                             exit={{ y: "100%" }}
                             transition={{ type: "spring", damping: 25, stiffness: 200 }}
-                            className="relative w-full sm:max-w-md bg-zinc-900 border-t sm:border border-white/10 rounded-t-3xl sm:rounded-2xl p-6 shadow-2xl pb-[calc(1.5rem+env(safe-area-inset-bottom))]"
+                            className="fixed bottom-0 left-0 right-0 w-full max-w-[1024px] mx-auto z-[200] bg-black/40 backdrop-blur-2xl rounded-t-[2.5rem] border-t-[0.5px] border-white/10 shadow-[0_-10px_40px_rgba(0,0,0,0.5),inset_0_0.5px_0_rgba(255,255,255,0.1)] p-6 pb-12"
                         >
                             <div className="flex justify-between items-center mb-6">
                                 <h3 className="text-2xl font-bold text-white">{t.language.select}</h3>
@@ -505,7 +505,7 @@ export function SettingsPage({ session, lang, setLang, onLogin, onLogout, onDele
                                     }}
                                     className={clsx(
                                         "w-full p-4 rounded-xl flex items-center justify-between transition-colors",
-                                        lang === 'en' ? "bg-white text-black" : "bg-zinc-800 text-zinc-300 hover:bg-zinc-700"
+                                        lang === 'en' ? "bg-white text-black" : "bg-zinc-800/60 text-zinc-300 hover:bg-zinc-700/60"
                                     )}
                                 >
                                     <span className="font-medium">English</span>
@@ -518,7 +518,7 @@ export function SettingsPage({ session, lang, setLang, onLogin, onLogout, onDele
                                     }}
                                     className={clsx(
                                         "w-full p-4 rounded-xl flex items-center justify-between transition-colors",
-                                        lang === 'zh' ? "bg-white text-black" : "bg-zinc-800 text-zinc-300 hover:bg-zinc-700"
+                                        lang === 'zh' ? "bg-white text-black" : "bg-zinc-800/60 text-zinc-300 hover:bg-zinc-700/60"
                                     )}
                                 >
                                     <span className="font-medium">繁體中文</span>
@@ -526,7 +526,7 @@ export function SettingsPage({ session, lang, setLang, onLogin, onLogout, onDele
                                 </button>
                             </div>
                         </motion.div>
-                    </div>
+                    </>
                 )}
             </AnimatePresence>
 
