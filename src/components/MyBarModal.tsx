@@ -61,7 +61,7 @@ export function MyBarModal({
                 i.name_zh.includes(lowerQ)
             );
         } else {
-            const debugIngs = allIngredients.filter(i => ['orgeat', 'grenadine', 'pudding'].includes(i.id));
+
 
         }
 

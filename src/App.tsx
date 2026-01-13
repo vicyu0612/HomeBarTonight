@@ -131,8 +131,7 @@ function App() {
       const { data: ingData } = await supabase.from('ingredients').select('*');
       if (ingData) {
         setAllIngredients(ingData as IngredientItem[]);
-        // Debug Log
-        const debugIngs = ingData.filter((i: any) => ['orgeat', 'grenadine', 'pudding'].includes(i.id));
+
 
       }
 
@@ -478,7 +477,7 @@ function App() {
   // Helper function to filter recipes based on collection rules
   const filterRecipes = useMemo(() => (collection: Collection, recipes: Recipe[]): Recipe[] => {
     // 1. Explicit Recipe IDs (Highest Priority)
-    if (collection.recipeIds && collection.recipeIds.length > 0) {
+    if (collection.recipeIds && collection.recipeIds.length) {
       return recipes.filter(r => collection.recipeIds?.includes(r.id));
     }
 
