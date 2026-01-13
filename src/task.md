@@ -37,6 +37,11 @@
         - [x] Added Swipe Gestures for Category Switching (Left/Right).
         - [x] Refined Segmented Control Animation (LayoutId smooth slide).
         - [x] Unified Button Sizes (Filter & Random buttons).
+        - [x] Unified Empty State Styles (MyBar matches Cocktails page).
+    - [x] **Project Hygiene & Optimization**:
+        - [x] Removed unused `jsonwebtoken` dependency.
+        - [x] Deleted unused files (`App.css`, `src/admin`).
+        - [x] Cleaned up redundant iOS project files.
     - [x] **App Icon**: Updated to user-provided cleaner design.
     - [x] **iOS Large Title Scroll Effect**: Implemented scroll-driven navigation bar transition for My Bar, Favorites, and Settings pages.
 - [x] **Dynamic Ingredients Migration**
