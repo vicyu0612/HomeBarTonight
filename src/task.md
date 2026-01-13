@@ -113,7 +113,6 @@
 - [ ] **Data Cleanup (Post-Approval)**
     - [ ] Remove temporary `dessert-lover` tags from recipes.
     - [ ] Remove legacy `filter_rules` from Dessert Collection (rely purely on `recipe_ids`).
-- [x] **Movie & Literature Collection**
-    - [x] Update descriptions for remaining 5 cocktails (White Russian, French 75, Mint Julep, Old Fashioned, Martini)
-    - [x] Add "Cosmpolitan" (Sex and the City) with generated image & specs
-    - [x] Verify ingredient mapping (Lemon/Lime merge, Cranberry Juice check).
+- [x] **Debugging & Maintenance**
+    - [x] Investigate and fix Xcode Cloud build failure (`ci_post_clone.sh` created).
+
