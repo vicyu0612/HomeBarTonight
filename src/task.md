@@ -89,6 +89,22 @@
     - [x] **Gestures & Transitions**:
         - [x] **Swipe to Go Back**: Implemented native-like left-edge swipe gesture for Detail Pages.
         - [x] **Page Transitions**: Implemented "Push/Pop" slide animations (Slide Right/Left) for Collection Detail View.
+    - [x] **New Collections Integration**:
+        - [x] Created "Dessert Lover" Collection (Image Gen + SQL Injection).
+        - [x] Added 5 New CVS Recipes (Images + SQL + Ingredients).
+
 
 ## Next Steps
 - [x] Prepare for App Store Submission (Screenshots, Description)
+
+## Phase 6: Post-Launch Roadmap (After App Review Approval)
+- [ ] **Execute SwiftUI Rewrite Plan** (`swiftui_migration_plan.md`)
+    - [ ] Create new Xcode Project (Pure SwiftUI).
+    - [ ] Migrate Data Models (TS Interface -> Swift Structs).
+    - [ ] Reimplement UI with native components (ScrollView, LazyVGrid).
+    - [ ] Integrate RevenueCat & Supabase iOS SDKs.
+- [ ] **Web Payments Expansion** (`web_payments_plan.md`)
+    - [ ] Implement Paddle/Stripe integration for web-based subscriptions.
+- [ ] **Data Cleanup (Post-Approval)**
+    - [ ] Remove temporary `dessert-lover` tags from recipes.
+    - [ ] Remove legacy `filter_rules` from Dessert Collection (rely purely on `recipe_ids`).

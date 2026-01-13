@@ -85,6 +85,9 @@ export const INGREDIENT_DB: Record<string, { en: string; zh: string }> = {
     'plum_green_tea': { en: 'Plum Green Tea', zh: '梅子綠茶' }, // Added
     'black_coffee': { en: 'Black Coffee', zh: '黑咖啡' }, // Added
     'plum': { en: 'Sour Plum', zh: '梅子 (話梅)' }, // Added
+    'umeshu': { en: 'Umeshu (Plum Wine)', zh: '梅酒' }, // Added
+    'coffee_milk': { en: 'Coffee Milk', zh: '咖啡牛奶' }, // Added
+    'papaya_milk': { en: 'Papaya Milk', zh: '木瓜牛奶' }, // Added
 
     // Essentials
     'ice': { en: 'Ice', zh: '冰塊' },
@@ -175,6 +178,15 @@ const ALIAS_MAP_ZH: Record<string, string> = {
     "黑咖啡": "black_coffee",
     "美式咖啡": "black_coffee",
     "冰美式": "black_coffee",
+    "梅酒": "umeshu", // Added
+    "choya梅酒": "umeshu", // Added
+    "choya": "umeshu", // Added
+    "咖啡牛奶": "coffee_milk", // Added
+    "輕鬆小品": "coffee_milk", // Added
+    "貝納頌": "coffee_milk", // Added
+    "木瓜牛奶": "papaya_milk", // Added
+    "木瓜牛乳": "papaya_milk", // Added
+    "統一木瓜牛乳": "papaya_milk", // Added
     "蛋黃": "egg", // Added for Egg Yolk mapping
 
     "不甜香艾酒": "dry_vermouth",
@@ -315,7 +327,13 @@ const ALIAS_MAP_EN: Record<string, string> = {
     "pudding": "pudding",
     "uni-president pudding": "pudding",
     "grass jelly": "grass_jelly",
-    "hot grass jelly": "grass_jelly",
+    "umeshu": "umeshu", // Added
+    "plum wine": "umeshu", // Added
+    "choya": "umeshu", // Added
+    "coffee milk": "coffee_milk", // Added
+    "papaya milk": "papaya_milk", // Added
+    "uni-president papaya milk": "papaya_milk", // Added
+
 
     "dry vermouth": "dry_vermouth",
     "sweet vermouth": "vermouth", // Added

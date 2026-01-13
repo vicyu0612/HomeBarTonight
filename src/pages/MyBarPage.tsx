@@ -237,12 +237,12 @@ export function MyBarPage({
                                 ))}
                             </div>
                         ) : exactMatches.length === 0 ? (
-                            <div className="flex flex-col items-center justify-center py-16 text-zinc-500">
-                                <ShakerIcon size={48} className="mb-4 opacity-20" />
+                            <div className="flex flex-col items-center justify-center py-20 text-zinc-500">
+                                <ShakerIcon size={48} className="mb-4 opacity-50" />
                                 <p>{lang === 'zh' ? '庫存不足，無法完整調製任何酒譜' : 'Not enough ingredients.'}</p>
                                 <button
                                     onClick={() => setShowModal(true)}
-                                    className="text-xs mt-2 text-indigo-400 underline underline-offset-4 hover:text-indigo-300 transition-colors"
+                                    className="mt-4 text-indigo-400 underline underline-offset-4 hover:text-indigo-300 transition-colors"
                                 >
                                     {lang === 'zh' ? '試試新增更多材料？' : 'Try adding more ingredients?'}
                                 </button>

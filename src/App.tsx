@@ -477,6 +477,11 @@ function App() {
 
   // Helper function to filter recipes based on collection rules
   const filterRecipes = useMemo(() => (collection: Collection, recipes: Recipe[]): Recipe[] => {
+    // 1. Explicit Recipe IDs (Highest Priority)
+    if (collection.recipeIds && collection.recipeIds.length > 0) {
+      return recipes.filter(r => collection.recipeIds?.includes(r.id));
+    }
+
     // 2. Dynamic JSON Rules (DB)
     if (collection.filterRules) {
       const rules = collection.filterRules;
