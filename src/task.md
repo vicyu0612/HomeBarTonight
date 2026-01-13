@@ -119,6 +119,7 @@
     - [x] Verify ingredient mapping (Lemon/Lime merge, Cranberry Juice check).
     - [x] Add "Godfather" recipe (The Godfather) with generated image & specs.
     - [x] Add "Vesper Martini" recipe (Casino Royale) with generated image & specs.
+    - [x] Add "Gin Fizz" recipe (Classic) with generated image & specs.
 - [x] **Debugging & Maintenance**
     - [x] Investigate and fix Xcode Cloud build failure (`ci_post_clone.sh` created).
     - [x] **Code Optimization**: Removed debug `console.log` from App, SubscriptionContext, MyBarModal.
