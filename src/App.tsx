@@ -133,7 +133,7 @@ function App() {
         setAllIngredients(ingData as IngredientItem[]);
         // Debug Log
         const debugIngs = ingData.filter((i: any) => ['orgeat', 'grenadine', 'pudding'].includes(i.id));
-        console.log('[App] Fetched Ingredients Debug:', debugIngs);
+
       }
 
       // Fetch Collections
@@ -144,7 +144,7 @@ function App() {
         .order('sort_order', { ascending: true });
 
       if (colData && colData.length > 0) {
-        console.log('[App] Fetched collections from Supabase:', colData);
+
         // Map DB fields to Collection interface
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const mappedCollections: Collection[] = colData.map((c: any) => ({
@@ -215,7 +215,7 @@ function App() {
     if (!Capacitor.isNativePlatform()) return;
 
     CapApp.addListener('appUrlOpen', async ({ url }) => {
-      console.log('App opened with URL:', url);
+
       if (url.includes('access_token') || url.includes('refresh_token')) {
         // Supabase V2: Extract tokens from URL fragment
         // But simpler: pass the full URL to supabase helpers if available, or parse manual.

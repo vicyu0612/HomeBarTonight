@@ -38,9 +38,9 @@ export const SubscriptionProvider = ({ children }: { children: ReactNode }) => {
 
     const checkEntitlement = useCallback((info: CustomerInfo) => {
         // Debug Log
-        console.log("Checking Entitlement:", ENTITLEMENT_ID);
+
         const activeEntitlements = Object.keys(info.entitlements.active);
-        console.log("Active Entitlements:", activeEntitlements);
+
 
         setDebugInfo({
             activeEntitlements,
@@ -51,10 +51,10 @@ export const SubscriptionProvider = ({ children }: { children: ReactNode }) => {
         const entitlement = info.entitlements.all[ENTITLEMENT_ID];
 
         if (entitlement?.isActive) {
-            console.log("User IS Pro (Active Entitlement Found)");
+
             setIsPro(true);
         } else {
-            console.log("User is NOT Pro");
+
             setIsPro(false);
         }
     }, []);
@@ -84,14 +84,14 @@ export const SubscriptionProvider = ({ children }: { children: ReactNode }) => {
 
             // Setup Listener for real-time updates (e.g. from Paywall purchase)
             await Purchases.addCustomerInfoUpdateListener((info) => {
-                console.log("Customer Info Updated via Listener");
+
                 checkEntitlement(info);
             });
 
             // Refresh on App Resume (Critical for external cancellations)
             App.addListener('appStateChange', async ({ isActive }) => {
                 if (isActive) {
-                    console.log("App Resumed: Refreshing Customer Info");
+
                     await updateCustomerInfo();
                 }
             });

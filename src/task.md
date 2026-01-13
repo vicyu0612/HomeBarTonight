@@ -121,4 +121,7 @@
     - [x] Add "Vesper Martini" recipe (Casino Royale) with generated image & specs.
 - [x] **Debugging & Maintenance**
     - [x] Investigate and fix Xcode Cloud build failure (`ci_post_clone.sh` created).
+    - [x] **Code Optimization**: Removed debug `console.log` from App, SubscriptionContext, MyBarModal.
+    - [x] **Data Cleanup Preparation**: Created SQL scripts for post-approval cleanup (`cleanup_dessert_tags.sql`, `cleanup_collection_filters.sql`).
+
 

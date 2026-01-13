@@ -62,7 +62,7 @@ export function MyBarModal({
             );
         } else {
             const debugIngs = allIngredients.filter(i => ['orgeat', 'grenadine', 'pudding'].includes(i.id));
-            console.log('[MyBarModal] Received Ingredients:', debugIngs);
+
         }
 
         // Sort ingredients alphabetically or by ID? Let's use DB order (usually insert order) or Name?
