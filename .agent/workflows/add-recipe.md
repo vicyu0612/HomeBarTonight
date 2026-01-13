@@ -33,7 +33,25 @@ New recipes must follow the Supabase `recipes` table schema:
 }
 ```
 
-## 2. Ingredient Mapping Checklist
+## 2. Pre-Generation Validation & Proposal
+Before generating or inserting any new recipe, you MUST follow these validation steps:
+
+### Step 2a: Generate Proposal
+Create a list of proposed recipes with their ingredients and present it to the user for approval.
+**Wait for user confirmation before writing any code/SQL.**
+
+### Step 2b: Duplicate Checks
+For each proposed recipe, check against the database:
+
+1.  **Name Check**:
+    - Ensure `name->>'en'` and `name->>'zh'` do not match any existing records.
+2.  **Ingredient Set Check** (CRITICAL):
+    - Retrieve all existing recipes and their ingredients.
+    - Compare the **set of ingredient IDs** of the proposed recipe against existing ones.
+    - **Rule**: If a recipe with the *exact same set of ingredients* already exists, do NOT create a duplicate. Flag it to the user.
+    - *Example*: If "Whiskey Coke" exists (whiskey, coke), do not create "Bourbon & Cola" if it maps to `['whiskey', 'coke']`.
+
+## 3. Ingredient Mapping Checklist
 
 For EACH ingredient in the recipe:
 

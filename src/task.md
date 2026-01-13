@@ -113,3 +113,6 @@
 - [ ] **Data Cleanup (Post-Approval)**
     - [ ] Remove temporary `dessert-lover` tags from recipes.
     - [ ] Remove legacy `filter_rules` from Dessert Collection (rely purely on `recipe_ids`).
+- [x] **Movie & Literature Collection**
+    - [x] Updated descriptions for White Russian, French 75, Old Fashioned, Martini, Mojito, Mint Julep.
+    - [x] Added new recipe: Cosmopolitan (Sex and the City).
