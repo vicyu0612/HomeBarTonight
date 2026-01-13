@@ -1,0 +1,522 @@
+[
+  {
+    "id": "oolong-gin",
+    "name_en": "Oolong Gin",
+    "ease": 10
+  },
+  {
+    "id": "grape-aloe-soju",
+    "name_en": "Grape Aloe Soju",
+    "ease": 10
+  },
+  {
+    "id": "daiquiri",
+    "name_en": "Daiquiri",
+    "ease": 6
+  },
+  {
+    "id": "long-island",
+    "name_en": "Long Island Iced Tea",
+    "ease": 8
+  },
+  {
+    "id": "hot-buttered-rum",
+    "name_en": "Hot Buttered Rum",
+    "ease": 8
+  },
+  {
+    "id": "sarsaparilla-whiskey",
+    "name_en": "Sarsaparilla Highball",
+    "ease": 10
+  },
+  {
+    "id": "soju-melona",
+    "name_en": "Soju Melona",
+    "ease": 8
+  },
+  {
+    "id": "old-fashioned",
+    "name_en": "Old Fashioned",
+    "ease": 3
+  },
+  {
+    "id": "brandy-alexander",
+    "name_en": "Brandy Alexander",
+    "ease": 6
+  },
+  {
+    "id": "highball-cvs",
+    "name_en": "CVS Highball",
+    "ease": 7
+  },
+  {
+    "id": "tequila-coke",
+    "name_en": "Batanga (Tequila Coke)",
+    "ease": 9
+  },
+  {
+    "id": "sex-on-the-beach",
+    "name_en": "Sex on the Beach",
+    "ease": 8
+  },
+  {
+    "id": "mint-julep",
+    "name_en": "Mint Julep",
+    "ease": 7
+  },
+  {
+    "id": "b52",
+    "name_en": "B-52",
+    "ease": 4
+  },
+  {
+    "id": "kalimotxo",
+    "name_en": "Kalimotxo",
+    "ease": 10
+  },
+  {
+    "id": "horses-neck",
+    "name_en": "Horse's Neck",
+    "ease": 9
+  },
+  {
+    "id": "negroni",
+    "name_en": "Negroni",
+    "ease": 9
+  },
+  {
+    "id": "yakult-green-vodka",
+    "name_en": "Yogurt Green Vodka",
+    "ease": 9
+  },
+  {
+    "id": "plum-green-whiskey",
+    "name_en": "Plum Green Tea Whiskey",
+    "ease": 10
+  },
+  {
+    "id": "screwdriver",
+    "name_en": "Screwdriver",
+    "ease": 9
+  },
+  {
+    "id": "gimlet",
+    "name_en": "Gimlet",
+    "ease": 8
+  },
+  {
+    "id": "pocari-soju",
+    "name_en": "Pocari Soju",
+    "ease": 10
+  },
+  {
+    "id": "vodka-yakult",
+    "name_en": "Vodka Yakult",
+    "ease": 10
+  },
+  {
+    "id": "whiskey-sour",
+    "name_en": "Whiskey Sour",
+    "ease": 6
+  },
+  {
+    "id": "white-russian",
+    "name_en": "White Russian",
+    "ease": 8
+  },
+  {
+    "id": "pudding-whiskey",
+    "name_en": "Pudding Whiskey",
+    "ease": 10
+  },
+  {
+    "id": "red-eye-tw",
+    "name_en": "Red Eye (TW Style)",
+    "ease": 10
+  },
+  {
+    "id": "bloody-mary",
+    "name_en": "Bloody Mary",
+    "ease": 6
+  },
+  {
+    "id": "tom-collins",
+    "name_en": "Tom Collins",
+    "ease": 9
+  },
+  {
+    "id": "espresso-martini",
+    "name_en": "Espresso Martini",
+    "ease": 5
+  },
+  {
+    "id": "paloma",
+    "name_en": "Paloma",
+    "ease": 8
+  },
+  {
+    "id": "gin-tonic",
+    "name_en": "Gin & Tonic",
+    "ease": 9
+  },
+  {
+    "id": "red-eye",
+    "name_en": "Red Eye",
+    "ease": 9
+  },
+  {
+    "id": "wintermelon-whiskey",
+    "name_en": "Winter Melon Whiskey",
+    "ease": 10
+  },
+  {
+    "id": "vodka-energy",
+    "name_en": "Vodka Energy",
+    "ease": 10
+  },
+  {
+    "id": "lemon-sour",
+    "name_en": "Strong Zero Style",
+    "ease": 6
+  },
+  {
+    "id": "whiskey-oolong",
+    "name_en": "Whiskey Oolong",
+    "ease": 10
+  },
+  {
+    "id": "gin-cc",
+    "name_en": "Gin & CC Lemon",
+    "ease": 10
+  },
+  {
+    "id": "mai-tai",
+    "name_en": "Mai Tai",
+    "ease": 5
+  },
+  {
+    "id": "rum-coke",
+    "name_en": "Rum & Coke",
+    "ease": 9
+  },
+  {
+    "id": "lemon-tea-whiskey",
+    "name_en": "Lemon Tea Whiskey",
+    "ease": 10
+  },
+  {
+    "id": "wintermelon-lemon-beer",
+    "name_en": "Winter Melon Lemon Beer",
+    "ease": 10
+  },
+  {
+    "id": "singapore-sling",
+    "name_en": "Singapore Sling",
+    "ease": 4
+  },
+  {
+    "id": "hot-gin-ginger",
+    "name_en": "Hot Gin Ginger",
+    "ease": 10
+  },
+  {
+    "id": "margarita",
+    "name_en": "Margarita",
+    "ease": 6
+  },
+  {
+    "id": "sidecar",
+    "name_en": "Sidecar",
+    "ease": 5
+  },
+  {
+    "id": "sake-calpis",
+    "name_en": "Sake Calpis",
+    "ease": 10
+  },
+  {
+    "id": "guava-gin",
+    "name_en": "Gin & Guava",
+    "ease": 10
+  },
+  {
+    "id": "sarsaparilla-rum",
+    "name_en": "Sarsaparilla Rum",
+    "ease": 10
+  },
+  {
+    "id": "mulled-wine",
+    "name_en": "Mulled Wine",
+    "ease": 7
+  },
+  {
+    "id": "irish-coffee",
+    "name_en": "Irish Coffee",
+    "ease": 6
+  },
+  {
+    "id": "whiskey-tea",
+    "name_en": "Whiskey & Black Tea",
+    "ease": 10
+  },
+  {
+    "id": "beer-green-tea",
+    "name_en": "Beer Green Tea",
+    "ease": 10
+  },
+  {
+    "id": "rum-guava",
+    "name_en": "Rum & Guava",
+    "ease": 10
+  },
+  {
+    "id": "manhattan",
+    "name_en": "Manhattan",
+    "ease": 8
+  },
+  {
+    "id": "whiskey-hot-milk-tea",
+    "name_en": "Whiskey Hot Milk Tea",
+    "ease": 10
+  },
+  {
+    "id": "tequila-sunrise",
+    "name_en": "Tequila Sunrise",
+    "ease": 9
+  },
+  {
+    "id": "shandy",
+    "name_en": "Shandy / Radler",
+    "ease": 10
+  },
+  {
+    "id": "somaek",
+    "name_en": "Somaek (Soju Bomb)",
+    "ease": 8
+  },
+  {
+    "id": "gin-tea",
+    "name_en": "Gin & Tea",
+    "ease": 10
+  },
+  {
+    "id": "baileys-hot-chocolate",
+    "name_en": "Baileys Hot Chocolate",
+    "ease": 10
+  },
+  {
+    "id": "coffee-milk-whiskey",
+    "name_en": "Coffee Milk Whiskey",
+    "ease": 10
+  },
+  {
+    "id": "gin-sports",
+    "name_en": "Gin Sports",
+    "ease": 10
+  },
+  {
+    "id": "pisco-sour",
+    "name_en": "Pisco Sour",
+    "ease": 6
+  },
+  {
+    "id": "papaya-milk-rum",
+    "name_en": "Papaya Milk Rum",
+    "ease": 10
+  },
+  {
+    "id": "grass-jelly-jagermeister",
+    "name_en": "Grass Jelly Jagermeister",
+    "ease": 10
+  },
+  {
+    "id": "soju-yakult",
+    "name_en": "Soju Yakult",
+    "ease": 10
+  },
+  {
+    "id": "hot-plum-sake",
+    "name_en": "Hot Plum Sake",
+    "ease": 10
+  },
+  {
+    "id": "pina-colada",
+    "name_en": "Piña Colada",
+    "ease": 6
+  },
+  {
+    "id": "moscow-mule",
+    "name_en": "Moscow Mule",
+    "ease": 9
+  },
+  {
+    "id": "aperol-spritz",
+    "name_en": "Aperol Spritz",
+    "ease": 10
+  },
+  {
+    "id": "umeshu-green-tea",
+    "name_en": "Umeshu Green Tea",
+    "ease": 10
+  },
+  {
+    "id": "sazerac",
+    "name_en": "Sazerac",
+    "ease": 6
+  },
+  {
+    "id": "bellini",
+    "name_en": "Bellini",
+    "ease": 9
+  },
+  {
+    "id": "espresso-lemon-vodka",
+    "name_en": "Espresso Lemon Vodka",
+    "ease": 10
+  },
+  {
+    "id": "mimosa",
+    "name_en": "Mimosa",
+    "ease": 10
+  },
+  {
+    "id": "boulevardier",
+    "name_en": "Boulevardier",
+    "ease": 9
+  },
+  {
+    "id": "dark-n-stormy",
+    "name_en": "Dark 'n' Stormy",
+    "ease": 10
+  },
+  {
+    "id": "amaretto-sour",
+    "name_en": "Amaretto Sour",
+    "ease": 9
+  },
+  {
+    "id": "clover-club",
+    "name_en": "Clover Club",
+    "ease": 7
+  },
+  {
+    "id": "southside",
+    "name_en": "Southside",
+    "ease": 8
+  },
+  {
+    "id": "last-word",
+    "name_en": "The Last Word",
+    "ease": 8
+  },
+  {
+    "id": "bees-knees",
+    "name_en": "Bee's Knees",
+    "ease": 8
+  },
+  {
+    "id": "black-coffee-whiskey",
+    "name_en": "Black Coffee Whiskey",
+    "ease": 10
+  },
+  {
+    "id": "soy-milk-baileys",
+    "name_en": "Soy Milk Baileys",
+    "ease": 10
+  },
+  {
+    "id": "sake-barley-tea",
+    "name_en": "Sake Barley Tea",
+    "ease": 10
+  },
+  {
+    "id": "french-75",
+    "name_en": "French 75",
+    "ease": 7
+  },
+  {
+    "id": "warm-apple-whiskey",
+    "name_en": "Warm Apple Whiskey",
+    "ease": 9
+  },
+  {
+    "id": "hot-white-wine-peach",
+    "name_en": "Hot White Wine Peach",
+    "ease": 9
+  },
+  {
+    "id": "caipirinha",
+    "name_en": "Caipirinha",
+    "ease": 8
+  },
+  {
+    "id": "calpis-beer",
+    "name_en": "Calpis Beer",
+    "ease": 10
+  },
+  {
+    "id": "tequila-cider",
+    "name_en": "Tequila Cider",
+    "ease": 10
+  },
+  {
+    "id": "eggnog",
+    "name_en": "Eggnog",
+    "ease": 6
+  },
+  {
+    "id": "kaoliang-yakult",
+    "name_en": "Kaoliang & Yakult",
+    "ease": 10
+  },
+  {
+    "id": "hot-toddy",
+    "name_en": "Hot Toddy",
+    "ease": 10
+  },
+  {
+    "id": "martini",
+    "name_en": "Dry Martini",
+    "ease": 2
+  },
+  {
+    "id": "vitamin-c-bomb",
+    "name_en": "Vitamin C Bomb",
+    "ease": 10
+  },
+  {
+    "id": "mudslide",
+    "name_en": "Mudslide",
+    "ease": 6
+  },
+  {
+    "id": "mojito",
+    "name_en": "Mojito",
+    "ease": 9
+  },
+  {
+    "id": "baileys-milktea",
+    "name_en": "Baileys Milk Tea",
+    "ease": 10
+  },
+  {
+    "id": "cosmopolitan",
+    "name_en": "Cosmopolitan",
+    "ease": 7
+  },
+  {
+    "id": "godfather",
+    "name_en": "Godfather",
+    "ease": 4
+  },
+  {
+    "id": "vesper",
+    "name_en": "Vesper Martini",
+    "ease": 3
+  },
+  {
+    "id": "brandy-sidra",
+    "name_en": "Brandy Sidra",
+    "ease": 10
+  }
+]

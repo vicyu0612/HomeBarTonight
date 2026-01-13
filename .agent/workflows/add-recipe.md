@@ -1,118 +1,41 @@
 ---
-description: Adding new cocktail recipes with proper ingredient mapping
+description: Adding new cocktail recipes with proper ingredient mapping and scoring rules
 ---
 
-# Add New Recipe Workflow
+# Workflow: Add New Cocktail Recipe
 
-When adding new cocktail recipes to the database, follow these steps to ensure proper ingredient mapping and translation consistency.
+Follow these steps whenever adding a new cocktail to the database.
 
-## 1. Recipe Structure
+## 1. Proposal & Review
+- Draft a proposal including:
+    - **Description**: Background story (movie/book checks), taste profile.
+    - **Specs**:
+        - **Alcohol (1-10)**: 1 = Beer/Cider, 10 = Pure Spirit.
+        - **Sweetness (1-10)**: 1 = Dry, 10 = Syrupy.
+        - **Ease (1-10)**: **CRITICAL DEFINITION**
+            - **DEFINITION**: "How easy to drink" (Drinkability).
+            - **10**: Juice/Dessert-like (e.g., Baileys Milk Tea, Yakult).
+            - **8-9**: Refreshing Highballs (e.g., Gin Tonic, Mojito).
+            - **6-7**: Balanced Sours (e.g., Margarita, Whiskey Sour).
+            - **3-4**: Strong Sippers (e.g., Old Fashioned, Negroni, Godfather).
+            - **1-2**: Raw Spirit burn (e.g., Dry Martini).
+- **Normalize Ingredients**: Check `src/utils/normalization.ts` and `ingredients` table. Ensure new ingredients (e.g., Lillet) are added with specific IDs and categories.
 
-New recipes must follow the Supabase `recipes` table schema:
-```json
-{
-  "id": "unique_recipe_id",
-  "name": { "zh": "中文名稱", "en": "English Name" },
-  "type": "cocktail",
-  "base_spirit": "whiskey|gin|vodka|rum|tequila|brandy|other",
-  "ingredients": {
-    "zh": [{ "name": "材料名稱", "amount": "份量" }],
-    "en": [{ "name": "Ingredient Name", "amount": "Amount" }]
-  },
-  "steps": {
-    "zh": ["步驟1", "步驟2"],
-    "en": ["Step 1", "Step 2"]
-  },
-  "tags": ["tag1", "tag2"],
-  "description": { "zh": "描述", "en": "Description" },
-  "specs": { "glassware": "杯型", "difficulty": "easy|medium|hard" },
-  "color": "#hexcolor",
-  "image": "supabase_storage_url",
-  "collections": ["collection_id"],
-  "is_premium": false
-}
-```
+## 2. Image Generation
+- Generate high-quality, realistic 4K images.
+- Style: Moody, cinematic, "Home Bar" aesthetic.
+- Upload to Supabase Storage (`cocktails` bucket) and get Public URL.
 
-## 2. Pre-Generation Validation & Proposal
-Before generating or inserting any new recipe, you MUST follow these validation steps:
-
-### Step 2a: Generate Proposal
-Create a list of proposed recipes with their ingredients and present it to the user for approval.
-**Wait for user confirmation before writing any code/SQL.**
-
-### Step 2b: Duplicate Checks
-For each proposed recipe, check against the database:
-
-1.  **Name Check**:
-    - Ensure `name->>'en'` and `name->>'zh'` do not match any existing records.
-2.  **Ingredient Set Check** (CRITICAL):
-    - Retrieve all existing recipes and their ingredients.
-    - Compare the **set of ingredient IDs** of the proposed recipe against existing ones.
-    - **Rule**: If a recipe with the *exact same set of ingredients* already exists, do NOT create a duplicate. Flag it to the user.
-    - *Example*: If "Whiskey Coke" exists (whiskey, coke), do not create "Bourbon & Cola" if it maps to `['whiskey', 'coke']`.
-
-## 3. Ingredient Mapping Checklist
-
-For EACH ingredient in the recipe:
-
-### Step 2a: Check Existing Ingredients
-Query the `ingredients` table to find a match:
-```sql
-SELECT id, name_en, name_zh, category FROM ingredients 
-WHERE name_en ILIKE '%ingredient_name%' OR name_zh LIKE '%材料名稱%';
-```
-
-### Step 2b: Decision Tree
-- **Exact match found**: Use the existing ingredient's naming in the recipe
-- **Similar match found**: ASK USER whether to merge or create new
-- **No match found**: Proceed to add new ingredient
-
-### Step 2c: Add Missing Ingredients to Database
-```sql
-INSERT INTO ingredients (id, name_en, name_zh, category)
-VALUES ('ingredient_id', 'English Name', '中文名稱', 'category');
-```
-
-Categories:
-- `base` - Base spirits (whiskey, gin, vodka, rum, tequila, brandy)
-- `liqueur` - Liqueurs (coffee liqueur, amaretto, etc.)
-- `other_alc` - Other alcohol (beer, wine, sake, etc.)
-- `essential` - Essentials (sugar, bitters, lemon, etc.)
-- `mixer` - Common drinks/desserts (sodas, juices, teas, etc.)
-- `garnish` - Garnishes (mint, olive, celery, etc.)
-
-## 3. Update Normalization Aliases
-
-Add aliases to `src/utils/normalization.ts` so the ingredient can be properly matched:
-
-### For Chinese aliases (ALIAS_MAP_ZH):
-```typescript
-"材料別名": "ingredient_id",
-"另一個別名": "ingredient_id",
-```
-
-### For English aliases (ALIAS_MAP_EN):
-```typescript
-"ingredient alias": "ingredient_id",
-"another alias": "ingredient_id",
-```
-
-**IMPORTANT**: This ensures:
-- Inventory filtering works correctly
-- Missing ingredient tags display proper translations
-- Recipes are correctly matched when users select ingredients
+## 3. SQL Generation
+- Use `INSERT ... ON CONFLICT (id) DO UPDATE` pattern.
+- **Columns**:
+    - `steps`: Array of strings for instructions.
+    - `type`: Category (e.g., 'classic', 'original', 'cvs').
+    - `specs`: JSONB `{"alcohol": X, "sweetness": Y, "ease": Z}`.
+    - `ingredients`: Array of `{"name": "...", "amount": "..."}` objects.
+- **Double Check**: Ensure `ease` score aligns with the definition above.
 
 ## 4. Verification
-
-After adding the recipe:
-1. Check inventory modal shows the new ingredient under correct category
-2. Test recipe appears when selecting all its ingredients
-3. Test missing ingredient tag shows correct translation (not raw English)
-
-## Example: Adding "Spiced Hot Chocolate" Recipe
-
-1. **Ingredients**: Hot Chocolate, Rum, Cinnamon
-2. **Check DB**: `hot_chocolate` exists, `rum` exists, `cinnamon` - NOT FOUND
-3. **Ask User**: "Cinnamon (肉桂) is not in the database. Should I add it as a new ingredient in the 'garnish' category, or merge with an existing spice?"
-4. **After confirmation**: Add to DB, add aliases
-5. **Add recipe with correct naming**
+- Verify ingredient mapping in valid JSON format.
+- execute SQL and confirm success.
+- Update `task.md`.

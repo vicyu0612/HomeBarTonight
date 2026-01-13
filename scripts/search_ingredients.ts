@@ -11,9 +11,9 @@ dotenv.config({ path: path.resolve(__dirname, '../.env.local') });
 const supabase = createClient(process.env.VITE_SUPABASE_URL!, process.env.VITE_SUPABASE_ANON_KEY!);
 
 async function searchIngredients() {
-    const term1 = 'cranberry';
-    const term2 = 'lime';
-    const term3 = 'lemon';
+    const term1 = 'lillet';
+    const term2 = '利萊';
+    const term3 = 'liqueur';
 
     console.log(`Searching for "${term1}", "${term2}", "${term3}"...`);
 
