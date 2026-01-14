@@ -3,7 +3,7 @@ import { MyBarModal, type IngredientItem } from '../components/MyBarModal';
 import { ShakerIcon } from '../components/ShakerIcon';
 import clsx from 'clsx';
 import type { Recipe } from '../data/recipes';
-import { normalizeIngredient } from '../utils/normalization';
+import { normalizeIngredient, getIngredientLabel } from '../utils/normalization';
 import { RecipeCard } from '../components/RecipeCard';
 import { RecipeCardSkeleton } from '../components/RecipeCardSkeleton';
 import { useSubscription } from '../hooks/useSubscription';
@@ -81,11 +81,21 @@ export function MyBarPage({
                         // We are missing this real ingredient.
                         let displayName = ing.name;
 
-                        // Try to find the item in allIngredients using the canonical IDs
+                        // Priority 1: Try to find the item in Supabase allIngredients using the canonical IDs
                         const dbItem = allIngredients.find(item => canonicals.includes(item.id));
 
                         if (dbItem) {
                             displayName = lang === 'zh' ? dbItem.name_zh : dbItem.name_en;
+                        } else {
+                            // Priority 2: Fallback to static INGREDIENT_DB
+                            const canonicalId = canonicals[0]; // Use first canonical ID
+                            if (canonicalId) {
+                                const staticLabel = getIngredientLabel(canonicalId, lang);
+                                // Only use static label if it's different from the raw ID (meaning it was found)
+                                if (staticLabel !== canonicalId) {
+                                    displayName = staticLabel;
+                                }
+                            }
                         }
 
                         missingIngredients.push(displayName);

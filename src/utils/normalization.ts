@@ -65,6 +65,7 @@ export const INGREDIENT_DB: Record<string, { en: string; zh: string }> = {
     'ginger_beer': { en: 'Ginger Beer', zh: '薑汁啤酒' },
     'peach_juice': { en: 'Peach Juice', zh: '水蜜桃汁' },
     'grass_jelly': { en: 'Grass Jelly', zh: '燒仙草' },
+    'lillet_blanc': { en: 'Lillet Blanc', zh: '利萊白酒' },
     'barley_tea': { en: 'Barley Tea', zh: '麥仔茶' },
     'pudding': { en: 'Pudding', zh: '布丁' }, // Added explicit mapping
 
@@ -272,7 +273,12 @@ const ALIAS_MAP_ZH: Record<string, string> = {
     "統一布丁": "pudding",
     "布丁": "pudding",
     "uni-president pudding": "pudding",
-    "uni-president": "pudding"
+    "uni-president": "pudding",
+    "燒仙草": "grass_jelly",
+    "熱仙草": "grass_jelly",
+    "利萊白酒": "lillet_blanc",
+    "利萊": "lillet_blanc",
+    "Lillet": "lillet_blanc"
 };
 
 const ALIAS_MAP_EN: Record<string, string> = {
@@ -333,6 +339,10 @@ const ALIAS_MAP_EN: Record<string, string> = {
     "coffee milk": "coffee_milk", // Added
     "papaya milk": "papaya_milk", // Added
     "uni-president papaya milk": "papaya_milk", // Added
+    "hot grass jelly": "grass_jelly", // Added
+    "lillet blanc": "lillet_blanc", // Added
+    "lillet": "lillet_blanc", // Added
+    "kina lillet": "lillet_blanc", // Added (historical name)
 
 
     "dry vermouth": "dry_vermouth",
