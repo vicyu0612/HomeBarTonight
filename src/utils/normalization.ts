@@ -71,6 +71,7 @@ export const INGREDIENT_DB: Record<string, { en: string; zh: string }> = {
     'barley_tea': { en: 'Barley Tea', zh: '麥仔茶' },
     'pudding': { en: 'Pudding', zh: '布丁' }, // Added explicit mapping
 
+    'absinthe': { en: 'Absinthe', zh: '艾碧斯' },
     'grenadine': { en: 'Grenadine', zh: '紅石榴糖漿' },
     'orgeat': { en: 'Orgeat', zh: '杏仁糖漿' }, // Added
     // 'lime_cordial': { en: 'Lime Cordial', zh: '莱姆汁 (Cordial)' }, // Removed, covered by Lemon/Lime
