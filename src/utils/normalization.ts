@@ -398,8 +398,8 @@ const ALIAS_MAP_EN: Record<string, string> = {
     "green tea": "green_tea", // Split
     "espresso": "espresso",
     "espresso (fresh)": "espresso", // Added
-    "coffee": "espresso", // Merged
-    "hot coffee": "espresso", // Merged
+    "coffee": "black_coffee", // Merged to Black Coffee
+    "hot coffee": "black_coffee", // Merged to Black Coffee
 
     "lime juice": "lemon", // Standard mapping
     "fresh lime juice": "lemon",
@@ -503,7 +503,8 @@ export function normalizeIngredient(name: string, lang: 'en' | 'zh'): string[] {
                 else if (p.includes('麥香') || p.includes('紅茶') || p.includes('茶')) id = 'tea';
                 else if (p.includes('綠茶')) id = 'green_tea'; // Split
                 else if (p.includes('烏龍')) id = 'oolong_tea';
-                else if (p.includes('咖啡') || p.includes('濃縮')) id = 'espresso'; // Merged
+                else if (p.includes('濃縮')) id = 'espresso';
+                else if (p.includes('黑咖啡') || p.includes('美式') || p.includes('咖啡')) id = 'black_coffee';
                 else if (p.includes('養樂多')) id = 'yakult';
                 else if (p.includes('沙士')) id = 'sarsaparilla'; // Added
                 else if (p.includes('雪碧')) id = 'sprite';

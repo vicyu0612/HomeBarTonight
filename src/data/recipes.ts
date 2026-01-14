@@ -1845,13 +1845,13 @@ export const recipes: Recipe[] = [
         ingredients: {
             en: [
                 { name: 'Irish Whiskey', amount: '50ml' },
-                { name: 'Hot Coffee', amount: '120ml' },
+                { name: 'Black Coffee', amount: '120ml' },
                 { name: 'Brown Sugar', amount: '1-2 tsp' },
                 { name: 'Heavy Cream', amount: 'Top' }
             ],
             zh: [
                 { name: '愛爾蘭威士忌', amount: '50ml' },
-                { name: '熱咖啡', amount: '120ml' },
+                { name: '黑咖啡', amount: '120ml' },
                 { name: '紅糖', amount: '1-2茶匙' },
                 { name: '鮮奶油', amount: '適量' }
             ]
