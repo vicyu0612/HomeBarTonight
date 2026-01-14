@@ -3,7 +3,7 @@ import { MyBarModal, type IngredientItem } from '../components/MyBarModal';
 import { ShakerIcon } from '../components/ShakerIcon';
 import clsx from 'clsx';
 import type { Recipe } from '../data/recipes';
-import { normalizeIngredient, getIngredientLabel } from '../utils/normalization';
+import { useIngredients } from '../hooks/useIngredients'; // Dynamic Hook
 import { RecipeCard } from '../components/RecipeCard';
 import { RecipeCardSkeleton } from '../components/RecipeCardSkeleton';
 import { useSubscription } from '../hooks/useSubscription';
@@ -35,6 +35,9 @@ export function MyBarPage({
     onRefresh
 }: MyBarPageProps) {
     const { isPro, presentPaywall } = useSubscription();
+    // Dynamic Ingredients Hook
+    const { normalizeIngredient, getIngredientLabel, ingredients: dynamicIngredients } = useIngredients();
+
     // Modal Persistence
     const [showModal, setShowModal] = useState(() => {
         try {
@@ -66,6 +69,7 @@ export function MyBarPage({
 
             // Check each required ingredient
             for (const ing of needed) {
+                // Use dynamic normalization
                 const canonicals = normalizeIngredient(ing.name, 'en');
 
                 // 1. Do we have it?
@@ -81,13 +85,15 @@ export function MyBarPage({
                         // We are missing this real ingredient.
                         let displayName = ing.name;
 
-                        // Priority 1: Try to find the item in Supabase allIngredients using the canonical IDs
-                        const dbItem = allIngredients.find(item => canonicals.includes(item.id));
+                        // Priority 1: Try to find the item in Supabase ingredients using the canonical IDs
+                        // Use dynamicIngredients from hook if available, else prop fallback
+                        const sourceIngredients = dynamicIngredients.length > 0 ? dynamicIngredients : allIngredients;
+                        const dbItem = sourceIngredients.find(item => canonicals.includes(item.id));
 
                         if (dbItem) {
                             displayName = lang === 'zh' ? dbItem.name_zh : dbItem.name_en;
                         } else {
-                            // Priority 2: Fallback to static INGREDIENT_DB
+                            // Priority 2: Fallback to ID or Label lookup from hook
                             const canonicalId = canonicals[0]; // Use first canonical ID
                             if (canonicalId) {
                                 const staticLabel = getIngredientLabel(canonicalId, lang);
@@ -112,7 +118,7 @@ export function MyBarPage({
 
         return { exactMatches: exact, missingOneMatches: missingOne };
 
-    }, [allRecipes, myInventory, allIngredients, lang]);
+    }, [allRecipes, myInventory, allIngredients, dynamicIngredients, lang, normalizeIngredient, getIngredientLabel]);
 
     // Derived Lists based on Subscription
     const displayedExactMatches = isPro ? exactMatches : exactMatches.slice(0, 2);

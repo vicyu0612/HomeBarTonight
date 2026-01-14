@@ -22,6 +22,7 @@ const CollectionDetailPage = lazy(() => import('./pages/CollectionDetailPage').t
 const SettingsPage = lazy(() => import('./pages/SettingsPage').then(module => ({ default: module.SettingsPage })));
 
 import { collections as fallbackCollections, type Collection } from './data/collections';
+import { useIngredients } from './hooks/useIngredients';
 
 
 
@@ -111,29 +112,45 @@ function App() {
     localStorage.setItem('favorites', JSON.stringify(Array.from(favorites)));
   }, [favorites]);
 
-  // Fetch Data
+
+  const { ingredients: hookedIngredients, refetch: refetchIngredients } = useIngredients();
+
+  // ... (existing state) ...
+
+  // Sync hook data to existing state for prop compatibility
+  useEffect(() => {
+    // Map to IngredientItem if types differ slightly, but they match mostly.
+    // useIngredients defines Ingredient with aliases, IngredientItem in MyBarModal doesn't have aliases but has extra fields?
+    // MyBarModal IngredientItem: id, name_en, name_zh, category.
+    // useIngredients Ingredient: id, name_en, name_zh, category, aliases.
+    // It's compatible (extra fields are fine).
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    setAllIngredients(hookedIngredients as any);
+  }, [hookedIngredients]);
+
+  // ... (fetchData) ...
   const fetchData = useCallback(async () => {
     if (!supabase) return;
     const { data: recipeData } = await supabase.from('recipes').select('*').order('id', { ascending: true });
+    // ... (recipe processing) ...
     if (recipeData && recipeData.length > 0) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // ... (setAllRecipes logic) ...
       setAllRecipes(recipeData.map((r: any) => ({
         id: r.id, name: r.name, type: r.type, baseSpirit: r.base_spirit,
         ingredients: r.ingredients, steps: r.steps, tags: r.tags,
         description: r.description, specs: r.specs, color: r.color,
-        image: r.image ? `${r.image}?v=${new Date().getTime()}` : (r.image || ""), // Cache busting & Type Safety
-        collections: r.collections, // Important: Include collections tags for filtering
-        is_premium: r.is_premium // Map premium status from DB
+        image: r.image ? `${r.image}?v=${new Date().getTime()}` : (r.image || ""),
+        collections: r.collections,
+        is_premium: r.is_premium
       })));
     }
+
     if (supabase) {
-      // Fetch Ingredients
-      const { data: ingData } = await supabase.from('ingredients').select('*');
-      if (ingData) {
-        setAllIngredients(ingData as IngredientItem[]);
-
-
-      }
+      // Ingredients fetching REMOVED - handled by useIngredients hook.
+      // But we call refetchIngredients() if we want a fresh copy during refresh.
+      // Since fetchData is called on mount, refetchIngredients() might be redundant if hook already fetched on mount.
+      // But for PullToRefresh, we need it.
+      // We will export a wrapper `refreshData` that calls both.
 
       // Fetch Collections
       const { data: colData } = await supabase
@@ -143,9 +160,7 @@ function App() {
         .order('sort_order', { ascending: true });
 
       if (colData && colData.length > 0) {
-
-        // Map DB fields to Collection interface
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        // ... (collection mapping) ...
         const mappedCollections: Collection[] = colData.map((c: any) => ({
           id: c.id,
           title: c.title,
@@ -153,7 +168,7 @@ function App() {
           type: c.type,
           recipeIds: c.recipe_ids,
           coverImage: c.cover_image,
-          coverImageEn: c.cover_image_en, // Localized image
+          coverImageEn: c.cover_image_en,
           themeColor: c.theme_color,
           description: c.description,
           sortOrder: c.sort_order,
@@ -163,6 +178,12 @@ function App() {
       }
     }
   }, [supabase]);
+
+  const handleRefresh = async () => {
+    await Promise.all([fetchData(), refetchIngredients()]);
+  };
+
+
 
   // --- Auth & Sync Logic ---
   useEffect(() => {
@@ -520,7 +541,7 @@ function App() {
               onSelectRecipe={handleSelectRecipe}
               toggleFavorite={toggleFavorite}
               favorites={favorites}
-              onRefresh={fetchData}
+              onRefresh={handleRefresh}
             />
 
             <AnimatePresence>
@@ -550,7 +571,7 @@ function App() {
                           favorites={favorites}
                           lang={lang}
                           filterRecipes={filterRecipes}
-                          onRefresh={fetchData}
+                          onRefresh={handleRefresh}
                         />
                       </div>
                     );
@@ -569,7 +590,7 @@ function App() {
               onSelectRecipe={handleSelectRecipe}
               lang={lang}
               onShake={handleShake}
-              onRefresh={fetchData}
+              onRefresh={handleRefresh}
             />
           </div>
 
@@ -584,7 +605,7 @@ function App() {
               onSelectRecipe={handleSelectRecipe}
               favorites={favorites}
               toggleFavorite={toggleFavorite}
-              onRefresh={fetchData}
+              onRefresh={handleRefresh}
             />
           </div>
 
@@ -596,7 +617,7 @@ function App() {
               toggleFavorite={toggleFavorite}
               onSelectRecipe={handleSelectRecipe}
               lang={lang}
-              onRefresh={fetchData}
+              onRefresh={handleRefresh}
             />
           </div>
 
