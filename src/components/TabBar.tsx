@@ -28,7 +28,8 @@ export function TabBar({ activeTab, onTabChange, lang }: TabBarProps) {
 
                 {tabs.map((tab) => {
                     // Logic: If on 'collection' detail page, highlight 'explore' tab
-                    const isActive = activeTab === tab.id || (activeTab === 'collection' && tab.id === 'explore');
+                    const isActive = activeTab === tab.id ||
+                        (activeTab === 'collection' && tab.id === 'explore');
                     const Icon = tab.icon;
 
                     return (

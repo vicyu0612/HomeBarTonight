@@ -6,8 +6,6 @@ export interface Collection {
     subtitle: { en: string; zh: string };
     type: 'curated' | 'filter';
     recipeIds?: string[]; // For curated
-    filterRules?: FilterRules; // JSONB from DB
-    filter?: (recipe: Recipe) => boolean; // Legacy/Fallback local function
     coverImage?: string;
     coverImageEn?: string; // Localized cover image for English
     themeColor?: string; // CSS gradient classes
@@ -15,12 +13,6 @@ export interface Collection {
     sortOrder?: number;
     isActive?: boolean;
 }
-
-export type FilterRules =
-    | { type: 'cvs' }
-    | { tag: string }
-    | { collection: string }
-    | Array<{ field: string; operator: 'eq' | 'in'; value: unknown }>;
 
 export const collections: Collection[] = [
     {
@@ -73,8 +65,16 @@ export const collections: Collection[] = [
         id: 'party-time',
         title: { en: 'Party Starters', zh: '派對必備' },
         subtitle: { en: 'Crowd pleaders for any gathering', zh: '炒熱氣氛的最佳選擇' },
-        type: 'filter',
-        filter: (r) => r.tags.en.includes('party') || r.specs.ease >= 8,
+        type: 'curated',
+        recipeIds: [
+            'margarita', 'mojito', 'paloma', 'tequila-sunrise', 'aperol-spritz',
+            'moscow-mule', 'long-island', 'sex-on-the-beach', 'pina-colada',
+            'rum-coke', 'kalimotxo', 'b52', 'somaek', 'tequila-coke', 'vodka-yakult',
+            'soju-melona', 'shandy', 'gin-cc', 'gin-tea', 'lemon-tea-whiskey',
+            'guava-gin', 'rum-guava', 'sake-calpis', 'brandy-sidra', 'baileys-milktea',
+            'tequila-cider', 'vodka-energy', 'gin-sports', 'manhattan', 'negroni',
+            'gimlet', 'tom-collins', 'calpis-beer', 'red-eye'
+        ],
         themeColor: 'from-purple-600 to-pink-900',
         coverImage: '/cocktails/party_starters.png',
         description: {

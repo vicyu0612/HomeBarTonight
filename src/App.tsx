@@ -152,7 +152,6 @@ function App() {
           subtitle: c.subtitle,
           type: c.type,
           recipeIds: c.recipe_ids,
-          filterRules: c.filter_rules,
           coverImage: c.cover_image,
           coverImageEn: c.cover_image_en, // Localized image
           themeColor: c.theme_color,
@@ -476,67 +475,8 @@ function App() {
 
   // Helper function to filter recipes based on collection rules
   const filterRecipes = useMemo(() => (collection: Collection, recipes: Recipe[]): Recipe[] => {
-    // 1. Explicit Recipe IDs (Highest Priority)
-    if (collection.recipeIds && collection.recipeIds.length) {
-      return recipes.filter(r => collection.recipeIds?.includes(r.id));
-    }
-
-    // 2. Dynamic JSON Rules (DB)
-    if (collection.filterRules) {
-      const rules = collection.filterRules;
-
-      // Handle "CVS" special case
-      if ('type' in rules && rules.type === 'cvs') {
-        return recipes.filter(r => r.type === 'cvs');
-      }
-
-      // Handle "Party/Tag" special case
-      if ('tag' in rules) {
-        return recipes.filter(r => r.tags && r.tags.en && r.tags.en.includes(rules.tag));
-      }
-
-      // Handle "Collection" tag rule (New Standard)
-      if ('collection' in rules) {
-        return recipes.filter(r => {
-          return r.collections && r.collections.includes(rules.collection);
-        });
-      }
-
-      // Handle Generic Array Rules
-      if (Array.isArray(rules)) {
-        return recipes.filter(recipe => {
-          for (const rule of rules) {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            const recipeValue = (recipe as any)[rule.field];
-            if (recipeValue === undefined) return false;
-
-            switch (rule.operator) {
-              case 'eq':
-                if (Array.isArray(recipeValue)) {
-                  if (!recipeValue.includes(rule.value)) return false;
-                } else {
-                  if (recipeValue !== rule.value) return false;
-                }
-                break;
-              case 'in':
-                if (!Array.isArray(recipeValue) || !recipeValue.some((v: unknown) => (rule.value as string[]).includes(v as string))) return false;
-                break;
-              default:
-                return false;
-            }
-          }
-          return true;
-        });
-      }
-    }
-
-    // 3. Legacy Function Filter (Local Fallback)
-    if (collection.filter) {
-      return recipes.filter(collection.filter);
-    }
-
-    // 4. Default: Return Empty (Safety) - Don't show everything if no rules match
-    return [];
+    // Unify logic: Filter recipes that have this collection's ID in their collections array
+    return recipes.filter(r => r.collections && r.collections.includes(collection.id));
   }, []);
 
   useEffect(() => {

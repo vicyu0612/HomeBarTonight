@@ -1,4 +1,4 @@
-import { HelpCircle, ChevronRight, X, FileText, Globe, ArrowLeft, LogOut, Trash2, RefreshCw, Check, Crown } from 'lucide-react';
+import { HelpCircle, ChevronRight, X, FileText, Globe, ArrowLeft, LogOut, Trash2, RefreshCw, Check, Crown, ShieldCheck } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState } from 'react';
 import { createPortal } from 'react-dom';
@@ -64,7 +64,8 @@ export function SettingsPage({ session, lang, setLang, onLogin, onLogout, onDele
         about: {
             title: lang === 'zh' ? '關於' : 'About',
             support: lang === 'zh' ? '支援' : 'Support',
-            privacy: lang === 'zh' ? '隱私政策' : 'Privacy Policy'
+            terms: lang === 'zh' ? '使用者條款' : 'Terms of Use',
+            privacy: lang === 'zh' ? '隱私權政策' : 'Privacy Policy'
         },
         subscription: {
             title: lang === 'zh' ? '訂閱' : 'Subscription',
@@ -281,14 +282,6 @@ export function SettingsPage({ session, lang, setLang, onLogin, onLogout, onDele
                         WebkitMaskImage: 'linear-gradient(to bottom, black 0%, transparent 100%)'
                     }}
                 />
-                {/* Title Removed
-                <span className={clsx(
-                    "font-bold text-white transition-opacity duration-300",
-                    isScrolled ? "opacity-100" : "opacity-0"
-                )}>
-                    {t.title}
-                </span>
-                */}
             </div>
 
             {/* Scrollable Content */}
@@ -445,22 +438,32 @@ export function SettingsPage({ session, lang, setLang, onLogin, onLogout, onDele
                         <h2 className="text-zinc-500 text-sm font-medium mb-3 ml-1">{t.about.title}</h2>
                         <div className="bg-zinc-900/50 backdrop-blur-md border border-white/10 rounded-2xl overflow-hidden divide-y divide-white/5">
                             <button
-                                onClick={() => openLink('https://docs.google.com/document/d/1O_uWSZ8r-jCsEfZE4r276m-Xb1L1kS7PS1CAi8pgaJc/view')}
+                                onClick={() => openLink('https://amenable-tail-446.notion.site/Privacy-Policy-2e1c2f53a0b180eeb7c5d477d6292db5?source=copy_link')}
+                                className="w-full p-4 flex items-center justify-between hover:bg-white/5 transition-colors"
+                            >
+                                <div className="flex items-center gap-3">
+                                    <ShieldCheck size={20} className="text-zinc-400" />
+                                    <span className="text-white">{t.about.privacy}</span>
+                                </div>
+                                <ChevronRight size={20} className="text-zinc-500" />
+                            </button>
+                            <button
+                                onClick={() => openLink('https://www.apple.com/legal/internet-services/itunes/dev/stdeula/')}
+                                className="w-full p-4 flex items-center justify-between hover:bg-white/5 transition-colors"
+                            >
+                                <div className="flex items-center gap-3">
+                                    <FileText size={20} className="text-zinc-400" />
+                                    <span className="text-white">{t.about.terms}</span>
+                                </div>
+                                <ChevronRight size={20} className="text-zinc-500" />
+                            </button>
+                            <button
+                                onClick={() => openLink('https://amenable-tail-446.notion.site/Support-2e6c2f53a0b18005a020cbe7ea7338c2?source=copy_link')}
                                 className="w-full p-4 flex items-center justify-between hover:bg-white/5 transition-colors"
                             >
                                 <div className="flex items-center gap-3">
                                     <HelpCircle size={20} className="text-zinc-400" />
                                     <span className="text-white">{t.about.support}</span>
-                                </div>
-                                <ChevronRight size={20} className="text-zinc-500" />
-                            </button>
-                            <button
-                                onClick={() => openLink('https://docs.google.com/document/d/1t56AP7vWITorzdr8OI7Fz-r0VvT2n_-zWRP8Fe4n-kA/view')}
-                                className="w-full p-4 flex items-center justify-between hover:bg-white/5 transition-colors"
-                            >
-                                <div className="flex items-center gap-3">
-                                    <FileText size={20} className="text-zinc-400" />
-                                    <span className="text-white">{t.about.privacy}</span>
                                 </div>
                                 <ChevronRight size={20} className="text-zinc-500" />
                             </button>

@@ -112,7 +112,8 @@
     - [ ] Implement Paddle/Stripe integration for web-based subscriptions.
 - [ ] **Data Cleanup (Post-Approval)**
     - [ ] Remove temporary `dessert-lover` tags from recipes.
-    - [ ] Remove legacy `filter_rules` from Dessert Collection (rely purely on `recipe_ids`).
+    - [x] Remove legacy `filter_rules` from Dessert Collection (rely purely on `recipe_ids`).
+    - [x] Cleanup App.tsx dynamic filter logic (Part of legal links simplification/cleanup request).
 - [x] **Movie & Literature Collection**
     - [x] Update descriptions for remaining 5 cocktails (White Russian, French 75, Mint Julep, Old Fashioned, Martini)
     - [x] Add "Cosmopolitan" (Sex and the City) with generated image & specs
