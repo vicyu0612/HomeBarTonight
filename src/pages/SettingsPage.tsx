@@ -1,4 +1,4 @@
-import { HelpCircle, ChevronRight, X, FileText, Globe, ArrowLeft, LogOut, Trash2, RefreshCw, Check, Crown, ShieldCheck } from 'lucide-react';
+import { HelpCircle, ChevronRight, X, FileText, Globe, ArrowLeft, LogOut, Trash2, RefreshCw, Check, Crown, ShieldCheck, ExternalLink } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState } from 'react';
 import { createPortal } from 'react-dom';
@@ -445,7 +445,7 @@ export function SettingsPage({ session, lang, setLang, onLogin, onLogout, onDele
                                     <ShieldCheck size={20} className="text-zinc-400" />
                                     <span className="text-white">{t.about.privacy}</span>
                                 </div>
-                                <ChevronRight size={20} className="text-zinc-500" />
+                                <ExternalLink size={20} className="text-zinc-500" />
                             </button>
                             <button
                                 onClick={() => openLink('https://www.apple.com/legal/internet-services/itunes/dev/stdeula/')}
@@ -455,7 +455,7 @@ export function SettingsPage({ session, lang, setLang, onLogin, onLogout, onDele
                                     <FileText size={20} className="text-zinc-400" />
                                     <span className="text-white">{t.about.terms}</span>
                                 </div>
-                                <ChevronRight size={20} className="text-zinc-500" />
+                                <ExternalLink size={20} className="text-zinc-500" />
                             </button>
                             <button
                                 onClick={() => openLink('https://amenable-tail-446.notion.site/Support-2e6c2f53a0b18005a020cbe7ea7338c2?source=copy_link')}
@@ -465,7 +465,7 @@ export function SettingsPage({ session, lang, setLang, onLogin, onLogout, onDele
                                     <HelpCircle size={20} className="text-zinc-400" />
                                     <span className="text-white">{t.about.support}</span>
                                 </div>
-                                <ChevronRight size={20} className="text-zinc-500" />
+                                <ExternalLink size={20} className="text-zinc-500" />
                             </button>
                         </div>
                     </section>

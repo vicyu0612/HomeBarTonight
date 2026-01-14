@@ -71,22 +71,7 @@ export function CollectionDetailPage({
     // Filter recipes based on collection type using helper
     const collectionRecipes = collection ? filterRecipes(collection, allRecipes) : [];
 
-    // Fallback for legacy local collections if helper fails or returns empty (optional safety)
-    if (collectionRecipes.length === 0 && collection?.filter) {
-        // collectionRecipes.push(...allRecipes.filter(collection.filter)); 
-        // Actually filterRecipes should handle it if we passed the right logic.
-        // But for safety let's leave as is, since filterRecipes in App.tsx handles IDs and Rules.
-        // It does NOT handle the functional `filter` property which is not serializable.
-        // So we should check for that here as a fallback!
-        const legacyFiltered = allRecipes.filter(collection.filter);
-        if (legacyFiltered.length > 0) {
-            // Merge unique? Or just use legacy if dynamic returned nothing?
-            // Local collections use `filter` function in `collections.ts`.
-            // Our App.tsx `filterRecipes` only handles `recipeIds` and `filterRules`.
-            // So we MUST use `collection.filter` if present.
-            collectionRecipes.push(...legacyFiltered);
-        }
-    }
+
 
     // Handle Scroll for sticky header
     const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {

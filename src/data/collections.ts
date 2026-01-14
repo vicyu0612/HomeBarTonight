@@ -1,4 +1,4 @@
-import type { Recipe } from './recipes';
+
 
 export interface Collection {
     id: string;
