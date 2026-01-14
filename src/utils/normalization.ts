@@ -57,6 +57,8 @@ export const INGREDIENT_DB: Record<string, { en: string; zh: string }> = {
     'green_tea': { en: 'Green Tea', zh: '綠茶' }, // Added split
     // 'coffee': { en: 'Coffee', zh: '咖啡' }, // Merged to Espresso
     'espresso': { en: 'Espresso', zh: '濃縮咖啡' },
+    'grapefruit_juice': { en: 'Grapefruit Juice', zh: '葡萄柚汁' }, // Added
+    'grapefruit': { en: 'Grapefruit', zh: '葡萄柚' }, // Added Fruit
     'milk': { en: 'Milk', zh: '牛奶' },
     'calpis': { en: 'Calpis', zh: '可爾必思' },
     'yakult': { en: 'Yakult', zh: '養樂多' },
@@ -573,6 +575,8 @@ export function normalizeIngredient(name: string, lang: 'en' | 'zh'): string[] {
                 if (lowerP.includes('assam') || lowerP.includes('black tea')) id = 'tea';
                 if (lowerP.includes('concentrate')) id = 'calpis';
                 if (lowerP.includes('grape juice')) id = 'grape_juice'; // Added
+                if (lowerP.includes('grapefruit juice')) id = 'grapefruit_juice'; // Added
+                else if (lowerP.includes('grapefruit')) id = 'grapefruit'; // Added for Fruit/Slice
                 if (lowerP.includes('aloe')) id = 'aloe'; // Added
                 if (lowerP.includes('pocari') || lowerP.includes('sports drink')) id = 'sports_drink';
                 if (lowerP.includes('soy milk')) id = 'soy_milk';

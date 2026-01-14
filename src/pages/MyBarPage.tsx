@@ -54,7 +54,7 @@ export function MyBarPage({
         if (myInventory.size === 0) return { exactMatches: [], missingOneMatches: [] };
 
         const ignorableIngredients = new Set([
-            'ice', 'water'
+            'ice', 'water', 'salt', 'sugar'
         ]);
 
         const exact: Recipe[] = [];
