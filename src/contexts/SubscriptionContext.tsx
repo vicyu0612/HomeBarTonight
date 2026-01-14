@@ -20,6 +20,7 @@ export interface SubscriptionContextType {
     presentPaywall: () => Promise<void>;
     presentCustomerCenter: () => Promise<void>;
     restorePurchases: () => Promise<CustomerInfo | null>;
+    refreshSubscription: () => Promise<void>;
     debugInfo: {
         activeEntitlements: string[];
         originalCustomerInfo: unknown;
@@ -119,6 +120,9 @@ export const SubscriptionProvider = ({ children }: { children: ReactNode }) => {
         }
 
         try {
+            // Apply blur effect
+            document.body.classList.add('paywall-active');
+
             const result = await RevenueCatUI.presentPaywall({
                 displayCloseButton: true,
             });
@@ -130,6 +134,9 @@ export const SubscriptionProvider = ({ children }: { children: ReactNode }) => {
             }
         } catch (e) {
             console.error("Error presenting paywall", e);
+        } finally {
+            // Remove blur effect
+            document.body.classList.remove('paywall-active');
         }
     }, [updateCustomerInfo]);
 
@@ -167,6 +174,7 @@ export const SubscriptionProvider = ({ children }: { children: ReactNode }) => {
             presentPaywall,
             presentCustomerCenter,
             restorePurchases,
+            refreshSubscription: updateCustomerInfo,
             debugInfo
         }}>
             {children}

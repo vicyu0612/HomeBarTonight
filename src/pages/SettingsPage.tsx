@@ -5,6 +5,7 @@ import { createPortal } from 'react-dom';
 import type { Session } from '@supabase/supabase-js';
 import clsx from 'clsx';
 import { useSubscription } from '../hooks/useSubscription';
+import { PullToRefresh } from '../components/PullToRefresh';
 
 
 interface SettingsPageProps {
@@ -26,7 +27,7 @@ const GoogleIcon = () => (
 );
 
 export function SettingsPage({ session, lang, setLang, onLogin, onLogout, onDeleteAccount }: SettingsPageProps) {
-    const { presentCustomerCenter, restorePurchases, isPro, presentPaywall } = useSubscription();
+    const { presentCustomerCenter, restorePurchases, isPro, presentPaywall, refreshSubscription } = useSubscription();
     const [view, setView] = useState<'main' | 'account'>('main');
     const [showLanguageSheet, setShowLanguageSheet] = useState(false);
     const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
@@ -285,9 +286,10 @@ export function SettingsPage({ session, lang, setLang, onLogin, onLogout, onDele
             </div>
 
             {/* Scrollable Content */}
-            <div
+            <PullToRefresh
                 className="flex-1 overflow-y-auto px-4 pb-32 no-scrollbar pt-[calc(3rem+env(safe-area-inset-top))]"
                 onScroll={handleScroll}
+                onRefresh={refreshSubscription}
             >
                 <h1 className="text-3xl font-bold text-white mb-8 mt-2">{t.title}</h1>
 
@@ -471,7 +473,7 @@ export function SettingsPage({ session, lang, setLang, onLogin, onLogout, onDele
                     </section>
                 </div>
 
-            </div>
+            </PullToRefresh>
             {/* Language Action Sheet */}
             {createPortal(
                 <AnimatePresence>

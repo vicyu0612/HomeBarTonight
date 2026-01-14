@@ -17,6 +17,16 @@ body {
   padding: 0;
 }
 
+/* Paywall Blur Effect */
+body.paywall-active #root {
+  filter: blur(16px) brightness(0.6);
+  transform: scale(0.96);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); /* Apple-like spring/ease */
+  pointer-events: none;
+  border-radius: 20px; /* Optional: adds a card-like effect when scaled */
+  overflow: hidden;
+}
+
 .glass {
   @apply bg-white/5 backdrop-blur-xl border border-white/10 shadow-lg;
 }
