@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import { supabase } from '../supabaseClient';
 
 export interface Ingredient {
@@ -59,13 +59,18 @@ export function useIngredients(): UseIngredientsResult {
         setLoading(true);
         setError(null); // Clear previous errors before new fetch
 
+        if (!supabase) {
+            setLoading(false);
+            return;
+        }
+
         const currentFetchPromise = supabase
             .from('ingredients')
             .select('*')
             .then(({ data, error }) => {
                 if (error) throw error;
                 return data as Ingredient[];
-            });
+            }) as Promise<Ingredient[]>;
 
         fetchPromise = currentFetchPromise; // Store the promise globally
 
@@ -193,6 +198,7 @@ export function useIngredients(): UseIngredientsResult {
         loading,
         error,
         normalizeIngredient,
-        getIngredientLabel
+        getIngredientLabel,
+        refetch
     };
 }
