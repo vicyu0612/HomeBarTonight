@@ -64,7 +64,14 @@ export function MyBarPage({
         const missingOne: Array<{ recipe: Recipe, missing: string }> = [];
 
         for (const recipe of allRecipes) {
-            const needed = recipe.ingredients['en'];
+            const needed = recipe.ingredients?.['en'];
+
+            // Skip recipes with missing or invalid ingredient data
+            if (!Array.isArray(needed)) {
+                console.warn(`Recipe "${recipe.id}" has invalid ingredients structure, skipping.`);
+                continue;
+            }
+
             const missingIngredients: string[] = [];
 
             // Check each required ingredient

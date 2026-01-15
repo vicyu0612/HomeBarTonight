@@ -12,7 +12,7 @@ export interface Spec {
 export interface Recipe {
     id: string;
     name: { en: string; zh: string };
-    type: 'classic' | 'cvs' | 'signature';
+    type: 'classic' | 'cvs' | 'signature' | 'mocktail';
     baseSpirit: string[];
     ingredients: { en: Ingredient[]; zh: Ingredient[] };
     steps: { en: string[]; zh: string[] };

@@ -26,11 +26,11 @@ export function CocktailsPage({ allRecipes, favorites, toggleFavorite, onSelectR
     const { isPro } = useSubscription();
 
     // State Initialization with URL Search Params
-    const [selectedCategories, setSelectedCategories] = useState<Set<'classic' | 'cvs'>>(() => {
+    const [selectedCategories, setSelectedCategories] = useState<Set<'classic' | 'cvs' | 'mocktail'>>(() => {
         const params = new URLSearchParams(window.location.search);
         const cat = params.get('cat');
         if (!cat) return new Set();
-        return new Set(cat.split(',').filter((c): c is 'classic' | 'cvs' => c === 'classic' || c === 'cvs'));
+        return new Set(cat.split(',').filter((c): c is 'classic' | 'cvs' | 'mocktail' => c === 'classic' || c === 'cvs' || c === 'mocktail'));
     });
 
     const [selectedSpirits, setSelectedSpirits] = useState<Set<string>>(() => {
@@ -65,7 +65,7 @@ export function CocktailsPage({ allRecipes, favorites, toggleFavorite, onSelectR
         window.history.replaceState({}, '', newUrl);
     }, [selectedCategories, selectedSpirits, searchQuery]);
 
-    const tabs: ('cvs' | 'classic')[] = ['cvs', 'classic'];
+    const tabs: ('cvs' | 'classic' | 'mocktail')[] = ['cvs', 'classic', 'mocktail'];
 
     const t = {
         title: lang === 'zh' ? '調酒' : 'Cocktails',
@@ -73,7 +73,8 @@ export function CocktailsPage({ allRecipes, favorites, toggleFavorite, onSelectR
         tabs: {
             all: lang === 'zh' ? '全部' : 'All',
             classic: lang === 'zh' ? '經典調酒' : 'Classic',
-            cvs: lang === 'zh' ? '超商速調' : 'Easy Mixes'
+            cvs: lang === 'zh' ? '超商速調' : 'Easy Mixes',
+            mocktail: lang === 'zh' ? '無酒精' : 'Target Type' // Will be manually overridden in render map below or fixed here
         },
         spirits: {
             all: lang === 'zh' ? '所有基酒' : 'All Spirits',
@@ -103,7 +104,8 @@ export function CocktailsPage({ allRecipes, favorites, toggleFavorite, onSelectR
             // Category filter (OR logic within categories)
             const categoryMatch = selectedCategories.size === 0 ||
                 (selectedCategories.has('classic') && recipe.type === 'classic') ||
-                (selectedCategories.has('cvs') && recipe.type === 'cvs');
+                (selectedCategories.has('cvs') && recipe.type === 'cvs') ||
+                (selectedCategories.has('mocktail') && recipe.type === 'mocktail');
 
             // Spirit filter (OR logic within spirits)
             const spiritMatch = selectedSpirits.size === 0 ||
@@ -132,7 +134,7 @@ export function CocktailsPage({ allRecipes, favorites, toggleFavorite, onSelectR
         setIsSticky(scrollTop > 50);
     };
 
-    const toggleCategory = (cat: 'classic' | 'cvs') => {
+    const toggleCategory = (cat: 'classic' | 'cvs' | 'mocktail') => {
         const newSet = new Set(selectedCategories);
         if (newSet.has(cat)) {
             newSet.delete(cat);
@@ -275,7 +277,8 @@ export function CocktailsPage({ allRecipes, favorites, toggleFavorite, onSelectR
                                             {tabs.map(tab => {
                                                 const labels = {
                                                     cvs: t.tabs.cvs,
-                                                    classic: t.tabs.classic
+                                                    classic: t.tabs.classic,
+                                                    mocktail: lang === 'zh' ? '無酒精' : 'Mocktail'
                                                 };
                                                 return (
                                                     <button
