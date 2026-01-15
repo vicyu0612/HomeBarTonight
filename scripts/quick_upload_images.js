@@ -1,3 +1,16 @@
+/**
+ * Quick Upload Images to Supabase
+ * 
+ * This script uploads generated cocktail images to Supabase storage
+ * and updates the recipes table with the public URLs.
+ * 
+ * Usage:
+ *   1. Update the imageMappings array with your recipe IDs and image paths
+ *   2. Run: node scripts/quick_upload_images.js
+ * 
+ * See: .agent/workflows/upload-recipe-images.md for full workflow
+ */
+
 import { createClient } from '@supabase/supabase-js';
 import fs from 'fs';
 import path from 'path';
@@ -16,15 +29,17 @@ const supabaseUrl = envConfig.VITE_SUPABASE_URL;
 const supabaseServiceKey = envConfig.SUPABASE_SERVICE_ROLE_KEY;
 
 if (!supabaseUrl || !supabaseServiceKey) {
-    console.error('Missing Supabase Config');
+    console.error('❌ Missing Supabase Config in .env.local');
+    console.error('   Required: VITE_SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY');
     process.exit(1);
 }
 
 const supabase = createClient(supabaseUrl, supabaseServiceKey);
-
 const BUCKET_NAME = 'cocktails';
 
-// Image mappings: recipe_id -> generated image path
+// ========================================
+// UPDATE THIS ARRAY WITH YOUR IMAGE PATHS
+// ========================================
 const imageMappings = [
     { id: 'almond-whiskey', path: '/Users/vic-yu/.gemini/antigravity/brain/d467568f-c033-4a50-b60f-455ab2738823/almond_whiskey_1768486783009.png' },
     { id: 'chocolate-brandy', path: '/Users/vic-yu/.gemini/antigravity/brain/d467568f-c033-4a50-b60f-455ab2738823/chocolate_brandy_1768486800668.png' },
@@ -40,12 +55,18 @@ const imageMappings = [
 
 async function uploadAndUpdate() {
     console.log('🚀 Starting upload process...\n');
+    console.log(`📊 Total images to upload: ${imageMappings.length}\n`);
+
+    let successCount = 0;
+    let failCount = 0;
 
     for (const { id, path: imagePath } of imageMappings) {
         console.log(`📸 Processing: ${id}`);
 
+        // Check if image exists
         if (!fs.existsSync(imagePath)) {
-            console.error(`   ❌ Image not found: ${imagePath}`);
+            console.error(`   ❌ Image not found: ${imagePath}\n`);
+            failCount++;
             continue;
         }
 
@@ -63,7 +84,8 @@ async function uploadAndUpdate() {
             });
 
         if (uploadError) {
-            console.error(`   ❌ Upload failed: ${uploadError.message}`);
+            console.error(`   ❌ Upload failed: ${uploadError.message}\n`);
+            failCount++;
             continue;
         }
 
@@ -82,13 +104,19 @@ async function uploadAndUpdate() {
             .eq('id', id);
 
         if (dbError) {
-            console.error(`   ❌ DB update failed: ${dbError.message}`);
+            console.error(`   ❌ DB update failed: ${dbError.message}\n`);
+            failCount++;
         } else {
             console.log(`   ✅ Success!\n`);
+            successCount++;
         }
     }
 
-    console.log('✨ All done!');
+    console.log('========================================');
+    console.log(`✨ Upload complete!`);
+    console.log(`   ✅ Success: ${successCount}`);
+    console.log(`   ❌ Failed: ${failCount}`);
+    console.log('========================================');
 }
 
 uploadAndUpdate();
