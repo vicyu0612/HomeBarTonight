@@ -81,7 +81,7 @@ export function SettingsPage({ session, lang, setLang, onLogin, onLogout, onDele
         await Browser.open({
             url: url,
             windowName: '_self',
-            presentationStyle: 'popover'
+            presentationStyle: 'fullscreen'
         });
     };
 
