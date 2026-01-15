@@ -17,8 +17,41 @@ dist-ssr
 !.vscode/extensions.json
 .idea
 .DS_Store
+**/.DS_Store
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Capacitor
+ios/App/Podfile.lock
+ios/App/Pods/
+android/
+
+# Scripts output
+scripts/*.json
+scripts/all_recipe_stats.json
+
+# Temporary files
+temp_*/
+*.tmp
+*.bak
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyc
+
+# Sensitive files
+apple_key.p8
+*.p8
+*.pem
+
+# Database migrations (keep in supabase/ but ignore root)
+migrate_*.sql

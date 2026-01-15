@@ -237,11 +237,8 @@ function App() {
     if (!Capacitor.isNativePlatform()) return;
 
     CapApp.addListener('appUrlOpen', async ({ url }) => {
-      console.log('🔗 Deep Link received:', url); // Debug log
-
       // 1. Handle Restore Purchases (RevenueCat Custom Action)
       if (url.includes('homebartonight://restore')) {
-        console.log('✅ Triggering Restore Purchases...');
         const info = await restorePurchases();
 
         if (info) {

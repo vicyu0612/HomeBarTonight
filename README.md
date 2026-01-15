@@ -1,73 +1,102 @@
-# React + TypeScript + Vite
+# HomeBarTonight 🍹
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern cocktail recipe app built with React, TypeScript, and Capacitor. Discover classic cocktails, create your own bar inventory, and find recipes you can make with what you have.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- 📚 **Extensive Recipe Library**: Browse classic cocktails and convenience store (CVS) cocktails
+- 🏠 **My Bar**: Track your ingredient inventory and discover what you can make
+- ⭐ **Favorites**: Save your favorite recipes
+- 🌍 **Bilingual**: Full support for English and Traditional Chinese (繁體中文)
+- 📱 **Native iOS App**: Built with Capacitor for native performance
+- 🔐 **User Accounts**: Sign in with Google or Apple ID
+- 💎 **Premium Features**: Unlock exclusive recipes with subscription
 
-## React Compiler
+## Tech Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **Frontend**: React 19, TypeScript, Vite
+- **Styling**: Tailwind CSS
+- **Mobile**: Capacitor 8 (iOS)
+- **Backend**: Supabase (PostgreSQL, Auth, Storage)
+- **Subscriptions**: RevenueCat
+- **Animations**: Framer Motion
 
-## Expanding the ESLint configuration
+## Getting Started
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### Prerequisites
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- Node.js 18+
+- npm or yarn
+- Xcode (for iOS development)
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+### Installation
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+1. Clone the repository
+```bash
+git clone <repository-url>
+cd HomeBarTonight
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+2. Install dependencies
+```bash
+npm install
 ```
+
+3. Set up environment variables
+
+Create a `.env.local` file in the root directory:
+```env
+VITE_SUPABASE_URL=your_supabase_url
+VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
+VITE_REVENUECAT_API_KEY_IOS=your_revenuecat_key
+```
+
+4. Run the development server
+```bash
+npm run dev
+```
+
+### Building for iOS
+
+```bash
+npm run build:ios
+```
+
+Then open the iOS project in Xcode:
+```bash
+npx cap open ios
+```
+
+## Project Structure
+
+```
+src/
+├── components/     # Reusable UI components
+├── contexts/       # React contexts (Subscription, etc.)
+├── data/          # Static data (recipes, collections)
+├── hooks/         # Custom React hooks
+├── pages/         # Main page components
+├── utils/         # Utility functions
+└── App.tsx        # Main application component
+```
+
+## Scripts
+
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run build:ios` - Build and sync with iOS
+- `npm run lint` - Run ESLint
+- `npm run preview` - Preview production build
+
+## Contributing
+
+This is a personal project, but suggestions and bug reports are welcome!
+
+## License
+
+All rights reserved.
+
+## Contact
+
+For questions or support, please contact [your-email]
