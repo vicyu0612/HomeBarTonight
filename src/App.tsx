@@ -257,25 +257,6 @@ function App() {
         return;
       }
 
-      // 1.5 Handle Legal Links (Paywall Fullscreen Override)
-      if (url.includes('homebartonight://terms')) {
-        await Browser.open({
-          url: 'https://www.apple.com/legal/internet-services/itunes/dev/stdeula/',
-          windowName: '_self',
-          presentationStyle: 'fullscreen'
-        });
-        return;
-      }
-
-      if (url.includes('homebartonight://privacy')) {
-        await Browser.open({
-          url: 'https://amenable-tail-446.notion.site/Privacy-Policy-2e1c2f53a0b180eeb7c5d477d6292db5?source=copy_link',
-          windowName: '_self',
-          presentationStyle: 'fullscreen'
-        });
-        return;
-      }
-
       // 2. Handle Auth Callback
       if (url.includes('access_token') || url.includes('refresh_token')) {
         const hashMap = new URLSearchParams(new URL(url).hash.substring(1));
@@ -473,7 +454,7 @@ function App() {
         await Browser.open({
           url: data.url,
           windowName: '_self', // Suggests opening in-place/SVC
-          presentationStyle: 'popover' // Optional, for nicer transition on iPad
+          presentationStyle: 'pageSheet' as any // Use pageSheet for better iPad experience (larger modal + blur)
         });
       }
     } else {
