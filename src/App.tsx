@@ -23,6 +23,7 @@ const SettingsPage = lazy(() => import('./pages/SettingsPage').then(module => ({
 
 import { collections as fallbackCollections, type Collection } from './data/collections';
 import { useIngredients } from './hooks/useIngredients';
+import { useSubscription } from './hooks/useSubscription';
 
 
 
@@ -229,19 +230,35 @@ function App() {
     }
   }, [allRecipes, initialRecipeId, hasRestoredRecipe]);
 
-  // Listen for Deep Links (Auth Callback)
+  const { restorePurchases } = useSubscription();
+
+  // Listen for Deep Links (Auth Callback & Custom Actions)
   useEffect(() => {
     if (!Capacitor.isNativePlatform()) return;
 
     CapApp.addListener('appUrlOpen', async ({ url }) => {
+      console.log('🔗 Deep Link received:', url); // Debug log
 
+      // 1. Handle Restore Purchases (RevenueCat Custom Action)
+      if (url.includes('homebartonight://restore')) {
+        console.log('✅ Triggering Restore Purchases...');
+        const info = await restorePurchases();
+
+        if (info) {
+          const active = Object.keys(info.entitlements.active);
+          if (active.length > 0) {
+            alert(`Purchases Restored!\nActive Entitlements:\n${active.join(', ')}`);
+          } else {
+            alert('Restore completed, but no active subscriptions found.\n請確認您的 Apple ID 是否有訂閱紀錄。');
+          }
+        } else {
+          alert('Restore Failed / 恢復失敗');
+        }
+        return;
+      }
+
+      // 2. Handle Auth Callback
       if (url.includes('access_token') || url.includes('refresh_token')) {
-        // Supabase V2: Extract tokens from URL fragment
-        // But simpler: pass the full URL to supabase helpers if available, or parse manual.
-        // Actually, Supabase JS usually handles `getSession` correctly if the URL is visited? 
-        // No, in native app, we must feed it.
-
-        // Extract fragment
         const hashMap = new URLSearchParams(new URL(url).hash.substring(1));
         const accessToken = hashMap.get('access_token');
         const refreshToken = hashMap.get('refresh_token');
@@ -249,14 +266,11 @@ function App() {
         if (accessToken && refreshToken && supabase) {
           const { error } = await supabase.auth.setSession({ access_token: accessToken, refresh_token: refreshToken });
           if (error) console.error('Set Session Error:', error);
-          // Close Browser/WebView if opened (iOS sometimes keeps SFSafariViewController open)
-          // Browser.close(); // Not always needed but good practice
-          // eslint-disable-next-line no-empty
           try { await Browser.close(); } catch { }
         }
       }
     });
-  }, []);
+  }, [restorePurchases]);
 
   // Sync favorites/inventory on login
   useEffect(() => {

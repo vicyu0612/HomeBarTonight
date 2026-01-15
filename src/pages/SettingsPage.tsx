@@ -1,4 +1,4 @@
-import { HelpCircle, ChevronRight, X, FileText, Globe, ArrowLeft, LogOut, Trash2, RefreshCw, Check, Crown, ShieldCheck, ExternalLink } from 'lucide-react';
+import { HelpCircle, ChevronRight, X, FileText, Globe, ArrowLeft, LogOut, Trash2, RefreshCw, Check, Crown, ShieldCheck } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState } from 'react';
 import { createPortal } from 'react-dom';
@@ -6,6 +6,7 @@ import type { Session } from '@supabase/supabase-js';
 import clsx from 'clsx';
 import { useSubscription } from '../hooks/useSubscription';
 import { PullToRefresh } from '../components/PullToRefresh';
+import { Browser } from '@capacitor/browser';
 
 
 interface SettingsPageProps {
@@ -65,8 +66,8 @@ export function SettingsPage({ session, lang, setLang, onLogin, onLogout, onDele
         about: {
             title: lang === 'zh' ? '關於' : 'About',
             support: lang === 'zh' ? '支援' : 'Support',
-            terms: lang === 'zh' ? '使用者條款' : 'Terms of Use',
-            privacy: lang === 'zh' ? '隱私權政策' : 'Privacy Policy'
+            terms: lang === 'zh' ? '使用條款' : 'Terms of Use',
+            privacy: lang === 'zh' ? '隱私政策' : 'Privacy Policy'
         },
         subscription: {
             title: lang === 'zh' ? '訂閱' : 'Subscription',
@@ -76,7 +77,13 @@ export function SettingsPage({ session, lang, setLang, onLogin, onLogout, onDele
         }
     };
 
-    const openLink = (url: string) => window.open(url, '_blank');
+    const openLink = async (url: string) => {
+        await Browser.open({
+            url: url,
+            windowName: '_self',
+            presentationStyle: 'popover'
+        });
+    };
 
     const formatDate = (isoString?: string) => {
         if (!isoString) return '';
@@ -447,7 +454,7 @@ export function SettingsPage({ session, lang, setLang, onLogin, onLogout, onDele
                                     <ShieldCheck size={20} className="text-zinc-400" />
                                     <span className="text-white">{t.about.privacy}</span>
                                 </div>
-                                <ExternalLink size={20} className="text-zinc-500" />
+                                <ChevronRight size={20} className="text-zinc-500" />
                             </button>
                             <button
                                 onClick={() => openLink('https://www.apple.com/legal/internet-services/itunes/dev/stdeula/')}
@@ -457,7 +464,7 @@ export function SettingsPage({ session, lang, setLang, onLogin, onLogout, onDele
                                     <FileText size={20} className="text-zinc-400" />
                                     <span className="text-white">{t.about.terms}</span>
                                 </div>
-                                <ExternalLink size={20} className="text-zinc-500" />
+                                <ChevronRight size={20} className="text-zinc-500" />
                             </button>
                             <button
                                 onClick={() => openLink('https://amenable-tail-446.notion.site/Support-2e6c2f53a0b18005a020cbe7ea7338c2?source=copy_link')}
@@ -467,7 +474,7 @@ export function SettingsPage({ session, lang, setLang, onLogin, onLogout, onDele
                                     <HelpCircle size={20} className="text-zinc-400" />
                                     <span className="text-white">{t.about.support}</span>
                                 </div>
-                                <ExternalLink size={20} className="text-zinc-500" />
+                                <ChevronRight size={20} className="text-zinc-500" />
                             </button>
                         </div>
                     </section>
