@@ -454,7 +454,7 @@ function App() {
         await Browser.open({
           url: data.url,
           windowName: '_self', // Suggests opening in-place/SVC
-          presentationStyle: 'pageSheet' as any // Use pageSheet for better iPad experience (larger modal + blur)
+          presentationStyle: 'fullscreen' // Fallback to fullscreen as pageSheet is flaky on some versions
         });
       }
     } else {
