@@ -1,237 +1,202 @@
-
 import { createClient } from '@supabase/supabase-js';
-import fs from 'fs';
-import path from 'path';
 import dotenv from 'dotenv';
-import { fileURLToPath } from 'url';
+import path from 'path';
+import fs from 'fs';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-dotenv.config({ path: path.resolve(__dirname, '../.env.local') });
+// Load env
+dotenv.config({ path: '.env.local' });
 
 const supabaseUrl = process.env.VITE_SUPABASE_URL;
-const supabaseKey = process.env.VITE_SUPABASE_ANON_KEY;
+const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
 if (!supabaseUrl || !supabaseKey) {
-    console.error('Missing Supabase credentials');
+    console.error('Missing Supabase credentials.');
     process.exit(1);
 }
 
 const supabase = createClient(supabaseUrl, supabaseKey);
 
-// Map recipe IDs to local generated image paths
-const IMAGE_PATHS = {
-    'soju-yakult': '/Users/vic-yu/.gemini/antigravity/brain/bc7b8460-01e2-4fa4-a7cd-a512a59ec63b/soju_yakult_1768262655263.png',
-    'umeshu-green-tea': '/Users/vic-yu/.gemini/antigravity/brain/bc7b8460-01e2-4fa4-a7cd-a512a59ec63b/umeshu_green_tea_1768262670131.png',
-    'espresso-lemon-vodka': '/Users/vic-yu/.gemini/antigravity/brain/bc7b8460-01e2-4fa4-a7cd-a512a59ec63b/espresso_lemon_vodka_1768262684484.png',
-    'coffee-milk-whiskey': '/Users/vic-yu/.gemini/antigravity/brain/bc7b8460-01e2-4fa4-a7cd-a512a59ec63b/coffee_milk_whiskey_1768262698868.png',
-    'papaya-milk-rum': '/Users/vic-yu/.gemini/antigravity/brain/bc7b8460-01e2-4fa4-a7cd-a512a59ec63b/papaya_milk_rum_1768262713748.png'
-};
-
-const newIngredients = [
-    { id: 'umeshu', name_en: 'Umeshu (Plum Wine)', name_zh: '梅酒', category: 'liqueur' },
-    { id: 'coffee_milk', name_en: 'Coffee Milk', name_zh: '咖啡牛奶', category: 'mixer' },
-    { id: 'papaya_milk', name_en: 'Papaya Milk', name_zh: '木瓜牛奶', category: 'mixer' }
-];
+const BASE_STORAGE_URL = `${supabaseUrl}/storage/v1/object/public/cocktails`;
 
 const newRecipes = [
     {
-        id: 'soju-yakult',
-        name: { en: 'Soju Yakult', zh: '養樂多燒酒' },
+        id: 'kitty',
+        name: { en: 'Kitty', zh: '凱蒂' },
         type: 'cvs',
-        baseSpirit: ['soju'],
+        baseSpirit: ['wine'],
         ingredients: {
-            en: [{ name: 'Soju', amount: '1 bottle' }, { name: 'Yakult', amount: '2 bottles' }, { name: 'Sprite', amount: 'Top up' }],
-            zh: [{ name: '燒酒', amount: '1罐' }, { name: '養樂多', amount: '2罐' }, { name: '雪碧', amount: '加滿' }]
+            en: [{ name: 'Red Wine', amount: '1 part' }, { name: 'Ginger Ale', amount: '1 part' }, { name: 'Lime', amount: 'Slice' }],
+            zh: [{ name: '紅酒', amount: '1份' }, { name: '薑汁汽水', amount: '1份' }, { name: '檸檬片', amount: '1片' }]
         },
         steps: {
-            en: ['Fill a highball glass with ice.', 'Pour in Soju and Yakult.', 'Top with Sprite and stir gently.'],
-            zh: ['Highball杯裝滿冰塊。', '倒入燒酒與養樂多。', '加滿雪碧並輕輕攪拌。']
+            en: ['Fill wine glass with ice.', 'Pour red wine.', 'Top with ginger ale.', 'Garnish with lime.'],
+            zh: ['紅酒杯裝滿冰塊。', '倒入紅酒。', '加滿薑汁汽水。', '以檸檬片裝飾。']
         },
-        tags: { en: ['cvs', 'party', 'sweet'], zh: ['超商', '乳酸', '派對'] },
+        tags: { en: ['cvs', 'refreshing', 'low-abv'], zh: ['超商', '清爽', '低酒精'] },
         description: {
-            en: 'A Korean favorite known as "Yogurt Soju". The creamy sweetness of Yakult masks the alcohol bite completely.',
-            zh: '韓國國民喝法。養樂多的酸甜完美掩蓋了燒酒的酒精味，不知不覺就會喝完一整瓶。'
+            en: 'A refreshing wine cocktail that reduces the tannins of red wine with the sweetness of ginger ale. Popular in Japan.',
+            zh: '透過薑汁汽水的甜味中和紅酒的單寧，清爽易飲，在日本相當受歡迎。'
         },
-        specs: { alcohol: 7, sweetness: 9, ease: 10 },
-        color: '#fef3c7' // amber-100
+        specs: { alcohol: 3, sweetness: 6, ease: 10 },
+        color: '#7f1d1d',
+        image: `${BASE_STORAGE_URL}/kalimotxo.png`, // Reuse Kalimotxo
+        collections: ['cvs-hacks']
     },
     {
-        id: 'umeshu-green-tea',
-        name: { en: 'Umeshu Green Tea', zh: '梅酒綠茶' },
+        id: 'operator',
+        name: { en: 'Operator', zh: '接線生' },
         type: 'cvs',
-        baseSpirit: ['liqueur'],
+        baseSpirit: ['white_wine'],
         ingredients: {
-            en: [{ name: 'Umeshu', amount: '60ml' }, { name: 'Green Tea (Unsweetened)', amount: 'Top up' }],
-            zh: [{ name: '梅酒', amount: '60ml' }, { name: '無糖綠茶', amount: '加滿' }]
+            en: [{ name: 'White Wine', amount: '1 part' }, { name: 'Ginger Ale', amount: '1 part' }, { name: 'Lemon', amount: 'Twist' }],
+            zh: [{ name: '白酒', amount: '1份' }, { name: '薑汁汽水', amount: '1份' }, { name: '檸檬皮', amount: '1片' }]
         },
         steps: {
-            en: ['Build in a highball glass with ice.', 'Add Umeshu.', 'Top with cold green tea.'],
-            zh: ['在杯中加入冰塊。', '倒入梅酒。', '注滿無糖綠茶攪拌。']
+            en: ['Fill glass with ice.', 'Pour white wine.', 'Top with ginger ale.', 'Stir gently.'],
+            zh: ['杯中加冰。', '倒入白酒。', '加滿薑汁汽水。', '輕輕攪拌。']
         },
-        tags: { en: ['cvs', 'refreshing', 'dinner'], zh: ['超商', '清爽', '佐餐'] },
+        tags: { en: ['cvs', 'refreshing', 'bubbly'], zh: ['超商', '清爽', '氣泡'] },
         description: {
-            en: 'Elegant and simple. The tannins in green tea balance the sweetness of plum wine.',
-            zh: '清雅的日式風味。無糖綠茶的茶香與單寧感，中和了梅酒的甜膩，非常適合佐餐。'
+            en: 'The white wine version of the Kitty. Crisp, bubbly, and incredibly easy to drink.',
+            zh: 'Kitty 的白酒版本。口感清脆氣泡感十足，非常好入口。'
         },
-        specs: { alcohol: 5, sweetness: 6, ease: 10 },
-        color: '#fbbf24' // amber-400
+        specs: { alcohol: 3, sweetness: 6, ease: 10 },
+        color: '#fef3c7',
+        image: `${BASE_STORAGE_URL}/gin-tonic.png`, // Placeholder
+        collections: ['cvs-hacks']
     },
     {
-        id: 'espresso-lemon-vodka',
-        name: { en: 'Espresso Lemon Vodka', zh: '西西里氣泡咖啡酒' },
+        id: 'spritzer',
+        name: { en: 'Spritzer', zh: '噴氣機' },
         type: 'cvs',
-        baseSpirit: ['vodka'],
+        baseSpirit: ['white_wine'],
         ingredients: {
-            en: [{ name: 'Vodka', amount: '45ml' }, { name: 'Black Coffee', amount: '60ml' }, { name: 'Lemon Sparkling Water', amount: 'Top up' }],
-            zh: [{ name: '伏特加', amount: '45ml' }, { name: '黑咖啡', amount: '60ml' }, { name: '檸檬氣泡水', amount: '加滿' }]
+            en: [{ name: 'White Wine', amount: '1 part' }, { name: 'Soda Water', amount: '1 part' }],
+            zh: [{ name: '白酒', amount: '1份' }, { name: '氣泡水', amount: '1份' }]
         },
         steps: {
-            en: ['Fill glass with ice.', 'Add vodka and coffee.', 'Top with lemon sparkling water.', 'Garnish with a lemon slice.'],
-            zh: ['杯中加滿冰塊。', '加入伏特加與黑咖啡。', '緩緩注入檸檬氣泡水。', '放上一片檸檬裝飾。']
+            en: ['Fill wine glass with ice.', 'Pour white wine.', 'Top with soda water.'],
+            zh: ['紅酒杯裝滿冰塊。', '倒入白酒。', '加滿氣泡水。']
         },
-        tags: { en: ['cvs', 'coffee', 'fruity'], zh: ['超商', '咖啡', '清爽'] },
+        tags: { en: ['cvs', 'dry', 'refreshing'], zh: ['超商', '不甜', '清爽'] },
         description: {
-            en: 'An alcoholic twist on the popular Espresso Romano. Tart, bubbly, and caffeinated.',
-            zh: '清爽的西西里咖啡升級版。檸檬氣泡水的酸甜支撐起咖啡的苦韻，增加微醺感，是午後提神的最佳選擇。'
+            en: 'An Austrian classic. Diluting wine with soda makes it a hydrating, long drink perfect for summer.',
+            zh: '奧地利經典喝法。用氣泡水沖淡白酒，成為適合夏日的清爽解渴飲品。'
         },
-        specs: { alcohol: 5, sweetness: 4, ease: 10 },
-        color: '#451a03' // amber-950 (coffee color)
+        specs: { alcohol: 3, sweetness: 3, ease: 10 },
+        color: '#fefce8',
+        image: `${BASE_STORAGE_URL}/vodka-energy.png`, // Placeholder
+        collections: ['cvs-hacks']
     },
     {
-        id: 'coffee-milk-whiskey',
-        name: { en: 'Coffee Milk Whiskey', zh: '咖啡牛奶威士忌' },
+        id: 'whiskey-coke',
+        name: { en: 'Whiskey Coke', zh: '威士忌可樂' },
         type: 'cvs',
         baseSpirit: ['whiskey'],
         ingredients: {
-            en: [{ name: 'Whiskey', amount: '45ml' }, { name: 'Coffee Milk', amount: 'Top up' }],
-            zh: [{ name: '威士忌', amount: '45ml' }, { name: '咖啡牛奶', amount: '加滿' }]
+            en: [{ name: 'Whiskey', amount: '45ml' }, { name: 'Coke', amount: 'Top up' }, { name: 'Lime', amount: 'Wedge' }],
+            zh: [{ name: '威士忌', amount: '45ml' }, { name: '可樂', amount: '適量' }, { name: '檸檬角', amount: '1塊' }]
         },
         steps: {
-            en: ['Fill a rock glass with ice.', 'Pour whiskey.', 'Top with creamy coffee milk.'],
-            zh: ['威士忌杯加入大冰塊。', '倒入威士忌。', '加滿咖啡牛奶攪拌。']
+            en: ['Fill highball glass with ice.', 'Add whiskey.', 'Top with Coke.', 'Squeeze lime.'],
+            zh: ['高球杯裝滿冰塊。', '加入威士忌。', '加滿可樂。', '擠入檸檬汁。']
         },
-        tags: { en: ['cvs', 'creamy', 'winter'], zh: ['超商', '奶香', '暖心'] },
+        tags: { en: ['cvs', 'classic', 'party'], zh: ['超商', '經典', '派對'] },
         description: {
-            en: 'The convenience store Irish Coffee. Creamy, rich, and comforting.',
-            zh: '大人的早餐飲品。奶香濃郁的咖啡牛奶，讓威士忌變得順滑溫潤，適合冬天或深夜飲用。'
+            en: 'The reliable classic. Smoky whiskey meets sweet caramel soda.',
+            zh: '絕對經典。煙燻威士忌遇上香甜焦糖氣泡。'
         },
         specs: { alcohol: 5, sweetness: 7, ease: 10 },
-        color: '#a16207' // yellow-700
+        color: '#3f1d10',
+        image: `${BASE_STORAGE_URL}/rum-coke.png`, // Placeholder
+        collections: ['cvs-hacks']
     },
     {
-        id: 'papaya-milk-rum',
-        name: { en: 'Papaya Milk Rum', zh: '木瓜牛乳蘭姆酒' },
+        id: 'soju-coffee',
+        name: { en: 'Soju Coffee (Sojucano)', zh: '燒酒咖啡' },
         type: 'cvs',
-        baseSpirit: ['rum'],
+        baseSpirit: ['soju'],
         ingredients: {
-            en: [{ name: 'Rum (White or Gold)', amount: '45ml' }, { name: 'Papaya Milk', amount: 'Top up' }],
-            zh: [{ name: '蘭姆酒', amount: '45ml' }, { name: '木瓜牛乳', amount: '加滿' }]
+            en: [{ name: 'Soju', amount: '1 part' }, { name: 'Black Coffee', amount: '2 parts' }],
+            zh: [{ name: '燒酒', amount: '1份' }, { name: '黑咖啡', amount: '2份' }]
         },
         steps: {
-            en: ['Fill glass with ice.', 'Add Rum.', 'Top with Papaya Milk.'],
-            zh: ['杯中加入冰塊。', '倒入蘭姆酒。', '加滿木瓜牛乳。']
+            en: ['Fill glass with ice.', 'Pour Soju.', 'Top with black coffee.'],
+            zh: ['杯中加冰。', '倒入燒酒。', '加滿黑咖啡。']
         },
-        tags: { en: ['cvs', 'tropical', 'sweet'], zh: ['超商', '熱帶', '台味'] },
+        tags: { en: ['cvs', 'bittersweet', 'pick-me-up'], zh: ['超商', '苦甜', '提神'] },
         description: {
-            en: 'A surprising tropical match. The sugarcane notes of Rum blend perfectly with the creamy papaya milk.',
-            zh: '意想不到的台式熱帶風情。瓜果的香甜與蔗糖酒體完美融合，喝起來就像是融化的熱帶冰淇淋。'
+            en: 'The bitterness of coffee masks the alcohol burn of Soju perfectly. A dangerous wake-up call.',
+            zh: '咖啡的苦味完美掩蓋了燒酒的酒精味。危險的提神飲料。'
         },
-        specs: { alcohol: 5, sweetness: 9, ease: 10 },
-        color: '#fb923c' // orange-400
+        specs: { alcohol: 4, sweetness: 3, ease: 10 },
+        color: '#1c1917',
+        image: `${BASE_STORAGE_URL}/black-coffee-whiskey.png`, // Placeholder
+        collections: ['cvs-hacks']
+    },
+    {
+        id: 'cowboy',
+        name: { en: 'Cowboy', zh: '牛仔' },
+        type: 'cvs',
+        baseSpirit: ['whiskey'],
+        ingredients: {
+            en: [{ name: 'Whiskey', amount: '45ml' }, { name: 'Milk', amount: 'Top up' }],
+            zh: [{ name: '威士忌', amount: '45ml' }, { name: '牛奶', amount: '適量' }]
+        },
+        steps: {
+            en: ['Fill glass with ice.', 'Add whiskey.', 'Top with milk.', 'Stir.'],
+            zh: ['杯中加冰。', '加入威士忌。', '加滿牛奶。', '攪拌均勻。']
+        },
+        tags: { en: ['cvs', 'creamy', 'winter'], zh: ['超商', '濃郁', '冬季'] },
+        description: {
+            en: 'A simple, creamy drink. The milk mellows out the whiskey, creating a smooth sipper.',
+            zh: '簡單濃郁。牛奶柔化了威士忌的線條，滑順易飲。'
+        },
+        specs: { alcohol: 4, sweetness: 4, ease: 10 },
+        color: '#f5f5f4',
+        image: `${BASE_STORAGE_URL}/white-russian.png`, // Placeholder
+        collections: ['cvs-hacks']
     }
 ];
 
-const BUCKET_NAME = 'cocktails';
+async function addRecipes() {
+    console.log(`🚀 Starting to add ${newRecipes.length} new CVS recipes...`);
 
-async function main() {
-    console.log(`🚀 Starting Batch 2 CVS Update...`);
-
-    // 1. Add New Ingredients
-    console.log(`\n📦 Adding ${newIngredients.length} new ingredients...`);
-    const { error: ingError } = await supabase
-        .from('ingredients')
-        .upsert(newIngredients, { onConflict: 'id' });
-
-    if (ingError) {
-        console.error(`❌ Failed to add ingredients: ${ingError.message}`);
-    } else {
-        console.log(`✅ Ingredients added successfully.`);
-    }
-
-    // 2. Process Recipes
     for (const recipe of newRecipes) {
         console.log(`\n🔹 Processing: ${recipe.name.en} (${recipe.id})`);
 
-        // Upload Image
-        const localPath = IMAGE_PATHS[recipe.id];
-        const fileName = `${recipe.id}.png`;
+        // Skip image upload, relying on remote placeholders.
+        const imageUrl = recipe.image;
 
-        if (fs.existsSync(localPath)) {
-            const fileBuffer = fs.readFileSync(localPath);
-            console.log(`   ⬆️ Uploading image...`);
+        console.log(`   🖼️ Using placeholder image: ${imageUrl}`);
 
-            const { error: uploadError } = await supabase.storage
-                .from(BUCKET_NAME)
-                .upload(fileName, fileBuffer, {
-                    contentType: 'image/png',
-                    upsert: true
-                });
+        const dbRecord = {
+            id: recipe.id,
+            name: recipe.name,
+            type: recipe.type,
+            base_spirit: recipe.baseSpirit,
+            ingredients: recipe.ingredients,
+            steps: recipe.steps,
+            tags: recipe.tags,
+            description: recipe.description,
+            specs: recipe.specs,
+            color: recipe.color,
+            image: imageUrl,
+            collections: recipe.collections
+        };
 
-            if (uploadError) {
-                console.error(`   ❌ Upload failed: ${uploadError.message}`);
-                // Continue, publicUrl might still work if previously uploaded
-            }
-        } else {
-            console.error(`   ❌ Local image not found: ${localPath}`);
-        }
-
-        const { data: { publicUrl } } = supabase.storage
-            .from(BUCKET_NAME)
-            .getPublicUrl(fileName);
-
-        // Upsert Recipe
-        console.log(`   💾 Upserting recipe...`);
+        console.log(`   💾 Upserting into DB...`);
         const { error: insertError } = await supabase
             .from('recipes')
-            .upsert({
-                id: recipe.id,
-                name: recipe.name,
-                type: recipe.type,
-                base_spirit: recipe.baseSpirit, // Ensure column name matches DB schema
-                ingredients: recipe.ingredients,
-                steps: recipe.steps,
-                tags: recipe.tags,
-                description: recipe.description,
-                specs: recipe.specs,
-                color: recipe.color,
-                image: publicUrl
-            }, { onConflict: 'id' });
+            .upsert(dbRecord, { onConflict: 'id' });
 
         if (insertError) {
-            if (insertError.message.includes('base_spirit')) {
-                console.warn('   ⚠️ Column base_spirit not found, trying baseSpirit...');
-                await supabase.from('recipes').upsert({
-                    id: recipe.id,
-                    name: recipe.name,
-                    type: recipe.type,
-                    ingredients: recipe.ingredients,
-                    steps: recipe.steps,
-                    tags: recipe.tags,
-                    description: recipe.description,
-                    specs: recipe.specs,
-                    color: recipe.color,
-                    image: publicUrl,
-                    baseSpirit: recipe.baseSpirit
-                }, { onConflict: 'id' });
-            } else {
-                console.error(`   ❌ Insert failed: ${insertError.message}`);
-            }
+            console.error(`   ❌ DB Insert failed: ${insertError.message}`);
         } else {
-            console.log(`   ✅ Success!`);
+            console.log(`   ✅ Recipe saved!`);
         }
     }
-    console.log('\n✨ All operations completed!');
+    console.log('\n✨ All done!');
 }
 
-main();
+addRecipes();

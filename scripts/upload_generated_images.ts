@@ -1,72 +1,90 @@
-
 import { createClient } from '@supabase/supabase-js';
-import * as fs from 'fs';
-import * as path from 'path';
 import dotenv from 'dotenv';
-import { fileURLToPath } from 'url';
+import fs from 'fs';
+import path from 'path';
 
-// Load environment variables
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-dotenv.config({ path: path.resolve(__dirname, '../.env.local') });
+// Load env
+dotenv.config({ path: '.env.local' });
 
 const supabaseUrl = process.env.VITE_SUPABASE_URL;
-const supabaseKey = process.env.VITE_SUPABASE_ANON_KEY;
-// IMPORTANT: For Storage upload (upsert), often need Policy permissions.
-// If RLS allows Authenticated/Anon uploads, fine. If not, might need Service Role.
-// I'll try with ANON first, if fail, I assume user has set proper policies or I need to use another way.
-// Wait, previous scripts used MCP SQL to verify. 
-// "fixed_missing_images.ts" used Supabase Client. If that worked (or was planned to work), then this should work.
-// Actually, earlier `scripts/fix_missing_images.ts` was created. Let's assume generic write access or public bucket?
-// "cocktails" bucket is usually public.
+const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+const artifactsDir = '/Users/vic-yu/.gemini/antigravity/brain/bc7b8460-01e2-4fa4-a7cd-a512a59ec63b';
 
 if (!supabaseUrl || !supabaseKey) {
-    console.error('Missing Supabase credentials');
+    console.error('Missing Supabase credentials.');
     process.exit(1);
 }
 
 const supabase = createClient(supabaseUrl, supabaseKey);
+const BUCKET_NAME = 'cocktails';
 
-const FILES_TO_UPLOAD = [
-    'mint-julep.png',
-    'pocari-soju.png',
-    'black-coffee-whiskey.png',
-    'oolong-gin.png',
-    'soy-milk-baileys.png',
-    'red-eye-tw.png',
-    'vitamin-c-bomb.png'
-];
+// Map of Recipe ID to Partial Image Filename (to find the file)
+const recipeImageMap = {
+    'kitty': 'kitty_cocktail',
+    'operator': 'operator_cocktail',
+    'spritzer': 'spritzer_cocktail',
+    'whiskey-coke': 'whiskey_coke_cocktail',
+    'soju-coffee': 'soju_coffee_cocktail',
+    'cowboy': 'cowboy_cocktail'
+};
 
-async function uploadImages() {
-    console.log('Starting upload...');
+async function run() {
+    console.log(`🚀 Uploading generated images for ${Object.keys(recipeImageMap).length} recipes...`);
 
-    for (const filename of FILES_TO_UPLOAD) {
-        const filePath = path.resolve(__dirname, '../public/cocktails', filename);
-        if (!fs.existsSync(filePath)) {
-            console.warn(`File not found: ${filePath}`);
+    const files = fs.readdirSync(artifactsDir);
+
+    for (const [recipeId, partialName] of Object.entries(recipeImageMap)) {
+        // Find the actual file (since timestamp is appended)
+        const file = files.find(f => f.startsWith(partialName) && f.endsWith('.png'));
+
+        if (!file) {
+            console.warn(`⚠️ Could not find image file for ${recipeId} (prefix: ${partialName})`);
             continue;
         }
 
+        const filePath = path.join(artifactsDir, file);
         const fileBuffer = fs.readFileSync(filePath);
+        // Clean filename for storage: just the recipe id usually, or keep original name?
+        // Let's use recipeId.png to be clean and consistent.
+        const storageFileName = `${recipeId}.png`;
 
-        console.log(`Uploading ${filename}...`);
-        const { data, error } = await supabase
-            .storage
-            .from('cocktails')
-            .upload(filename, fileBuffer, {
+        console.log(`\n🔹 Processing ${recipeId}...`);
+        console.log(`   Found local file: ${file}`);
+        console.log(`   ⬆️ Uploading as ${storageFileName}...`);
+
+        const { error: uploadError } = await supabase.storage
+            .from(BUCKET_NAME)
+            .upload(storageFileName, fileBuffer, {
                 contentType: 'image/png',
                 upsert: true
             });
 
-        if (error) {
-            console.error(`Failed to upload ${filename}:`, error.message);
+        if (uploadError) {
+            console.error(`   ❌ Upload failed: ${uploadError.message}`);
+            continue;
+        }
+
+        const { data: { publicUrl } } = supabase.storage
+            .from(BUCKET_NAME)
+            .getPublicUrl(storageFileName);
+
+        // Break cache if it existed?
+        const publicUrlWithCacheBust = `${publicUrl}?t=${Date.now()}`;
+
+        console.log(`   ✅ Image ready: ${publicUrlWithCacheBust}`);
+        console.log(`   💾 Updating recipe record...`);
+
+        const { error: updateError } = await supabase
+            .from('recipes')
+            .update({ image: publicUrlWithCacheBust })
+            .eq('id', recipeId);
+
+        if (updateError) {
+            console.error(`   ❌ DB Update failed: ${updateError.message}`);
         } else {
-            console.log(`Successfully uploaded ${filename}`);
-            // Get Public URL
-            const { data: { publicUrl } } = supabase.storage.from('cocktails').getPublicUrl(filename);
-            console.log(`URL: ${publicUrl}`);
+            console.log(`   ✅ Recipe updated!`);
         }
     }
 }
 
-uploadImages();
+run();
