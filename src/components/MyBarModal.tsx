@@ -126,12 +126,13 @@ export function MyBarModal({
             'dairy': { en: 'Dairy & Alternatives', zh: '乳製品 & 替代品' },
             'syrup': { en: 'Syrup / Sweetener', zh: '糖漿 / 甜味劑' },
             'bitters': { en: 'Bitters', zh: '苦精' },
-            'egg': { en: 'Egg / Egg White', zh: '蛋 / 蛋白' },
+            'egg': { en: 'Egg / Egg White', zh: '蛋/蛋白' },
             'hot_sauce': { en: 'Hot Sauce', zh: '辣醬' },
             'fruit': { en: 'Fruit', zh: '水果' },
             'dessert': { en: 'Dessert', zh: '甜品' },
             'pantry': { en: 'Pantry', zh: '家中常備' },
             'basic': { en: 'Basic', zh: '基本' },
+            'aperitif': { en: 'Aperitivo / Aperitif', zh: '開胃酒' },
         };
         const label = labels[sub];
         if (!label) return sub.charAt(0).toUpperCase() + sub.slice(1);
@@ -236,7 +237,7 @@ export function MyBarModal({
 
                         {/* Content */}
                         < PullToRefresh
-                            className="flex-1 overflow-y-auto px-4 space-y-8 custom-scrollbar pt-0"
+                            className="flex-1 overflow-y-auto px-4 space-y-8 custom-scrollbar pt-0 pb-32"
                             onRefresh={onRefresh || (async () => { })}
                             onScroll={handleScroll}
                         >
@@ -277,7 +278,7 @@ export function MyBarModal({
                                     { id: 'liqueur', title: lang === 'zh' ? '利口酒' : 'Liqueurs', color: 'bg-orange-500', data: categories.liqueur },
                                     { id: 'other_alc', title: lang === 'zh' ? '其他酒類' : 'Other Alcohol', color: 'bg-red-500', data: categories.other_alc },
                                     { id: 'essential', title: lang === 'zh' ? '基本材料' : 'Essentials', color: 'bg-zinc-400', data: categories.essential },
-                                    { id: 'mixer', title: lang === 'zh' ? '常見飲料' : 'Common Drinks', color: 'bg-blue-400', data: categories.mixer },
+                                    { id: 'mixer', title: lang === 'zh' ? '常見飲料' : 'Mixers', color: 'bg-blue-400', data: categories.mixer },
                                     { id: 'fruit_dessert', title: lang === 'zh' ? '水果 & 甜品' : 'Fruit & Dessert', color: 'bg-pink-400', data: categories.fruit_dessert },
                                     { id: 'garnish', title: lang === 'zh' ? '裝飾 & 其他' : 'Garnishes & Others', color: 'bg-green-500', data: categories.garnish },
                                 ].map(section => {
