@@ -34,12 +34,13 @@ export function MyBarModal({
     allIngredients,
     onRefresh
 }: MyBarModalProps) {
-    const [isScrolled, setIsScrolled] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
     const [showClearConfirm, setShowClearConfirm] = useState(false);
+    const [isScrolled, setIsScrolled] = useState(false);
 
     const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
-        setIsScrolled(e.currentTarget.scrollTop > 20);
+        // Threshold to switch header mode (roughly when the content title/search scrolls up)
+        setIsScrolled(e.currentTarget.scrollTop > 80);
     };
 
     // Extract and categorize ingredients from DB Data directly
@@ -191,63 +192,74 @@ export function MyBarModal({
                         initial={{ scale: 0.95, opacity: 0 }}
                         animate={{ scale: 1, opacity: 1 }}
                         exit={{ scale: 0.95, opacity: 0 }}
-                        className="bg-black/40 backdrop-blur-2xl w-full h-full md:h-auto md:max-w-2xl md:max-h-[85vh] md:rounded-3xl shadow-[0_0_50px_rgba(0,0,0,0.5),inset_0_0.5px_0_rgba(255,255,255,0.1)] overflow-hidden flex flex-col border-0 md:border-[0.5px] border-white/10"
+                        // 1. Changed bg-black/40 backdrop-blur-2xl to bg-black solid
+                        className="bg-black w-full h-full md:h-auto md:max-w-2xl md:max-h-[85vh] md:rounded-3xl shadow-[0_0_50px_rgba(0,0,0,0.5),inset_0_0.5px_0_rgba(255,255,255,0.1)] overflow-hidden flex flex-col border-0 md:border-[0.5px] border-white/10"
                         onClick={e => e.stopPropagation()}
                     >
                         <div className={clsx(
-                            "absolute top-0 left-0 right-0 z-20 flex justify-between items-center transition-all duration-300",
+                            "w-full z-20 flex justify-between items-center bg-black transition-all duration-300",
                             "px-4 pb-3 pt-[calc(0.75rem+env(safe-area-inset-top))] md:p-6"
                         )}>
-                            {/* Gradient Blur Background */}
-                            <div
-                                className={clsx(
-                                    "absolute inset-0 -z-10 transition-opacity duration-300",
-                                    isScrolled ? "opacity-100" : "opacity-0",
-                                    "bg-gradient-to-b from-black to-transparent"
-                                )}
-                                style={{
-                                    backdropFilter: 'blur(60px)',
-                                    WebkitBackdropFilter: 'blur(60px)',
-                                    maskImage: 'linear-gradient(to bottom, black 0%, transparent 100%)',
-                                    WebkitMaskImage: 'linear-gradient(to bottom, black 0%, transparent 100%)'
-                                }}
-                            />
 
-                            {/* Left Spacer */}
-                            <div />
+                            {/* Sticky Header Search Bar (Visible when scrolled) */}
+                            {/* Always in flow (flex-1), toggling opacity only */}
+                            <div className={clsx(
+                                "flex-1 mr-3 transition-opacity duration-300",
+                                isScrolled ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+                            )}>
+                                <div className="relative h-9">
+                                    <Search className="absolute left-3 top-2.5 text-white/50" size={16} />
+                                    <input
+                                        type="text"
+                                        placeholder={lang === 'zh' ? '搜尋...' : 'Search...'}
+                                        value={searchQuery}
+                                        onChange={e => setSearchQuery(e.target.value)}
+                                        className="w-full bg-zinc-900 border border-white/10 rounded-full py-2 pl-9 pr-8 text-sm text-white placeholder:text-white/30 focus:outline-none focus:ring-1 focus:ring-indigo-500/50 h-full"
+                                    />
+                                    {searchQuery && (
+                                        <button
+                                            onClick={() => setSearchQuery('')}
+                                            className="absolute right-2 top-2.5 p-0.5 rounded-full bg-zinc-700 text-white hover:bg-zinc-600 transition-colors"
+                                        >
+                                            <X size={12} />
+                                        </button>
+                                    )}
+                                </div>
+                            </div>
 
                             {/* Right Actions */}
-                            <div className="flex items-center gap-2 relative z-10">
+                            <div className="flex items-center gap-2 relative z-10 shrink-0">
                                 {myInventory.size > 0 && (
                                     <button
                                         onClick={() => setShowClearConfirm(true)}
-                                        className="h-10 px-4 py-2 rounded-full bg-red-500/10 backdrop-blur-md border border-red-500/20 text-red-400 hover:bg-red-500/20 active:scale-95 text-xs font-bold transition-all"
+                                        className="h-9 px-3 rounded-full bg-red-500/10 border border-red-500/20 text-red-400 hover:bg-red-500/20 active:scale-95 text-xs font-bold transition-all"
                                     >
                                         {lang === 'zh' ? '全部清除' : 'Clear All'}
                                     </button>
                                 )}
                                 <button
                                     onClick={onClose}
-                                    className="p-2 rounded-full bg-black/30 backdrop-blur-md text-white border border-white/10 shadow-lg hover:bg-black/50 active:scale-95 transition-all"
+                                    className="p-2 rounded-full bg-zinc-800 text-white hover:bg-zinc-700 active:scale-95 transition-all"
                                 >
-                                    <X size={24} />
+                                    <X size={20} />
                                 </button>
                             </div>
                         </div>
 
                         {/* Content */}
                         <PullToRefresh
-                            className="flex-1 overflow-y-auto px-4 space-y-8 custom-scrollbar pt-[calc(3rem+env(safe-area-inset-top))]"
-                            onScroll={handleScroll}
+                            className="flex-1 overflow-y-auto px-4 space-y-8 custom-scrollbar pt-0"
                             onRefresh={onRefresh || (async () => { })}
+                            onScroll={handleScroll}
                         >
-                            {/* Header Group (Title + Search) */}
-                            <div className="space-y-4">
+                            {/* Header Group (Title + Large Search) */}
+                            {/* Scroll normally without collapsing/hiding */}
+                            <div className="space-y-4 mt-2">
                                 <h2 className="text-2xl font-bold text-white">
                                     {lang === 'zh' ? '我的庫存' : 'My Inventory'}
                                 </h2>
 
-                                {/* Search Bar */}
+                                {/* Large Search Bar */}
                                 <div className="relative">
                                     <Search className="absolute left-4 top-3.5 text-white z-10" size={20} />
                                     <input
@@ -255,7 +267,7 @@ export function MyBarModal({
                                         placeholder={lang === 'zh' ? '搜尋成分...' : 'Search ingredients...'}
                                         value={searchQuery}
                                         onChange={e => setSearchQuery(e.target.value)}
-                                        className="w-full bg-zinc-800/40 backdrop-blur-xl border border-white/10 rounded-full py-3 pl-12 pr-10 text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 h-[50px]"
+                                        className="w-full bg-zinc-800/40 border border-white/10 rounded-full py-3 pl-12 pr-10 text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 h-[50px]"
                                     />
                                     {searchQuery && (
                                         <button
@@ -286,7 +298,7 @@ export function MyBarModal({
 
                                 return (
                                     <section key={section.id}>
-                                        <div className="flex justify-between items-center mb-4 sticky top-0 bg-black/40 backdrop-blur-lg py-2 z-10 rounded-lg px-2 -mx-2">
+                                        <div className="flex justify-between items-center mb-4 sticky top-0 bg-black py-3 z-10 px-4 -mx-4 border-b border-white/5">
                                             <h3 className="text-base font-bold text-zinc-300 uppercase tracking-wider flex items-center gap-2">
                                                 <span className={`w-1.5 h-1.5 rounded-full ${section.color}`}></span>
                                                 {section.title}
