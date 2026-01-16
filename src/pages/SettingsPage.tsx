@@ -206,7 +206,7 @@ export function SettingsPage({ session, lang, setLang, onLogin, onLogout, onDele
                                 <div className="flex gap-3">
                                     <button
                                         onClick={() => setShowLogoutConfirm(false)}
-                                        className="flex-1 py-3 rounded-xl bg-zinc-800 text-white font-medium hover:bg-zinc-700 transition-colors"
+                                        className="flex-1 py-3 rounded-xl bg-zinc-800 text-white font-medium hover:bg-zinc-700 transition-colors text-sm"
                                     >
                                         {t.account.cancel}
                                     </button>
@@ -216,7 +216,7 @@ export function SettingsPage({ session, lang, setLang, onLogin, onLogout, onDele
                                             setShowLogoutConfirm(false);
                                             setView('main'); // Go back to main on logout
                                         }}
-                                        className="flex-1 py-3 rounded-xl bg-red-500/10 text-red-500 border border-red-500/20 font-medium hover:bg-red-500/20 transition-colors"
+                                        className="flex-1 py-3 rounded-xl bg-red-500 text-white font-bold hover:bg-red-600 transition-colors text-sm shadow-lg shadow-red-500/20"
                                     >
                                         {t.account.logout}
                                     </button>
@@ -247,7 +247,7 @@ export function SettingsPage({ session, lang, setLang, onLogin, onLogout, onDele
                                 <div className="flex gap-3">
                                     <button
                                         onClick={() => setShowDeleteConfirm(false)}
-                                        className="flex-1 py-3 rounded-xl bg-zinc-800 text-white font-medium hover:bg-zinc-700 transition-colors"
+                                        className="flex-1 py-3 rounded-xl bg-zinc-800 text-white font-medium hover:bg-zinc-700 transition-colors text-sm"
                                     >
                                         {t.account.cancel}
                                     </button>
@@ -256,7 +256,7 @@ export function SettingsPage({ session, lang, setLang, onLogin, onLogout, onDele
                                             onDeleteAccount();
                                             setShowDeleteConfirm(false);
                                         }}
-                                        className="flex-1 py-3 rounded-xl bg-red-600 text-white font-medium hover:bg-red-700 transition-colors shadow-lg shadow-red-900/20"
+                                        className="flex-1 py-3 rounded-xl bg-red-500 text-white font-bold hover:bg-red-600 transition-colors text-sm shadow-lg shadow-red-500/20"
                                     >
                                         {t.account.delete}
                                     </button>
@@ -596,7 +596,7 @@ export function SettingsPage({ session, lang, setLang, onLogin, onLogout, onDele
                             <div className="flex gap-3">
                                 <button
                                     onClick={() => setShowLogoutConfirm(false)}
-                                    className="flex-1 py-3 rounded-xl bg-zinc-800 text-white font-medium hover:bg-zinc-700 transition-colors"
+                                    className="flex-1 py-3 rounded-xl bg-zinc-800 text-white font-medium hover:bg-zinc-700 transition-colors text-sm"
                                 >
                                     {t.account.cancel}
                                 </button>
@@ -605,7 +605,7 @@ export function SettingsPage({ session, lang, setLang, onLogin, onLogout, onDele
                                         onLogout();
                                         setShowLogoutConfirm(false);
                                     }}
-                                    className="flex-1 py-3 rounded-xl bg-red-500/10 text-red-500 border border-red-500/20 font-medium hover:bg-red-500/20 transition-colors"
+                                    className="flex-1 py-3 rounded-xl bg-red-500 text-white font-bold hover:bg-red-600 transition-colors text-sm shadow-lg shadow-red-500/20"
                                 >
                                     {t.account.logout}
                                 </button>

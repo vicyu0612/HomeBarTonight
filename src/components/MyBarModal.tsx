@@ -8,7 +8,7 @@ export interface IngredientItem {
     id: string;
     name_en: string;
     name_zh: string;
-    category: 'base' | 'liqueur' | 'other_alc' | 'essential' | 'mixer' | 'garnish';
+    category: 'base' | 'liqueur' | 'other_alc' | 'essential' | 'mixer' | 'garnish' | 'fruit_dessert';
 }
 
 import { PullToRefresh } from './PullToRefresh';
@@ -49,6 +49,7 @@ export function MyBarModal({
             other_alc: [] as string[],
             essential: [] as string[],
             mixer: [] as string[],
+            fruit_dessert: [] as string[],
             garnish: [] as string[],
         };
 
@@ -210,16 +211,18 @@ export function MyBarModal({
                                 </div>
                             </div>
 
+
                             {/* Helper to render sections */}
                             {[
                                 { id: 'base', title: lang === 'zh' ? '基酒' : 'Base Spirits', color: 'bg-amber-500', items: categories.base },
                                 { id: 'liqueur', title: lang === 'zh' ? '利口酒' : 'Liqueurs', color: 'bg-orange-500', items: categories.liqueur },
                                 { id: 'other_alc', title: lang === 'zh' ? '其他酒類' : 'Other Alcohol', color: 'bg-red-500', items: categories.other_alc },
                                 { id: 'essential', title: lang === 'zh' ? '基本材料' : 'Essentials', color: 'bg-zinc-400', items: categories.essential },
-                                { id: 'mixer', title: lang === 'zh' ? '常見飲料甜品' : 'Common Drinks & Desserts', color: 'bg-blue-400', items: categories.mixer },
+                                { id: 'mixer', title: lang === 'zh' ? '常見飲料' : 'Common Drinks', color: 'bg-blue-400', items: categories.mixer },
+                                { id: 'fruit_dessert', title: lang === 'zh' ? '水果 & 甜品' : 'Fruit & Dessert', color: 'bg-pink-400', items: categories.fruit_dessert },
                                 { id: 'garnish', title: lang === 'zh' ? '裝飾 & 其他' : 'Garnishes & Others', color: 'bg-green-500', items: categories.garnish },
                             ].map(section => (
-                                section.items.length > 0 && (
+                                section.items && section.items.length > 0 && (
                                     <section key={section.id}>
                                         <div className="flex justify-between items-center mb-4">
                                             <h3 className="text-sm font-bold text-zinc-300 uppercase tracking-wider flex items-center gap-2">
