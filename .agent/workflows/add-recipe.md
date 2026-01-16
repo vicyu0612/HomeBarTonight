@@ -19,7 +19,16 @@ Follow these steps whenever adding a new cocktail to the database.
             - **6-7**: Balanced Sours (e.g., Margarita, Whiskey Sour).
             - **3-4**: Strong Sippers (e.g., Old Fashioned, Negroni, Godfather).
             - **1-2**: Raw Spirit burn (e.g., Dry Martini).
-- **Normalize Ingredients**: Check `src/utils/normalization.ts` and `ingredients` table. Ensure new ingredients (e.g., Lillet) are added with specific IDs and categories.
+- **Normalize Ingredients**: Check `src/utils/normalization.ts` and `ingredients` table.
+    - **CRITICAL**: Ensure new ingredients are assigned a valid `subcategory` in the `ingredients` table.
+    - **Valid Subcategories**:
+        - **Base**: `whiskey`, `gin`, `rum`, `vodka`, `tequila`, `brandy`, `chinese_spirit`
+        - **Liqueur**: `fruit_liqueur`, `herbal_liqueur`, `nut_cream_liqueur`, `floral_liqueur`, `other_liqueur`, `rice_spirit`
+        - **Wine/Other**: `vermouth`, `wine`, `sparkling_alc`
+        - **Mixer**: `soda` (Sparkling Drinks), `juice` (Veg/Fruit), `tea_coffee` (Tea/Coffee/Cocoa), `dairy`
+        - **Essential**: `syrup`, `bitters`, `egg`, `hot_sauce`
+        - **Fruit/Dessert**: `fruit`, `dessert`
+        - **Other**: `pantry`
 
 ## 2. Image Generation
 - Generate high-quality, realistic 4K images.

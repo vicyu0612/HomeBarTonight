@@ -6,6 +6,7 @@ export interface Ingredient {
     name_en: string;
     name_zh: string;
     category?: string;
+    subcategory?: string;
     aliases?: string[];
 }
 

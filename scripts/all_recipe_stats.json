@@ -10,14 +10,19 @@
     "ease": 10
   },
   {
-    "id": "daiquiri",
-    "name_en": "Daiquiri",
-    "ease": 6
-  },
-  {
     "id": "long-island",
     "name_en": "Long Island Iced Tea",
-    "ease": 8
+    "ease": 9
+  },
+  {
+    "id": "almond-whiskey",
+    "name_en": "Almond Whiskey",
+    "ease": 10
+  },
+  {
+    "id": "gin_fizz",
+    "name_en": "Gin Fizz",
+    "ease": 6
   },
   {
     "id": "hot-buttered-rum",
@@ -35,11 +40,6 @@
     "ease": 8
   },
   {
-    "id": "old-fashioned",
-    "name_en": "Old Fashioned",
-    "ease": 3
-  },
-  {
     "id": "brandy-alexander",
     "name_en": "Brandy Alexander",
     "ease": 6
@@ -48,6 +48,11 @@
     "id": "highball-cvs",
     "name_en": "CVS Highball",
     "ease": 7
+  },
+  {
+    "id": "old-fashioned",
+    "name_en": "Old Fashioned",
+    "ease": 3
   },
   {
     "id": "tequila-coke",
@@ -60,14 +65,24 @@
     "ease": 8
   },
   {
+    "id": "b52",
+    "name_en": "B-52",
+    "ease": 4
+  },
+  {
+    "id": "tomato-tequila",
+    "name_en": "Tomato Tequila",
+    "ease": 9
+  },
+  {
     "id": "mint-julep",
     "name_en": "Mint Julep",
     "ease": 7
   },
   {
-    "id": "b52",
-    "name_en": "B-52",
-    "ease": 4
+    "id": "singapore-sling",
+    "name_en": "Singapore Sling",
+    "ease": 8
   },
   {
     "id": "kalimotxo",
@@ -75,13 +90,13 @@
     "ease": 10
   },
   {
-    "id": "horses-neck",
-    "name_en": "Horse's Neck",
-    "ease": 9
+    "id": "daiquiri",
+    "name_en": "Daiquiri",
+    "ease": 8
   },
   {
-    "id": "negroni",
-    "name_en": "Negroni",
+    "id": "horses-neck",
+    "name_en": "Horse's Neck",
     "ease": 9
   },
   {
@@ -95,14 +110,19 @@
     "ease": 10
   },
   {
-    "id": "screwdriver",
-    "name_en": "Screwdriver",
-    "ease": 9
+    "id": "honey-lemon-gin",
+    "name_en": "Honey Lemon Gin",
+    "ease": 10
   },
   {
-    "id": "gimlet",
-    "name_en": "Gimlet",
+    "id": "salty-dog",
+    "name_en": "Salty Dog",
     "ease": 8
+  },
+  {
+    "id": "whiskey-sour",
+    "name_en": "Whiskey Sour",
+    "ease": 7
   },
   {
     "id": "pocari-soju",
@@ -115,14 +135,14 @@
     "ease": 10
   },
   {
-    "id": "whiskey-sour",
-    "name_en": "Whiskey Sour",
-    "ease": 6
+    "id": "gimlet",
+    "name_en": "Gimlet",
+    "ease": 8
   },
   {
     "id": "white-russian",
     "name_en": "White Russian",
-    "ease": 8
+    "ease": 7
   },
   {
     "id": "pudding-whiskey",
@@ -130,14 +150,29 @@
     "ease": 10
   },
   {
+    "id": "tinto-de-verano",
+    "name_en": "Tinto de Verano",
+    "ease": 10
+  },
+  {
+    "id": "banana-rum",
+    "name_en": "Banana Rum",
+    "ease": 10
+  },
+  {
+    "id": "sake-bomb",
+    "name_en": "Sake Bomb",
+    "ease": 8
+  },
+  {
     "id": "red-eye-tw",
     "name_en": "Red Eye (TW Style)",
     "ease": 10
   },
   {
-    "id": "bloody-mary",
-    "name_en": "Bloody Mary",
-    "ease": 6
+    "id": "coconut-rum",
+    "name_en": "Coconut Rum",
+    "ease": 10
   },
   {
     "id": "tom-collins",
@@ -147,7 +182,7 @@
   {
     "id": "espresso-martini",
     "name_en": "Espresso Martini",
-    "ease": 5
+    "ease": 7
   },
   {
     "id": "paloma",
@@ -155,13 +190,13 @@
     "ease": 8
   },
   {
-    "id": "gin-tonic",
-    "name_en": "Gin & Tonic",
+    "id": "red-eye",
+    "name_en": "Red Eye",
     "ease": 9
   },
   {
-    "id": "red-eye",
-    "name_en": "Red Eye",
+    "id": "gin-tonic",
+    "name_en": "Gin & Tonic",
     "ease": 9
   },
   {
@@ -180,6 +215,11 @@
     "ease": 6
   },
   {
+    "id": "death-in-the-afternoon",
+    "name_en": "Death in the Afternoon",
+    "ease": 4
+  },
+  {
     "id": "whiskey-oolong",
     "name_en": "Whiskey Oolong",
     "ease": 10
@@ -190,9 +230,14 @@
     "ease": 10
   },
   {
+    "id": "gin-jin",
+    "name_en": "Gin-Jin",
+    "ease": 10
+  },
+  {
     "id": "mai-tai",
     "name_en": "Mai Tai",
-    "ease": 5
+    "ease": 7
   },
   {
     "id": "rum-coke",
@@ -210,9 +255,9 @@
     "ease": 10
   },
   {
-    "id": "singapore-sling",
-    "name_en": "Singapore Sling",
-    "ease": 4
+    "id": "black-russian",
+    "name_en": "Black Russian",
+    "ease": 6
   },
   {
     "id": "hot-gin-ginger",
@@ -220,18 +265,23 @@
     "ease": 10
   },
   {
-    "id": "margarita",
-    "name_en": "Margarita",
+    "id": "sidecar",
+    "name_en": "Sidecar",
     "ease": 6
   },
   {
-    "id": "sidecar",
-    "name_en": "Sidecar",
-    "ease": 5
+    "id": "margarita",
+    "name_en": "Margarita",
+    "ease": 7
   },
   {
     "id": "sake-calpis",
     "name_en": "Sake Calpis",
+    "ease": 10
+  },
+  {
+    "id": "operator",
+    "name_en": "Operator",
     "ease": 10
   },
   {
@@ -245,6 +295,26 @@
     "ease": 10
   },
   {
+    "id": "whiskey-coke",
+    "name_en": "Whiskey Coke",
+    "ease": 10
+  },
+  {
+    "id": "cowboy",
+    "name_en": "Cowboy",
+    "ease": 10
+  },
+  {
+    "id": "chocolate-brandy",
+    "name_en": "Chocolate Brandy",
+    "ease": 10
+  },
+  {
+    "id": "spritzer",
+    "name_en": "Spritzer",
+    "ease": 10
+  },
+  {
     "id": "mulled-wine",
     "name_en": "Mulled Wine",
     "ease": 7
@@ -253,6 +323,16 @@
     "id": "irish-coffee",
     "name_en": "Irish Coffee",
     "ease": 6
+  },
+  {
+    "id": "kitty",
+    "name_en": "Kitty",
+    "ease": 10
+  },
+  {
+    "id": "chrysanthemum-gin",
+    "name_en": "Chrysanthemum Gin",
+    "ease": 10
   },
   {
     "id": "whiskey-tea",
@@ -270,9 +350,9 @@
     "ease": 10
   },
   {
-    "id": "manhattan",
-    "name_en": "Manhattan",
-    "ease": 8
+    "id": "aviation",
+    "name_en": "Aviation",
+    "ease": 6
   },
   {
     "id": "whiskey-hot-milk-tea",
@@ -290,6 +370,11 @@
     "ease": 10
   },
   {
+    "id": "manhattan",
+    "name_en": "Manhattan",
+    "ease": 4
+  },
+  {
     "id": "somaek",
     "name_en": "Somaek (Soju Bomb)",
     "ease": 8
@@ -298,6 +383,16 @@
     "id": "gin-tea",
     "name_en": "Gin & Tea",
     "ease": 10
+  },
+  {
+    "id": "soju-coffee",
+    "name_en": "Soju Coffee (Sojucano)",
+    "ease": 10
+  },
+  {
+    "id": "corpse-reviver-2",
+    "name_en": "Corpse Reviver No. 2",
+    "ease": 6
   },
   {
     "id": "baileys-hot-chocolate",
@@ -315,23 +410,23 @@
     "ease": 10
   },
   {
-    "id": "pisco-sour",
-    "name_en": "Pisco Sour",
-    "ease": 6
-  },
-  {
     "id": "papaya-milk-rum",
     "name_en": "Papaya Milk Rum",
     "ease": 10
   },
   {
-    "id": "grass-jelly-jagermeister",
-    "name_en": "Grass Jelly Jagermeister",
-    "ease": 10
+    "id": "pisco-sour",
+    "name_en": "Pisco Sour",
+    "ease": 7
   },
   {
     "id": "soju-yakult",
     "name_en": "Soju Yakult",
+    "ease": 10
+  },
+  {
+    "id": "grass-jelly-jagermeister",
+    "name_en": "Grass Jelly Jagermeister",
     "ease": 10
   },
   {
@@ -360,9 +455,9 @@
     "ease": 10
   },
   {
-    "id": "sazerac",
-    "name_en": "Sazerac",
-    "ease": 6
+    "id": "dark-n-stormy",
+    "name_en": "Dark 'n' Stormy",
+    "ease": 10
   },
   {
     "id": "bellini",
@@ -380,24 +475,19 @@
     "ease": 10
   },
   {
-    "id": "boulevardier",
-    "name_en": "Boulevardier",
-    "ease": 9
-  },
-  {
-    "id": "dark-n-stormy",
-    "name_en": "Dark 'n' Stormy",
-    "ease": 10
-  },
-  {
     "id": "amaretto-sour",
     "name_en": "Amaretto Sour",
     "ease": 9
   },
   {
-    "id": "clover-club",
-    "name_en": "Clover Club",
-    "ease": 7
+    "id": "black-coffee-whiskey",
+    "name_en": "Black Coffee Whiskey",
+    "ease": 10
+  },
+  {
+    "id": "last-word",
+    "name_en": "The Last Word",
+    "ease": 6
   },
   {
     "id": "southside",
@@ -405,19 +495,9 @@
     "ease": 8
   },
   {
-    "id": "last-word",
-    "name_en": "The Last Word",
-    "ease": 8
-  },
-  {
     "id": "bees-knees",
     "name_en": "Bee's Knees",
     "ease": 8
-  },
-  {
-    "id": "black-coffee-whiskey",
-    "name_en": "Black Coffee Whiskey",
-    "ease": 10
   },
   {
     "id": "soy-milk-baileys",
@@ -430,14 +510,24 @@
     "ease": 10
   },
   {
-    "id": "french-75",
-    "name_en": "French 75",
-    "ease": 7
+    "id": "vieux-carre",
+    "name_en": "Vieux Carré",
+    "ease": 4
   },
   {
     "id": "warm-apple-whiskey",
     "name_en": "Warm Apple Whiskey",
     "ease": 9
+  },
+  {
+    "id": "french-75",
+    "name_en": "French 75",
+    "ease": 7
+  },
+  {
+    "id": "mocktail_coffee_tonic",
+    "name_en": "Coffee Tonic",
+    "ease": 5
   },
   {
     "id": "hot-white-wine-peach",
@@ -453,6 +543,16 @@
     "id": "calpis-beer",
     "name_en": "Calpis Beer",
     "ease": 10
+  },
+  {
+    "id": "mocktail_cinderella",
+    "name_en": "Cinderella",
+    "ease": 4
+  },
+  {
+    "id": "jungle-bird",
+    "name_en": "Jungle Bird",
+    "ease": 8
   },
   {
     "id": "tequila-cider",
@@ -475,6 +575,21 @@
     "ease": 10
   },
   {
+    "id": "penicillin",
+    "name_en": "Penicillin",
+    "ease": 7
+  },
+  {
+    "id": "white-lady",
+    "name_en": "White Lady",
+    "ease": 6
+  },
+  {
+    "id": "hurricane",
+    "name_en": "Hurricane",
+    "ease": 9
+  },
+  {
     "id": "martini",
     "name_en": "Dry Martini",
     "ease": 2
@@ -485,14 +600,59 @@
     "ease": 10
   },
   {
+    "id": "mocktail_arnold_palmer",
+    "name_en": "Arnold Palmer",
+    "ease": 5
+  },
+  {
+    "id": "paper-plane",
+    "name_en": "Paper Plane",
+    "ease": 7
+  },
+  {
+    "id": "grasshopper",
+    "name_en": "Grasshopper",
+    "ease": 10
+  },
+  {
+    "id": "rusty-nail",
+    "name_en": "Rusty Nail",
+    "ease": 4
+  },
+  {
+    "id": "mocktail_cranberry_cutie",
+    "name_en": "Cranberry Cutie",
+    "ease": 5
+  },
+  {
+    "id": "mocktail_virgin_mojito",
+    "name_en": "Virgin Mojito",
+    "ease": 5
+  },
+  {
     "id": "mudslide",
     "name_en": "Mudslide",
     "ease": 6
   },
   {
+    "id": "mocktail_roy_rogers",
+    "name_en": "Roy Rogers",
+    "ease": 5
+  },
+  {
     "id": "mojito",
     "name_en": "Mojito",
     "ease": 9
+  },
+  {
+    "id": "mocktail_gunner",
+    "name_en": "Gunner",
+    "ease": 5
+  },
+  {
+    "id": "mocktail_lemon_lime_bitters",
+    "name_en": "Lemon, Lime & Bitters",
+    "ease": 5
   },
   {
     "id": "baileys-milktea",
@@ -505,9 +665,19 @@
     "ease": 7
   },
   {
+    "id": "mocktail_virgin_mary",
+    "name_en": "Virgin Mary",
+    "ease": 4
+  },
+  {
     "id": "godfather",
     "name_en": "Godfather",
     "ease": 4
+  },
+  {
+    "id": "mocktail_shirley_temple",
+    "name_en": "Shirley Temple",
+    "ease": 5
   },
   {
     "id": "vesper",
@@ -515,8 +685,38 @@
     "ease": 3
   },
   {
+    "id": "negroni",
+    "name_en": "Negroni",
+    "ease": 3
+  },
+  {
+    "id": "boulevardier",
+    "name_en": "Boulevardier",
+    "ease": 3
+  },
+  {
+    "id": "sazerac",
+    "name_en": "Sazerac",
+    "ease": 3
+  },
+  {
+    "id": "clover-club",
+    "name_en": "Clover Club",
+    "ease": 7
+  },
+  {
+    "id": "screwdriver",
+    "name_en": "Screwdriver",
+    "ease": 9
+  },
+  {
     "id": "brandy-sidra",
     "name_en": "Brandy Sidra",
     "ease": 10
+  },
+  {
+    "id": "bloody-mary",
+    "name_en": "Bloody Mary",
+    "ease": 6
   }
 ]

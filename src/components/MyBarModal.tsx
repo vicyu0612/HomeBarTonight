@@ -9,6 +9,7 @@ export interface IngredientItem {
     name_en: string;
     name_zh: string;
     category: 'base' | 'liqueur' | 'other_alc' | 'essential' | 'mixer' | 'garnish' | 'fruit_dessert';
+    subcategory?: string;
 }
 
 import { PullToRefresh } from './PullToRefresh';
@@ -43,14 +44,15 @@ export function MyBarModal({
 
     // Extract and categorize ingredients from DB Data directly
     const categories = useMemo(() => {
-        const cats = {
-            base: [] as string[],
-            liqueur: [] as string[],
-            other_alc: [] as string[],
-            essential: [] as string[],
-            mixer: [] as string[],
-            fruit_dessert: [] as string[],
-            garnish: [] as string[],
+        // Prepare groups structure
+        const cats: Record<string, { items: string[], subcategories: Record<string, string[]> }> = {
+            base: { items: [], subcategories: {} },
+            liqueur: { items: [], subcategories: {} },
+            other_alc: { items: [], subcategories: {} },
+            essential: { items: [], subcategories: {} },
+            mixer: { items: [], subcategories: {} },
+            fruit_dessert: { items: [], subcategories: {} },
+            garnish: { items: [], subcategories: {} },
         };
 
         // Filter First if query exists
@@ -61,13 +63,9 @@ export function MyBarModal({
                 i.name_en.toLowerCase().includes(lowerQ) ||
                 i.name_zh.includes(lowerQ)
             );
-        } else {
-
-
         }
 
-        // Sort ingredients alphabetically or by ID? Let's use DB order (usually insert order) or Name?
-        // Let's sort by Name for better UX
+        // Sort by Name
         const sorted = [...filteredList].sort((a, b) => {
             const nameA = lang === 'zh' ? a.name_zh : a.name_en;
             const nameB = lang === 'zh' ? b.name_zh : b.name_en;
@@ -75,11 +73,17 @@ export function MyBarModal({
         });
 
         sorted.forEach(ing => {
-            if (cats[ing.category]) {
-                cats[ing.category].push(ing.id);
+            // Default to garnish if category is unknown
+            const catKey = cats[ing.category] ? ing.category : 'garnish';
+            const group = cats[catKey];
+
+            if (ing.subcategory) {
+                if (!group.subcategories[ing.subcategory]) {
+                    group.subcategories[ing.subcategory] = [];
+                }
+                group.subcategories[ing.subcategory].push(ing.id);
             } else {
-                // Fallback for unknown categories
-                cats.garnish.push(ing.id);
+                group.items.push(ing.id);
             }
         });
 
@@ -95,6 +99,43 @@ export function MyBarModal({
         return id;
     };
 
+    const getSubcategoryLabel = (sub: string) => {
+        // Simple mapping for now, can be moved to a config or DB later
+        const labels: Record<string, { en: string, zh: string }> = {
+            'whiskey': { en: 'Whiskey', zh: '威士忌' },
+            'gin': { en: 'Gin', zh: '琴酒' },
+            'rum': { en: 'Rum', zh: '蘭姆酒' },
+            'vodka': { en: 'Vodka', zh: '伏特加' },
+            'tequila': { en: 'Tequila / Mezcal', zh: '龍舌蘭 / 梅斯卡爾' },
+            'brandy': { en: 'Brandy / Cognac', zh: '白蘭地' },
+            'chinese_spirit': { en: 'Chinese Spirits', zh: '中式烈酒' },
+            'rice_spirit': { en: 'Rice Spirits (Sake / Soju)', zh: '清酒 / 燒酒' },
+            'fruit_liqueur': { en: 'Fruit Liqueurs', zh: '水果利口酒' },
+            'herbal_liqueur': { en: 'Herbal Liqueurs', zh: '草本利口酒' },
+            'nut_cream_liqueur': { en: 'Nut & Cream', zh: '堅果 & 奶類利口酒' },
+            'floral_liqueur': { en: 'Floral Liqueurs', zh: '花香利口酒' },
+            'other_liqueur': { en: 'Other Liqueurs', zh: '其他利口酒' },
+            'vermouth': { en: 'Vermouth', zh: '香艾酒' },
+            'wine': { en: 'Wine', zh: '葡萄酒' },
+            'sparkling_alc': { en: 'Sparkling Alcohol', zh: '氣泡類酒' },
+            'soda': { en: 'Sparkling Drinks', zh: '氣泡飲品' },
+            'juice': { en: 'Vegetable & Fruit Juice', zh: '蔬果汁' },
+            'tea_coffee': { en: 'Tea / Coffee / Cocoa', zh: '茶 / 咖啡 / 可可' },
+            'dairy': { en: 'Dairy & Alternatives', zh: '乳製品 & 替代品' },
+            'syrup': { en: 'Syrup / Sweetener', zh: '糖漿 / 甜味劑' },
+            'bitters': { en: 'Bitters', zh: '苦精' },
+            'egg': { en: 'Egg / Egg White', zh: '蛋 / 蛋白' },
+            'hot_sauce': { en: 'Hot Sauce', zh: '辣醬' },
+            'fruit': { en: 'Fruit', zh: '水果' },
+            'dessert': { en: 'Dessert', zh: '甜品' },
+            'pantry': { en: 'Pantry', zh: '家中常備' },
+            'basic': { en: 'Basic', zh: '基本' },
+        };
+        const label = labels[sub];
+        if (!label) return sub.charAt(0).toUpperCase() + sub.slice(1);
+        return lang === 'zh' ? label.zh : label.en;
+    };
+
     const toggleItem = (item: string) => {
         const newSet = new Set(myInventory);
         if (newSet.has(item)) {
@@ -105,7 +146,7 @@ export function MyBarModal({
         setMyInventory(newSet);
     };
 
-    const toggleAll = (items: string[]) => {
+    const toggleList = (items: string[]) => {
         const newSet = new Set(myInventory);
         const allSelected = items.every(i => newSet.has(i));
 
@@ -115,6 +156,25 @@ export function MyBarModal({
             items.forEach(i => newSet.add(i));
         }
         setMyInventory(newSet);
+    };
+
+    const toggleSection = (data: { items: string[], subcategories: Record<string, string[]> }) => {
+        // Collect ALL items in this section (flat + all subcategories)
+        let allItems = [...data.items];
+        Object.values(data.subcategories).forEach(subList => {
+            allItems = allItems.concat(subList);
+        });
+        toggleList(allItems);
+    };
+
+    // Helper to check if a section is fully selected
+    const isSectionSelected = (data: { items: string[], subcategories: Record<string, string[]> }) => {
+        const allItems = [...data.items];
+        Object.values(data.subcategories).forEach(subList => {
+            allItems.push(...subList);
+        });
+        if (allItems.length === 0) return false;
+        return allItems.every(i => myInventory.has(i));
     };
 
     return (
@@ -152,8 +212,6 @@ export function MyBarModal({
                                     WebkitMaskImage: 'linear-gradient(to bottom, black 0%, transparent 100%)'
                                 }}
                             />
-                            {/* Inline Title (Initially Hidden) */}
-                            {/* Inline Title Removed */}
 
                             {/* Left Spacer */}
                             <div />
@@ -183,7 +241,6 @@ export function MyBarModal({
                             onScroll={handleScroll}
                             onRefresh={onRefresh || (async () => { })}
                         >
-                            {/* Large Title */}
                             {/* Header Group (Title + Search) */}
                             <div className="space-y-4">
                                 <h2 className="text-2xl font-bold text-white">
@@ -214,53 +271,95 @@ export function MyBarModal({
 
                             {/* Helper to render sections */}
                             {[
-                                { id: 'base', title: lang === 'zh' ? '基酒' : 'Base Spirits', color: 'bg-amber-500', items: categories.base },
-                                { id: 'liqueur', title: lang === 'zh' ? '利口酒' : 'Liqueurs', color: 'bg-orange-500', items: categories.liqueur },
-                                { id: 'other_alc', title: lang === 'zh' ? '其他酒類' : 'Other Alcohol', color: 'bg-red-500', items: categories.other_alc },
-                                { id: 'essential', title: lang === 'zh' ? '基本材料' : 'Essentials', color: 'bg-zinc-400', items: categories.essential },
-                                { id: 'mixer', title: lang === 'zh' ? '常見飲料' : 'Common Drinks', color: 'bg-blue-400', items: categories.mixer },
-                                { id: 'fruit_dessert', title: lang === 'zh' ? '水果 & 甜品' : 'Fruit & Dessert', color: 'bg-pink-400', items: categories.fruit_dessert },
-                                { id: 'garnish', title: lang === 'zh' ? '裝飾 & 其他' : 'Garnishes & Others', color: 'bg-green-500', items: categories.garnish },
-                            ].map(section => (
-                                section.items && section.items.length > 0 && (
+                                { id: 'base', title: lang === 'zh' ? '基酒' : 'Base Spirits', color: 'bg-amber-500', data: categories.base },
+                                { id: 'liqueur', title: lang === 'zh' ? '利口酒' : 'Liqueurs', color: 'bg-orange-500', data: categories.liqueur },
+                                { id: 'other_alc', title: lang === 'zh' ? '其他酒類' : 'Other Alcohol', color: 'bg-red-500', data: categories.other_alc },
+                                { id: 'essential', title: lang === 'zh' ? '基本材料' : 'Essentials', color: 'bg-zinc-400', data: categories.essential },
+                                { id: 'mixer', title: lang === 'zh' ? '常見飲料' : 'Common Drinks', color: 'bg-blue-400', data: categories.mixer },
+                                { id: 'fruit_dessert', title: lang === 'zh' ? '水果 & 甜品' : 'Fruit & Dessert', color: 'bg-pink-400', data: categories.fruit_dessert },
+                                { id: 'garnish', title: lang === 'zh' ? '裝飾 & 其他' : 'Garnishes & Others', color: 'bg-green-500', data: categories.garnish },
+                            ].map(section => {
+                                const hasItems = section.data.items.length > 0;
+                                const hasSubcats = Object.keys(section.data.subcategories).length > 0;
+
+                                if (!hasItems && !hasSubcats) return null;
+
+                                return (
                                     <section key={section.id}>
-                                        <div className="flex justify-between items-center mb-4">
-                                            <h3 className="text-sm font-bold text-zinc-300 uppercase tracking-wider flex items-center gap-2">
+                                        <div className="flex justify-between items-center mb-4 sticky top-0 bg-black/40 backdrop-blur-lg py-2 z-10 rounded-lg px-2 -mx-2">
+                                            <h3 className="text-base font-bold text-zinc-300 uppercase tracking-wider flex items-center gap-2">
                                                 <span className={`w-1.5 h-1.5 rounded-full ${section.color}`}></span>
                                                 {section.title}
                                             </h3>
                                             <button
-                                                onClick={() => toggleAll(section.items)}
-                                                className={`text-xs px-2 py-1 rounded transition-colors ${section.items.every(i => myInventory.has(i))
+                                                onClick={() => toggleSection(section.data)}
+                                                className={`text-sm px-2 py-1 rounded transition-colors ${isSectionSelected(section.data)
                                                     ? 'text-zinc-400 hover:text-zinc-200 hover:bg-white/10'
                                                     : 'text-indigo-500 hover:text-indigo-400 hover:bg-indigo-500/10'
                                                     }`}
                                             >
-                                                {section.items.every(i => myInventory.has(i))
+                                                {isSectionSelected(section.data)
                                                     ? (lang === 'zh' ? '全取消' : 'Unselect All')
                                                     : (lang === 'zh' ? '全選' : 'Select All')}
                                             </button>
                                         </div>
-                                        <div className="flex flex-wrap gap-2">
-                                            {section.items.map(item => (
-                                                <button
-                                                    key={item}
-                                                    onClick={() => toggleItem(item)}
-                                                    className={clsx(
-                                                        "whitespace-nowrap px-4 py-2 rounded-full text-sm font-medium border transition-colors",
-                                                        myInventory.has(item)
-                                                            ? "bg-indigo-500 text-white border-indigo-500 shadow-md shadow-indigo-500/20"
-                                                            : "bg-zinc-800/40 text-zinc-400 border-white/10 hover:bg-zinc-700"
-                                                    )}
-                                                >
-                                                    {getLabel(item)}
-                                                </button>
-                                            ))}
-                                        </div>
-                                    </section>
-                                )
-                            ))}
 
+                                        {/* Render Subcategories first */}
+                                        {Object.entries(section.data.subcategories)
+                                            .sort(([keyA], [keyB]) => {
+                                                if (keyA === 'basic') return -1;
+                                                if (keyB === 'basic') return 1;
+                                                return 0;
+                                            })
+                                            .map(([subKey, items]) => (
+                                                <div key={subKey} className="mb-4 pl-2 border-l border-white/5 ml-1">
+                                                    <div className="flex justify-between items-center mb-2">
+                                                        <h4 className="text-xs font-semibold text-zinc-500 uppercase tracking-wide">
+                                                            {getSubcategoryLabel(subKey)}
+                                                        </h4>
+                                                    </div>
+                                                    <div className="flex flex-wrap gap-2 mb-2">
+                                                        {items.map(item => (
+                                                            <button
+                                                                key={item}
+                                                                onClick={() => toggleItem(item)}
+                                                                className={clsx(
+                                                                    "whitespace-nowrap px-4 py-2 rounded-full text-sm font-medium border transition-colors",
+                                                                    myInventory.has(item)
+                                                                        ? "bg-indigo-500 text-white border-indigo-500 shadow-md shadow-indigo-500/20"
+                                                                        : "bg-zinc-800/40 text-zinc-400 border-white/10 hover:bg-zinc-700"
+                                                                )}
+                                                            >
+                                                                {getLabel(item)}
+                                                            </button>
+                                                        ))}
+                                                    </div>
+                                                </div>
+                                            ))}
+
+                                        {/* Render remaining flat items */}
+                                        {section.data.items.length > 0 && (
+                                            <div className={clsx("flex flex-wrap gap-2", hasSubcats && "pl-2 border-l border-white/5 ml-1 pt-2")}>
+                                                {hasSubcats && <h4 className="w-full text-xs font-semibold text-zinc-500 uppercase tracking-wide mb-1">{lang === 'zh' ? '其他' : 'Others'}</h4>}
+                                                {section.data.items.map(item => (
+                                                    <button
+                                                        key={item}
+                                                        onClick={() => toggleItem(item)}
+                                                        className={clsx(
+                                                            "whitespace-nowrap px-4 py-2 rounded-full text-sm font-medium border transition-colors",
+                                                            myInventory.has(item)
+                                                                ? "bg-indigo-500 text-white border-indigo-500 shadow-md shadow-indigo-500/20"
+                                                                : "bg-zinc-800/40 text-zinc-400 border-white/10 hover:bg-zinc-700"
+                                                        )}
+                                                    >
+                                                        {getLabel(item)}
+                                                    </button>
+                                                ))}
+                                            </div>
+                                        )}
+                                    </section>
+                                );
+                            })}
                         </PullToRefresh>
 
                         {/* Footer */}
