@@ -296,7 +296,7 @@ export function MyBarModal({
                                     initial={{ scale: 0.9, opacity: 0 }}
                                     animate={{ scale: 1, opacity: 1 }}
                                     exit={{ scale: 0.9, opacity: 0 }}
-                                    className="bg-zinc-900/90 backdrop-blur-xl border border-white/10 rounded-2xl p-6 w-full max-w-xs shadow-2xl relative"
+                                    className="bg-zinc-900/90 backdrop-blur-xl border border-white/10 rounded-2xl p-6 w-full max-w-sm shadow-2xl relative"
                                     onClick={e => e.stopPropagation()}
                                 >
                                     <h3 className="text-lg font-bold text-white text-center">

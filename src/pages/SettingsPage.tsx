@@ -199,7 +199,7 @@ export function SettingsPage({ session, lang, setLang, onLogin, onLogout, onDele
                                 initial={{ scale: 0.9, opacity: 0 }}
                                 animate={{ scale: 1, opacity: 1 }}
                                 exit={{ scale: 0.9, opacity: 0 }}
-                                className="relative bg-zinc-900 border border-white/10 rounded-2xl p-6 w-full max-w-sm shadow-2xl"
+                                className="relative bg-zinc-900/90 backdrop-blur-xl border border-white/10 rounded-2xl p-6 w-full max-w-sm shadow-2xl"
                             >
                                 <h3 className="text-lg font-bold text-white mb-2">{t.account.logout}</h3>
                                 <p className="text-zinc-400 mb-6">{t.account.confirmLogout}</p>
@@ -240,7 +240,7 @@ export function SettingsPage({ session, lang, setLang, onLogin, onLogout, onDele
                                 initial={{ scale: 0.9, opacity: 0 }}
                                 animate={{ scale: 1, opacity: 1 }}
                                 exit={{ scale: 0.9, opacity: 0 }}
-                                className="relative bg-zinc-900 border border-red-500/30 rounded-2xl p-6 w-full max-w-sm shadow-2xl"
+                                className="relative bg-zinc-900/90 backdrop-blur-xl border border-red-500/30 rounded-2xl p-6 w-full max-w-sm shadow-2xl"
                             >
                                 <h3 className="text-lg font-bold text-red-500 mb-2">{t.account.confirmDeleteTitle}</h3>
                                 <p className="text-zinc-300 mb-6">{t.account.confirmDeleteMsg}</p>
@@ -589,7 +589,7 @@ export function SettingsPage({ session, lang, setLang, onLogin, onLogout, onDele
                             initial={{ scale: 0.9, opacity: 0 }}
                             animate={{ scale: 1, opacity: 1 }}
                             exit={{ scale: 0.9, opacity: 0 }}
-                            className="relative bg-zinc-900 border border-white/10 rounded-2xl p-6 w-full max-w-sm shadow-2xl"
+                            className="relative bg-zinc-900/90 backdrop-blur-xl border border-white/10 rounded-2xl p-6 w-full max-w-sm shadow-2xl"
                         >
                             <h3 className="text-lg font-bold text-white mb-2">{t.account.logout}</h3>
                             <p className="text-zinc-400 mb-6">{t.account.confirmLogout}</p>
