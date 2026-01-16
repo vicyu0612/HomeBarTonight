@@ -41,16 +41,7 @@ const BUCKET_NAME = 'cocktails';
 // UPDATE THIS ARRAY WITH YOUR IMAGE PATHS
 // ========================================
 const imageMappings = [
-    { id: 'almond-whiskey', path: '/Users/vic-yu/.gemini/antigravity/brain/d467568f-c033-4a50-b60f-455ab2738823/almond_whiskey_1768486783009.png' },
-    { id: 'chocolate-brandy', path: '/Users/vic-yu/.gemini/antigravity/brain/d467568f-c033-4a50-b60f-455ab2738823/chocolate_brandy_1768486800668.png' },
-    { id: 'tomato-tequila', path: '/Users/vic-yu/.gemini/antigravity/brain/d467568f-c033-4a50-b60f-455ab2738823/tomato_tequila_1768486819345.png' },
-    { id: 'honey-lemon-gin', path: '/Users/vic-yu/.gemini/antigravity/brain/d467568f-c033-4a50-b60f-455ab2738823/honey_lemon_gin_1768486845933.png' },
-    { id: 'gin-jin', path: '/Users/vic-yu/.gemini/antigravity/brain/d467568f-c033-4a50-b60f-455ab2738823/gin_jin_1768486862897.png' },
-    { id: 'chrysanthemum-gin', path: '/Users/vic-yu/.gemini/antigravity/brain/d467568f-c033-4a50-b60f-455ab2738823/chrysanthemum_gin_1768486879423.png' },
-    { id: 'tinto-de-verano', path: '/Users/vic-yu/.gemini/antigravity/brain/d467568f-c033-4a50-b60f-455ab2738823/tinto_de_verano_1768486901857.png' },
-    { id: 'banana-rum', path: '/Users/vic-yu/.gemini/antigravity/brain/d467568f-c033-4a50-b60f-455ab2738823/banana_rum_1768486918965.png' },
-    { id: 'sake-bomb', path: '/Users/vic-yu/.gemini/antigravity/brain/d467568f-c033-4a50-b60f-455ab2738823/sake_bomb_1768486942184.png' },
-    { id: 'coconut-rum', path: '/Users/vic-yu/.gemini/antigravity/brain/d467568f-c033-4a50-b60f-455ab2738823/coconut_rum_1768486977366.png' }
+    // { id: 'recipe-id', path: '/absolute/path/to/image.png' },
 ];
 
 async function uploadAndUpdate() {

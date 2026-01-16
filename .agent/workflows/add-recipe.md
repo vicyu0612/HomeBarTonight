@@ -1,5 +1,5 @@
 ---
-description: Adding new cocktail recipes with proper ingredient mapping and scoring rules
+description: Adding new cocktail recipes with proper ingredient mapping, scoring rules, and automated image upload
 ---
 
 # Workflow: Add New Cocktail Recipe
@@ -24,18 +24,50 @@ Follow these steps whenever adding a new cocktail to the database.
 ## 2. Image Generation
 - Generate high-quality, realistic 4K images.
 - Style: Moody, cinematic, "Home Bar" aesthetic.
-- Upload to Supabase Storage (`cocktails` bucket) and get Public URL.
+- **Action**: Save the generated artifacts and note their absolute paths.
 
-## 3. SQL Generation
+## 3. SQL Generation (Supabase Schema)
 - Use `INSERT ... ON CONFLICT (id) DO UPDATE` pattern.
-- **Columns**:
-    - `steps`: Array of strings for instructions.
-    - `type`: Category (e.g., 'classic', 'original', 'cvs').
-    - `specs`: JSONB `{"alcohol": X, "sweetness": Y, "ease": Z}`.
-    - `ingredients`: Array of `{"name": "...", "amount": "..."}` objects.
-- **Double Check**: Ensure `ease` score aligns with the definition above.
+- **Table: `recipes`**
+    - `id`: Unique slug (e.g., 'gin-fizz').
+    - `name`: JSONB `{"en": "Gin Fizz", "zh": "琴費士"}`.
+    - `type`: Category string (e.g., 'classic', 'original', 'cvs').
+    - `base_spirit`: Array of strings (e.g., `["gin"]`).
+    - `steps`: JSONB `{"en": ["Step 1", "Step 2"], "zh": ["步驟1", "步驟2"]}`.
+    - `ingredients`: JSONB `{"en": [{"name": "Gin", "amount": "45ml"}], "zh": [{"name": "琴酒", "amount": "45ml"}]}`.
+    - `tags`: JSONB `{"en": ["Classic"], "zh": ["經典"]}`.
+    - `description`: JSONB `{"en": "...", "zh": "..."}`.
+    - `specs`: JSONB `{"ease": 6, "alcohol": 5, "sweetness": 6}`. **(Numeric 1-10 Only)**.
+    - `collections`: Array of strings (e.g., `["cvs-hacks"]`).
+    - `is_premium`: Boolean.
+- **Table: `collections`** (If adding a new collection)
+    - `id`: Unique slug.
+    - `title`, `subtitle`, `description`: JSONB `{"en": "...", "zh": "..."}`.
+    - `type`: 'filter' or 'manual'.
+    - `filter_rules`: JSONB `{"collection": "slug"}` or similar.
 
-## 4. Verification
+## 4. Execution & Image Sync
+This step combines adding the data and uploading the image.
+
+**Step 4a: Insert Data**
+- Execute the generated SQL to insert the recipe data (without image URL initially, or update later).
+
+**Step 4b: Upload Image**
+1. Update `scripts/quick_upload_images.js`:
+    ```javascript
+    const imageMappings = [
+        { id: 'recipe-id', path: '/absolute/path/to/generated/image.png' }
+    ];
+    ```
+2. Run the upload script:
+    // turbo
+    ```bash
+    node scripts/quick_upload_images.js
+    ```
+    *(This script will upload to Supabase storage `cocktails` bucket and automatically update the `recipes` table with the public URL)*.
+
+## 5. Verification
 - Verify ingredient mapping in valid JSON format.
-- execute SQL and confirm success.
+- Check Supabase Dashboard or App to confirm recipe appears with image.
+- content check: `npx tsx scripts/check_db_recipe.ts` (helper script).
 - Update `task.md`.
