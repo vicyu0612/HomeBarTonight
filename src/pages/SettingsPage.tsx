@@ -70,10 +70,10 @@ export function SettingsPage({ session, lang, setLang, onLogin, onLogout, onDele
             privacy: lang === 'zh' ? '隱私政策' : 'Privacy Policy'
         },
         subscription: {
-            title: lang === 'zh' ? '訂閱' : 'Subscription',
-            manage: lang === 'zh' ? '管理訂閱' : 'Manage Subscription',
+            title: lang === 'zh' ? '加值服務' : 'Premium',
+            manage: lang === 'zh' ? '查看方案' : 'View Plan',
             restore: lang === 'zh' ? '恢復購買' : 'Restore Purchases',
-            join: lang === 'zh' ? '訂閱 HomeBarTonight Premium' : 'Join HomeBarTonight Premium'
+            join: lang === 'zh' ? '解鎖永久版' : 'Unlock Lifetime Access'
         }
     };
 
@@ -399,13 +399,13 @@ export function SettingsPage({ session, lang, setLang, onLogin, onLogout, onDele
                                             setRestoreAlert({
                                                 visible: true,
                                                 title: lang === 'zh' ? '購買已恢復' : 'Purchases Restored',
-                                                message: lang === 'zh' ? '您的訂閱已成功恢復' : 'Your subscription has been successfully restored'
+                                                message: lang === 'zh' ? '您的購買已成功恢復' : 'Your purchase has been successfully restored'
                                             });
                                         } else {
                                             setRestoreAlert({
                                                 visible: true,
                                                 title: lang === 'zh' ? '恢復購買失敗' : 'Restore Purchases Failed',
-                                                message: lang === 'zh' ? '您目前沒有有效的訂閱' : 'You don\'t have an active subscription'
+                                                message: lang === 'zh' ? '您目前沒有有效的加值服務' : 'You don\'t have an active plan'
                                             });
                                         }
                                     } else {
