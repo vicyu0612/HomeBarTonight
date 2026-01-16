@@ -73,7 +73,7 @@ export function SettingsPage({ session, lang, setLang, onLogin, onLogout, onDele
             title: lang === 'zh' ? '加值服務' : 'Premium',
             manage: lang === 'zh' ? '查看方案' : 'View Plan',
             restore: lang === 'zh' ? '恢復購買' : 'Restore Purchases',
-            join: lang === 'zh' ? '解鎖永久版' : 'Unlock Lifetime Access'
+            join: lang === 'zh' ? '解鎖Premium完整版' : 'Unlock Lifetime Access'
         }
     };
 
