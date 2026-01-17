@@ -92,6 +92,7 @@ export function CocktailsPage({ allRecipes, favorites, toggleFavorite, onSelectR
         { id: 'tequila', label: lang === 'zh' ? '龍舌蘭' : 'Tequila' },
         { id: 'whiskey', label: lang === 'zh' ? '威士忌' : 'Whiskey' },
         { id: 'brandy', label: lang === 'zh' ? '白蘭地' : 'Brandy' },
+        { id: 'champagne', label: lang === 'zh' ? '香檳/氣泡酒' : 'Champagne / Sparkling' },
         { id: 'liqueur', label: lang === 'zh' ? '利口酒' : 'Liqueur' },
         { id: 'wine', label: lang === 'zh' ? '葡萄酒' : 'Wine' },
         { id: 'beer', label: lang === 'zh' ? '啤酒' : 'Beer' },
@@ -300,7 +301,7 @@ export function CocktailsPage({ allRecipes, favorites, toggleFavorite, onSelectR
                                     {/* Base Spirit Only */}
                                     <div>
                                         <h4 className="text-zinc-500 text-xs font-bold uppercase tracking-wider mb-3">
-                                            {lang === 'zh' ? '基酒' : 'Base Spirit'}
+                                            {lang === 'zh' ? '常見酒類' : 'Common Alcohol'}
                                         </h4>
                                         <div className="flex flex-wrap gap-2">
                                             {spirits.map(s => (
