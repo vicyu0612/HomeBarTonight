@@ -7,7 +7,8 @@ import clsx from 'clsx';
 import { useSubscription } from '../hooks/useSubscription';
 import { PullToRefresh } from '../components/PullToRefresh';
 import { Browser } from '@capacitor/browser';
-import { App } from '@capacitor/app'; // Ensure @capacitor/app is installed (it is in package.json)
+import { Share } from '@capacitor/share';
+import { App } from '@capacitor/app';
 
 
 interface SettingsPageProps {
@@ -104,21 +105,15 @@ export function SettingsPage({ session, lang, setLang, onLogin, onLogout, onDele
     };
 
     const handleShare = async () => {
-        const shareData = {
-            title: 'HomeBar Tonight',
-            text: lang === 'zh' ? '我在 HomeBar Tonight 發現了好多很棒的調酒酒譜，推薦你也來試試！' : 'Check out HomeBar Tonight! It\'s amazing for finding cocktail recipes.',
-            url: 'https://apps.apple.com/tw/app/homebartonight/id6757362332'
-        };
-
-        if (navigator.share) {
-            try {
-                await navigator.share(shareData);
-            } catch (err) {
-                console.log('Error sharing:', err);
-            }
-        } else {
-            // Fallback to clipboard if needed, or simple alert
-            // For now, most mobile browsers/webviews support navigator.share
+        try {
+            await Share.share({
+                title: 'HomeBarTonight',
+                text: lang === 'zh' ? '我在 HomeBarTonight 發現了好多很棒的調酒酒譜，推薦你也來試試！' : 'Check out HomeBarTonight! It\'s amazing for finding cocktail recipes.',
+                url: 'https://apps.apple.com/tw/app/homebartonight/id6757362332',
+                dialogTitle: lang === 'zh' ? '分享 HomeBarTonight' : 'Share HomeBarTonight'
+            });
+        } catch (err) {
+            console.error('Error sharing:', err);
         }
     };
 
