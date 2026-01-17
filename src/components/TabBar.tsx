@@ -2,6 +2,7 @@ import { Heart, Settings, Wine, Compass } from 'lucide-react';
 import { motion } from 'framer-motion';
 import clsx from 'clsx';
 import { ShakerIcon } from './ShakerIcon';
+import { Haptics, ImpactStyle } from '@capacitor/haptics';
 
 export type TabId = 'explore' | 'cocktails' | 'my_bar' | 'favorites' | 'settings' | 'collection';
 
@@ -35,7 +36,12 @@ export function TabBar({ activeTab, onTabChange, lang }: TabBarProps) {
                     return (
                         <button
                             key={tab.id}
-                            onClick={() => onTabChange(tab.id as TabId)}
+                            onClick={() => {
+                                if (activeTab !== tab.id) {
+                                    Haptics.impact({ style: ImpactStyle.Light });
+                                    onTabChange(tab.id as TabId);
+                                }
+                            }}
                             className="relative flex flex-col items-center justify-center gap-1 flex-1 h-14 outline-none group"
                         >
                             {isActive && (

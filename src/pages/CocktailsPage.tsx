@@ -1,7 +1,8 @@
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Search, X, Martini, SlidersHorizontal } from 'lucide-react';
+import { Haptics, ImpactStyle } from '@capacitor/haptics';
 import type { Recipe } from '../data/recipes';
 import clsx from 'clsx';
 import { PullToRefresh } from '../components/PullToRefresh';
@@ -148,25 +149,25 @@ export function CocktailsPage({ allRecipes, favorites, toggleFavorite, onSelectR
         setIsSticky(scrollTop > 50);
     };
 
-    const toggleCategory = (cat: 'classic' | 'cvs' | 'mocktail') => {
-        const newSet = new Set(selectedCategories);
-        if (newSet.has(cat)) {
-            newSet.delete(cat);
-        } else {
-            newSet.add(cat);
-        }
-        setSelectedCategories(newSet);
-    };
+    const toggleCategory = useCallback((cat: 'classic' | 'cvs' | 'mocktail') => {
+        Haptics.impact({ style: ImpactStyle.Light });
+        setSelectedCategories(prev => {
+            const newSet = new Set(prev);
+            if (newSet.has(cat)) newSet.delete(cat);
+            else newSet.add(cat);
+            return newSet;
+        });
+    }, []);
 
-    const toggleSpirit = (spirit: string) => {
-        const newSet = new Set(selectedSpirits);
-        if (newSet.has(spirit)) {
-            newSet.delete(spirit);
-        } else {
-            newSet.add(spirit);
-        }
-        setSelectedSpirits(newSet);
-    };
+    const toggleSpirit = useCallback((spirit: string) => {
+        Haptics.impact({ style: ImpactStyle.Light });
+        setSelectedSpirits(prev => {
+            const newSet = new Set(prev);
+            if (newSet.has(spirit)) newSet.delete(spirit);
+            else newSet.add(spirit);
+            return newSet;
+        });
+    }, []);
 
     return (
         <PullToRefresh

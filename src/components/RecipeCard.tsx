@@ -1,9 +1,10 @@
 import { motion, type HTMLMotionProps } from 'framer-motion';
 import { Heart, Martini, Crown } from 'lucide-react';
+import { Haptics, ImpactStyle } from '@capacitor/haptics';
 import { ImageWithLoader } from './ImageWithLoader';
 import clsx from 'clsx';
 import type { Recipe } from '../data/recipes';
-import { forwardRef } from 'react';
+import { forwardRef, memo } from 'react';
 
 interface RecipeCardProps extends Omit<HTMLMotionProps<"div">, 'id'> {
     recipe: Recipe;
@@ -17,7 +18,7 @@ interface RecipeCardProps extends Omit<HTMLMotionProps<"div">, 'id'> {
     isLocked?: boolean;
 }
 
-export const RecipeCard = forwardRef<HTMLDivElement, RecipeCardProps>(({
+export const RecipeCard = memo(forwardRef<HTMLDivElement, RecipeCardProps>(({
     recipe,
     lang,
     isFavorite,
@@ -35,6 +36,7 @@ export const RecipeCard = forwardRef<HTMLDivElement, RecipeCardProps>(({
         <button
             onClick={(e) => {
                 e.stopPropagation();
+                Haptics.impact({ style: ImpactStyle.Light });
                 toggleFavorite(recipe.id, e);
             }}
             className={clsx(
@@ -197,5 +199,5 @@ export const RecipeCard = forwardRef<HTMLDivElement, RecipeCardProps>(({
 
         </motion.div >
     );
-});
+}));
 RecipeCard.displayName = 'RecipeCard';

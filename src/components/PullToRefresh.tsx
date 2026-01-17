@@ -1,6 +1,7 @@
 import { useState, useRef } from 'react';
 import { motion, useAnimation, useMotionValue, useTransform } from 'framer-motion';
 import { Loader2, ArrowDown } from 'lucide-react';
+import { Haptics, NotificationType, ImpactStyle } from '@capacitor/haptics';
 import clsx from 'clsx';
 
 interface PullToRefreshProps {
@@ -73,6 +74,7 @@ export const PullToRefresh = ({
             setPullDistance(damped);
 
             if (damped >= triggerHeight) {
+                if (status === 'idle') Haptics.impact({ style: ImpactStyle.Light }); // Feedback when trigger reached
                 setStatus('pulling');
             } else {
                 setStatus('idle');
@@ -95,6 +97,7 @@ export const PullToRefresh = ({
             // Trigger Refresh
             try {
                 await onRefresh();
+                Haptics.notification({ type: NotificationType.Success });
             } finally {
                 setStatus('idle');
                 controls.start({ y: 0 });

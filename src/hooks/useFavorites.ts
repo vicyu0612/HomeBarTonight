@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { supabase } from '../supabaseClient';
 import type { Session } from '@supabase/supabase-js';
 
@@ -10,8 +10,10 @@ export function useFavorites(session: Session | null) {
         } catch { return new Set(); }
     });
 
-    // Persistence
+    // Persistence & Ref Sync
+    const favoritesRef = useRef(favorites);
     useEffect(() => {
+        favoritesRef.current = favorites;
         localStorage.setItem('favorites', JSON.stringify(Array.from(favorites)));
     }, [favorites]);
 
@@ -68,10 +70,10 @@ export function useFavorites(session: Session | null) {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [session]);
 
-    const toggleFavorite = async (id: string, e?: React.MouseEvent) => {
+    const toggleFavorite = useCallback(async (id: string, e?: React.MouseEvent) => {
         e?.stopPropagation();
-        const prevFavs = new Set(favorites);
-        const newFavs = new Set(favorites);
+        const currentFavs = favoritesRef.current;
+        const newFavs = new Set(currentFavs);
         const isAdding = !newFavs.has(id);
 
         if (isAdding) newFavs.add(id); else newFavs.delete(id);
@@ -104,10 +106,10 @@ export function useFavorites(session: Session | null) {
                 }
             } catch (err) {
                 console.error('Toggle Favorite Error:', err);
-                setFavorites(prevFavs); // Revert
+                setFavorites(currentFavs); // Revert to ref state
             }
         }
-    };
+    }, [session]);
 
     const clearFavorites = () => {
         setFavorites(new Set());

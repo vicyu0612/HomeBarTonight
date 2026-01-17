@@ -1,6 +1,7 @@
 import { useRef } from 'react';
 import { motion, useScroll, useTransform, useMotionTemplate } from 'framer-motion';
 import { Heart, X, Flame, GlassWater, Smile, Wine, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Haptics, ImpactStyle } from '@capacitor/haptics';
 import clsx from 'clsx';
 import { useSwipeBack } from './hooks/useSwipeBack';
 import { Paywall } from './components/Paywall';
@@ -102,7 +103,10 @@ export const RecipeDetailModal = ({ recipe, onClose, isFavorite, onToggleFavorit
                 <div className="absolute top-0 left-0 right-0 z-30 pl-6 pr-4 pt-16 sm:pt-10 flex justify-end gap-3 items-start pointer-events-none">
                     {onToggleFavorite && (
                         <button
-                            onClick={() => onToggleFavorite(recipe.id)}
+                            onClick={() => {
+                                Haptics.impact({ style: ImpactStyle.Light });
+                                onToggleFavorite(recipe.id);
+                            }}
                             className="p-3 rounded-full bg-black/30 backdrop-blur-md text-white border border-white/10 shadow-lg hover:bg-black/50 active:scale-95 transition-all pointer-events-auto"
                         >
                             <Heart

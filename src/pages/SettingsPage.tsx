@@ -1,4 +1,4 @@
-import { HelpCircle, ChevronRight, X, FileText, Globe, ArrowLeft, LogOut, Trash2, RefreshCw, Check, Crown, ShieldCheck } from 'lucide-react';
+import { HelpCircle, ChevronRight, X, FileText, Globe, ArrowLeft, LogOut, Trash2, RefreshCw, Check, Crown, ShieldCheck, Star, Share2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState } from 'react';
 import { createPortal } from 'react-dom';
@@ -7,6 +7,7 @@ import clsx from 'clsx';
 import { useSubscription } from '../hooks/useSubscription';
 import { PullToRefresh } from '../components/PullToRefresh';
 import { Browser } from '@capacitor/browser';
+import { App } from '@capacitor/app'; // Ensure @capacitor/app is installed (it is in package.json)
 
 
 interface SettingsPageProps {
@@ -35,6 +36,13 @@ export function SettingsPage({ session, lang, setLang, onLogin, onLogout, onDele
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
     const [restoreAlert, setRestoreAlert] = useState<{ visible: boolean, title: string, message: string }>({ visible: false, title: '', message: '' });
     const [isScrolled, setIsScrolled] = useState(false);
+    const [version, setVersion] = useState('');
+
+    useState(() => {
+        App.getInfo().then(info => {
+            setVersion(`v${info.version} (${info.build})`);
+        }).catch(() => setVersion('v1.0.0'));
+    });
 
     const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
         setIsScrolled(e.currentTarget.scrollTop > 40);
@@ -74,15 +82,44 @@ export function SettingsPage({ session, lang, setLang, onLogin, onLogout, onDele
             manage: lang === 'zh' ? '查看方案' : 'View Plan',
             restore: lang === 'zh' ? '恢復購買' : 'Restore Purchases',
             join: lang === 'zh' ? '解鎖Premium完整版' : 'Unlock Lifetime Access'
+        },
+        support: {
+            title: lang === 'zh' ? '分享推薦' : 'Spread the Love',
+            rate: lang === 'zh' ? '到 App Store 評分' : 'Rate the App',
+            share: lang === 'zh' ? '分享給朋友' : 'Share the App'
         }
     };
 
     const openLink = async (url: string) => {
         await Browser.open({
             url: url,
-            windowName: '_self',
+            windowName: '_system', // Use _system to open in external browser/store
             presentationStyle: 'fullscreen'
         });
+    };
+
+    const handleRate = async () => {
+        // Direct link to write review
+        await openLink('https://apps.apple.com/app/id6757362332?action=write-review');
+    };
+
+    const handleShare = async () => {
+        const shareData = {
+            title: 'HomeBar Tonight',
+            text: lang === 'zh' ? '我在 HomeBar Tonight 發現了好多很棒的調酒酒譜，推薦你也來試試！' : 'Check out HomeBar Tonight! It\'s amazing for finding cocktail recipes.',
+            url: 'https://apps.apple.com/tw/app/homebartonight/id6757362332'
+        };
+
+        if (navigator.share) {
+            try {
+                await navigator.share(shareData);
+            } catch (err) {
+                console.log('Error sharing:', err);
+            }
+        } else {
+            // Fallback to clipboard if needed, or simple alert
+            // For now, most mobile browsers/webviews support navigator.share
+        }
     };
 
     const formatDate = (isoString?: string) => {
@@ -442,6 +479,33 @@ export function SettingsPage({ session, lang, setLang, onLogin, onLogout, onDele
                         </button>
                     </section>
 
+                    {/* Support / Share Section */}
+                    <section>
+                        <h2 className="text-zinc-500 text-sm font-medium mb-3 ml-1">{t.support.title}</h2>
+                        <div className="bg-zinc-900/50 backdrop-blur-md border border-white/10 rounded-2xl overflow-hidden divide-y divide-white/5">
+                            <button
+                                onClick={handleRate}
+                                className="w-full p-4 flex items-center justify-between hover:bg-white/5 transition-colors"
+                            >
+                                <div className="flex items-center gap-3">
+                                    <Star size={20} className="text-zinc-400" />
+                                    <span className="text-white">{t.support.rate}</span>
+                                </div>
+                                <ChevronRight size={20} className="text-zinc-500" />
+                            </button>
+                            <button
+                                onClick={handleShare}
+                                className="w-full p-4 flex items-center justify-between hover:bg-white/5 transition-colors"
+                            >
+                                <div className="flex items-center gap-3">
+                                    <Share2 size={20} className="text-zinc-400" />
+                                    <span className="text-white">{t.support.share}</span>
+                                </div>
+                                <ChevronRight size={20} className="text-zinc-500" />
+                            </button>
+                        </div>
+                    </section>
+
                     {/* About Section */}
                     <section>
                         <h2 className="text-zinc-500 text-sm font-medium mb-3 ml-1">{t.about.title}</h2>
@@ -476,6 +540,11 @@ export function SettingsPage({ session, lang, setLang, onLogin, onLogout, onDele
                                 </div>
                                 <ChevronRight size={20} className="text-zinc-500" />
                             </button>
+                        </div>
+                        <div className="mt-8 text-center pb-8">
+                            <p className="text-zinc-600 text-xs font-medium tracking-wider uppercase">
+                                HomeBarTonight {version}
+                            </p>
                         </div>
                     </section>
                 </div>

@@ -1,6 +1,7 @@
 import { useMemo, useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Search } from 'lucide-react';
+import { Haptics, ImpactStyle, NotificationType } from '@capacitor/haptics';
 import clsx from 'clsx';
 import { type CategoriesMetadata } from '../hooks/useIngredients';
 
@@ -113,6 +114,7 @@ export function MyBarModal({
     };
 
     const toggleItem = (item: string) => {
+        Haptics.impact({ style: ImpactStyle.Light });
         const newSet = new Set(myInventory);
         if (newSet.has(item)) {
             newSet.delete(item);
@@ -135,6 +137,7 @@ export function MyBarModal({
     };
 
     const toggleSection = (data: { items: string[], subcategories: Record<string, string[]> }) => {
+        Haptics.impact({ style: ImpactStyle.Medium });
         // Collect ALL items in this section (flat + all subcategories)
         let allItems = [...data.items];
         Object.values(data.subcategories).forEach(subList => {
@@ -412,6 +415,7 @@ export function MyBarModal({
                                             </button>
                                             <button
                                                 onClick={() => {
+                                                    Haptics.notification({ type: NotificationType.Success });
                                                     setMyInventory(new Set());
                                                     setShowClearConfirm(false);
                                                 }}
