@@ -35,6 +35,7 @@ const CATEGORY_COLORS: Record<string, string> = {
     'bg-red-500': '#dc2626',    // Red 600
     'bg-zinc-400': '#71717a',   // Zinc 500
     'bg-blue-400': '#2563eb',   // Blue 600
+    'bg-purple-500': '#9333ea', // Purple 600
     'bg-pink-400': '#db2777',   // Pink 600
     'bg-green-500': '#16a34a',  // Green 600
 };
@@ -81,12 +82,8 @@ export function MyBarModal({
             );
         }
 
-        // Sort by Name
-        const sorted = [...filteredList].sort((a, b) => {
-            const nameA = lang === 'zh' ? a.name_zh : a.name_en;
-            const nameB = lang === 'zh' ? b.name_zh : b.name_en;
-            return nameA.localeCompare(nameB);
-        });
+        // Use pre-sorted list from DB (via useIngredients)
+        const sorted = [...filteredList];
 
         sorted.forEach(ing => {
             // Default to garnish if category is unknown

@@ -85,7 +85,7 @@ export function useIngredients(): UseIngredientsResult {
         }
 
         const currentFetchPromise = Promise.all([
-            supabase.from('ingredients').select('*')
+            supabase.from('ingredients').select('*').order('sort_order', { ascending: true }).order('id', { ascending: true })
                 .then(({ data, error }) => { if (error) throw error; return data as Ingredient[]; }),
 
             Promise.all([
