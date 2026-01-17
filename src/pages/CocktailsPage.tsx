@@ -93,6 +93,8 @@ export function CocktailsPage({ allRecipes, favorites, toggleFavorite, onSelectR
         { id: 'whiskey', label: lang === 'zh' ? '威士忌' : 'Whiskey' },
         { id: 'brandy', label: lang === 'zh' ? '白蘭地' : 'Brandy' },
         { id: 'champagne', label: lang === 'zh' ? '香檳/氣泡酒' : 'Champagne / Sparkling' },
+        { id: 'umeshu', label: lang === 'zh' ? '梅酒' : 'Plum Wine' },
+        { id: 'baileys', label: lang === 'zh' ? '奶酒' : 'Cream Liqueur' },
         { id: 'liqueur', label: lang === 'zh' ? '利口酒' : 'Liqueur' },
         { id: 'wine', label: lang === 'zh' ? '葡萄酒' : 'Wine' },
         { id: 'beer', label: lang === 'zh' ? '啤酒' : 'Beer' },

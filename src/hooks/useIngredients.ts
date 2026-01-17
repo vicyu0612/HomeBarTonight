@@ -10,8 +10,30 @@ export interface Ingredient {
     aliases?: string[];
 }
 
+export interface Category {
+    id: string;
+    name_en: string;
+    name_zh: string;
+    sort_order: number;
+    color: string;
+}
+
+export interface Subcategory {
+    id: string;
+    category_id: string;
+    name_en: string;
+    name_zh: string;
+    sort_order: number;
+}
+
+export interface CategoriesMetadata {
+    categories: Category[];
+    subcategories: Subcategory[];
+}
+
 interface UseIngredientsResult {
     ingredients: Ingredient[];
+    categoriesMetadata: CategoriesMetadata;
     loading: boolean;
     error: Error | null;
     normalizeIngredient: (name: string, lang: 'en' | 'zh') => string[];
@@ -19,35 +41,32 @@ interface UseIngredientsResult {
     refetch: () => Promise<void>;
 }
 
-// Global cache to avoid re-fetching on every mount (simple singleton)
+// Global cache
 let cachedIngredients: Ingredient[] | null = null;
-let fetchPromise: Promise<Ingredient[]> | null = null;
+let cachedMetadata: CategoriesMetadata | null = null;
+let fetchPromise: Promise<[Ingredient[], CategoriesMetadata]> | null = null;
 
 export function useIngredients(): UseIngredientsResult {
     const [ingredients, setIngredients] = useState<Ingredient[]>(cachedIngredients || []);
+    const [metadata, setMetadata] = useState<CategoriesMetadata>(cachedMetadata || { categories: [], subcategories: [] });
     const [loading, setLoading] = useState(!cachedIngredients);
     const [error, setError] = useState<Error | null>(null);
 
-    // Maps for fast lookup (rebuilt if ingredients change or on mount)
-    // We use refs or memo to store them?
-    // Since ingredients is state, we can compute these.
-    // However, computing them on every render is expensive if list is huge? 
-    // It's ~120 items. Cheap.
-
-    const fetchIngredients = async (force = false) => {
-        if (!force && cachedIngredients) {
+    const fetchData = async (force = false) => {
+        if (!force && cachedIngredients && cachedMetadata) {
             setIngredients(cachedIngredients);
+            setMetadata(cachedMetadata);
             setLoading(false);
-            setError(null); // Clear any previous error
+            setError(null);
             return;
         }
 
-        // If a fetch is already in progress and not forcing, await it
         if (!force && fetchPromise) {
-            setLoading(true); // Still show loading if waiting for an ongoing fetch
+            setLoading(true);
             try {
-                const data = await fetchPromise;
-                setIngredients(data);
+                const [ingData, metaData] = await fetchPromise;
+                setIngredients(ingData);
+                setMetadata(metaData);
                 setError(null);
             } catch (err: any) {
                 setError(err);
@@ -58,33 +77,43 @@ export function useIngredients(): UseIngredientsResult {
         }
 
         setLoading(true);
-        setError(null); // Clear previous errors before new fetch
+        setError(null);
 
         if (!supabase) {
             setLoading(false);
             return;
         }
 
-        const currentFetchPromise = supabase
-            .from('ingredients')
-            .select('*')
-            .then(({ data, error }) => {
-                if (error) throw error;
-                return data as Ingredient[];
-            }) as Promise<Ingredient[]>;
+        const currentFetchPromise = Promise.all([
+            supabase.from('ingredients').select('*')
+                .then(({ data, error }) => { if (error) throw error; return data as Ingredient[]; }),
 
-        fetchPromise = currentFetchPromise; // Store the promise globally
+            Promise.all([
+                supabase.from('ingredient_categories').select('*').order('sort_order'),
+                supabase.from('ingredient_subcategories').select('*').order('sort_order')
+            ]).then(([cats, subcats]) => {
+                if (cats.error) throw cats.error;
+                if (subcats.error) throw subcats.error;
+                return {
+                    categories: cats.data as Category[],
+                    subcategories: subcats.data as Subcategory[]
+                };
+            })
+        ]);
+
+        fetchPromise = currentFetchPromise;
 
         try {
-            const data = await currentFetchPromise;
-            cachedIngredients = data;
-            setIngredients(data);
+            const [ingData, metaData] = await currentFetchPromise;
+            cachedIngredients = ingData;
+            cachedMetadata = metaData;
+            setIngredients(ingData);
+            setMetadata(metaData);
         } catch (err: any) {
-            console.error('Error fetching ingredients:', err);
+            console.error('Error fetching ingredients/metadata:', err);
             setError(err);
         } finally {
             setLoading(false);
-            // Only clear fetchPromise if it's the one we just started.
             if (fetchPromise === currentFetchPromise) {
                 fetchPromise = null;
             }
@@ -92,23 +121,20 @@ export function useIngredients(): UseIngredientsResult {
     };
 
     useEffect(() => {
-        fetchIngredients();
+        fetchData();
     }, []);
 
-    const refetch = () => fetchIngredients(true);
+    const refetch = () => fetchData(true);
 
     // --- Normalization Logic ---
-
     // Build Maps
     const nameToIdZH: Record<string, string> = {};
     const nameToIdEN: Record<string, string> = {};
-    const aliasMap: Record<string, string> = {}; // alias -> id
+    const aliasMap: Record<string, string> = {};
 
     ingredients.forEach(ing => {
         nameToIdEN[ing.name_en.toLowerCase()] = ing.id;
         nameToIdZH[ing.name_zh] = ing.id;
-
-        // Exact aliases
         if (ing.aliases) {
             ing.aliases.forEach(alias => {
                 aliasMap[alias.toLowerCase()] = ing.id;
@@ -123,11 +149,9 @@ export function useIngredients(): UseIngredientsResult {
     };
 
     const normalizeIngredient = (name: string, lang: 'en' | 'zh'): string[] => {
-        // 0. Remove content in parentheses
         let cleanName = name.replace(/\s*\(.*?\)/g, '').trim();
         if (!cleanName) cleanName = name.trim();
 
-        // 1. Split compound ingredients
         const splitters = lang === 'en' ? [/ or /i, /\//] : [/或/, /、/, /\//, /／/];
         let parts = [cleanName];
 
@@ -139,7 +163,6 @@ export function useIngredients(): UseIngredientsResult {
             parts = newParts;
         }
 
-        // 2. Normalize each part
         const normalizedIds = new Set<string>();
 
         parts.forEach(part => {
@@ -150,44 +173,28 @@ export function useIngredients(): UseIngredientsResult {
             let id: string | undefined;
 
             if (lang === 'zh') {
-                // Exact name
                 id = nameToIdZH[p];
-                // Exact alias
                 if (!id) id = aliasMap[p];
-
-                // Fuzzy fallback (The "Backend-driven" part: check if input contains any alias)
                 if (!id) {
-                    // Iterate all ingredients, check if any alias is a substring of p
-                    // OR if base name is substring?
-                    // normalization.ts checked `if (p.includes('威士忌'))`. '威士忌' is name_zh of whiskey.
-                    // So we check if any ingredient's name_zh or alias is contained in p.
-
                     const match = ingredients.find(ing => {
                         if (p.includes(ing.name_zh)) return true;
-                        if (ing.aliases) {
-                            return ing.aliases.some(alias => p.includes(alias));
-                        }
+                        if (ing.aliases) return ing.aliases.some(alias => p.includes(alias));
                         return false;
                     });
                     if (match) id = match.id;
                 }
             } else {
-                // EN
                 id = nameToIdEN[lowerP];
                 if (!id) id = aliasMap[lowerP];
-
                 if (!id) {
                     const match = ingredients.find(ing => {
                         if (lowerP.includes(ing.name_en.toLowerCase())) return true;
-                        if (ing.aliases) {
-                            return ing.aliases.some(alias => lowerP.includes(alias.toLowerCase()));
-                        }
+                        if (ing.aliases) return ing.aliases.some(alias => lowerP.includes(alias.toLowerCase()));
                         return false;
                     });
                     if (match) id = match.id;
                 }
             }
-
             normalizedIds.add(id || p);
         });
 
@@ -196,6 +203,7 @@ export function useIngredients(): UseIngredientsResult {
 
     return {
         ingredients,
+        categoriesMetadata: metadata,
         loading,
         error,
         normalizeIngredient,

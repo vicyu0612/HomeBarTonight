@@ -3,7 +3,7 @@ import { MyBarModal, type IngredientItem } from '../components/MyBarModal';
 import { ShakerIcon } from '../components/ShakerIcon';
 import clsx from 'clsx';
 import type { Recipe } from '../data/recipes';
-import { useIngredients } from '../hooks/useIngredients'; // Dynamic Hook
+import { useIngredients, type CategoriesMetadata } from '../hooks/useIngredients'; // Dynamic Hook
 import { RecipeCard } from '../components/RecipeCard';
 import { RecipeCardSkeleton } from '../components/RecipeCardSkeleton';
 import { useSubscription } from '../hooks/useSubscription';
@@ -16,6 +16,7 @@ interface MyBarPageProps {
     myInventory: Set<string>;
     setMyInventory: (inventory: Set<string>) => void;
     allIngredients: IngredientItem[];
+    categoriesMetadata: CategoriesMetadata; // New Prop
     lang: 'en' | 'zh';
     onSelectRecipe: (recipe: Recipe, list?: Recipe[]) => void;
     favorites: Set<string>;
@@ -28,6 +29,7 @@ export function MyBarPage({
     myInventory,
     setMyInventory,
     allIngredients,
+    categoriesMetadata,
     lang,
     onSelectRecipe,
     favorites,
@@ -367,6 +369,7 @@ export function MyBarPage({
                 setMyInventory={setMyInventory}
                 lang={lang}
                 allIngredients={allIngredients}
+                categoriesMetadata={categoriesMetadata}
                 onRefresh={onRefresh}
             />
         </div >

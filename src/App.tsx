@@ -1,19 +1,14 @@
-import { useEffect, useState, useMemo, lazy, Suspense, useCallback } from 'react';
+import { useEffect, useState, lazy, Suspense } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { recipes as localRecipes, type Recipe } from './data/recipes';
-import { supabase } from './supabaseClient';
-import type { Session } from '@supabase/supabase-js';
+import { type Recipe } from './data/recipes';
 import { RecipeDetailModal } from './RecipeDetailModal';
 import { TabBar, type TabId } from './components/TabBar';
-import { type IngredientItem } from './components/MyBarModal';
 import { Capacitor } from '@capacitor/core';
 import { App as CapApp } from '@capacitor/app';
-import { Browser } from '@capacitor/browser';
 
 import { MixingShaker } from './components/MixingShaker';
 
 // Pages
-// Pages (Lazy Loaded)
 const CocktailsPage = lazy(() => import('./pages/CocktailsPage').then(module => ({ default: module.CocktailsPage })));
 const MyBarPage = lazy(() => import('./pages/MyBarPage').then(module => ({ default: module.MyBarPage })));
 const FavoritesPage = lazy(() => import('./pages/FavoritesPage').then(module => ({ default: module.FavoritesPage })));
@@ -21,10 +16,12 @@ const ExplorePage = lazy(() => import('./pages/ExplorePage').then(module => ({ d
 const CollectionDetailPage = lazy(() => import('./pages/CollectionDetailPage').then(module => ({ default: module.CollectionDetailPage })));
 const SettingsPage = lazy(() => import('./pages/SettingsPage').then(module => ({ default: module.SettingsPage })));
 
-import { collections as fallbackCollections, type Collection } from './data/collections';
 import { useIngredients } from './hooks/useIngredients';
 import { useSubscription } from './hooks/useSubscription';
-
+import { useAuth } from './hooks/useAuth';
+import { useRecipes, filterRecipes } from './hooks/useRecipes';
+import { useFavorites } from './hooks/useFavorites';
+import { useInventory } from './hooks/useInventory';
 
 
 // Language Detection Helper
@@ -78,128 +75,23 @@ function App() {
 
   const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(null);
   const [currentList, setCurrentList] = useState<Recipe[]>([]);
-  /* Removed unused activeCollectionId */
   const [isShaking, setIsShaking] = useState(false);
 
-  // Auth State
-  const [session, setSession] = useState<Session | null>(null);
+  // Custom Hooks
+  const { session, login, logout, deleteAccount } = useAuth();
+  const { allRecipes, allCollections, refreshRecipes } = useRecipes();
+  // Alias hooked ingredients to match prop name
+  const { ingredients: allIngredients, categoriesMetadata, refetch: refetchIngredients } = useIngredients();
+  const { favorites, toggleFavorite, clearFavorites } = useFavorites(session);
+  const { myInventory, saveInventory, clearInventory } = useInventory(session);
+  const { restorePurchases } = useSubscription();
 
-  // Data State
-  const [allRecipes, setAllRecipes] = useState<Recipe[]>(localRecipes);
-  const [allIngredients, setAllIngredients] = useState<IngredientItem[]>([]);
-  const [allCollections, setAllCollections] = useState<Collection[]>(fallbackCollections);
-
-  // Inventory State
-  const [myInventory, setMyInventory] = useState<Set<string>>(() => {
-    try {
-      const saved = localStorage.getItem('myInventory');
-      return saved ? new Set(JSON.parse(saved)) : new Set();
-    } catch { return new Set(); }
-  });
-
-  useEffect(() => {
-    localStorage.setItem('myInventory', JSON.stringify(Array.from(myInventory)));
-  }, [myInventory]);
-
-  // Favorites State
-  const [favorites, setFavorites] = useState<Set<string>>(() => {
-    try {
-      const saved = localStorage.getItem('favorites');
-      return saved ? new Set(JSON.parse(saved)) : new Set();
-    } catch { return new Set(); }
-  });
-
-  useEffect(() => {
-    localStorage.setItem('favorites', JSON.stringify(Array.from(favorites)));
-  }, [favorites]);
-
-
-  const { ingredients: hookedIngredients, refetch: refetchIngredients } = useIngredients();
-
-  // ... (existing state) ...
-
-  // Sync hook data to existing state for prop compatibility
-  useEffect(() => {
-    // Map to IngredientItem if types differ slightly, but they match mostly.
-    // useIngredients defines Ingredient with aliases, IngredientItem in MyBarModal doesn't have aliases but has extra fields?
-    // MyBarModal IngredientItem: id, name_en, name_zh, category.
-    // useIngredients Ingredient: id, name_en, name_zh, category, aliases.
-    // It's compatible (extra fields are fine).
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    setAllIngredients(hookedIngredients as any);
-  }, [hookedIngredients]);
-
-  // ... (fetchData) ...
-  const fetchData = useCallback(async () => {
-    if (!supabase) return;
-    const { data: recipeData } = await supabase.from('recipes').select('*').order('id', { ascending: true });
-    // ... (recipe processing) ...
-    if (recipeData && recipeData.length > 0) {
-      // ... (setAllRecipes logic) ...
-      setAllRecipes(recipeData.map((r: any) => ({
-        id: r.id, name: r.name, type: r.type, baseSpirit: r.base_spirit,
-        ingredients: r.ingredients, steps: r.steps, tags: r.tags,
-        description: r.description, specs: r.specs, color: r.color,
-        image: r.image ? `${r.image}?v=${new Date().getTime()}` : (r.image || ""),
-        collections: r.collections,
-        is_premium: r.is_premium
-      })));
-    }
-
-    if (supabase) {
-      // Ingredients fetching REMOVED - handled by useIngredients hook.
-      // But we call refetchIngredients() if we want a fresh copy during refresh.
-      // Since fetchData is called on mount, refetchIngredients() might be redundant if hook already fetched on mount.
-      // But for PullToRefresh, we need it.
-      // We will export a wrapper `refreshData` that calls both.
-
-      // Fetch Collections
-      const { data: colData } = await supabase
-        .from('collections')
-        .select('*')
-        .eq('is_active', true)
-        .order('sort_order', { ascending: true });
-
-      if (colData && colData.length > 0) {
-        // ... (collection mapping) ...
-        const mappedCollections: Collection[] = colData.map((c: any) => ({
-          id: c.id,
-          title: c.title,
-          subtitle: c.subtitle,
-          type: c.type,
-          recipeIds: c.recipe_ids,
-          coverImage: c.cover_image,
-          coverImageEn: c.cover_image_en,
-          themeColor: c.theme_color,
-          description: c.description,
-          sortOrder: c.sort_order,
-          isActive: c.is_active
-        }));
-        setAllCollections(mappedCollections);
-      }
-    }
-  }, [supabase]);
-
+  // Combined Refresh
   const handleRefresh = async () => {
-    await Promise.all([fetchData(), refetchIngredients()]);
+    await Promise.all([refreshRecipes(), refetchIngredients()]);
   };
 
-
-
-  // --- Auth & Sync Logic ---
-  useEffect(() => {
-    if (!supabase) return;
-    supabase.auth.getSession().then(({ data: { session } }) => setSession(session));
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => setSession(session));
-
-    fetchData();
-
-    return () => subscription.unsubscribe();
-  }, [supabase, fetchData]);
-
-  // --- Persistence Logic for Modals ---
-
-  // 1. Recipe Detail Modal Persistence
+  // Recipe Detail Modal Persistence
   const [initialRecipeId] = useState(() => localStorage.getItem('selectedRecipeId'));
 
   // Sync selectedRecipe to localStorage
@@ -211,11 +103,6 @@ function App() {
     }
   }, [selectedRecipe]);
 
-  // (Removed conflicting restoration effect)
-
-  // Better approach for restoration effect:
-  // We only want to attempt restoration if we HAVEN'T interacted yet?
-  // Let's use a ref or a separate state "hasRestored" to prevent re-opening.
   const [hasRestoredRecipe, setHasRestoredRecipe] = useState(false);
 
   useEffect(() => {
@@ -230,9 +117,7 @@ function App() {
     }
   }, [allRecipes, initialRecipeId, hasRestoredRecipe]);
 
-  const { restorePurchases } = useSubscription();
-
-  // Listen for Deep Links (Auth Callback & Custom Actions)
+  // Listen for Deep Links (Restore Only)
   useEffect(() => {
     if (!Capacitor.isNativePlatform()) return;
 
@@ -253,144 +138,37 @@ function App() {
         }
         return;
       }
-
-      // 2. Handle Auth Callback
-      if (url.includes('access_token') || url.includes('refresh_token')) {
-        const hashMap = new URLSearchParams(new URL(url).hash.substring(1));
-        const accessToken = hashMap.get('access_token');
-        const refreshToken = hashMap.get('refresh_token');
-
-        if (accessToken && refreshToken && supabase) {
-          const { error } = await supabase.auth.setSession({ access_token: accessToken, refresh_token: refreshToken });
-          if (error) console.error('Set Session Error:', error);
-          try { await Browser.close(); } catch { }
-        }
-      }
     });
   }, [restorePurchases]);
 
-  // Sync favorites/inventory on login
-  useEffect(() => {
-    if (!session || !supabase) return;
 
-    const sync = async () => {
-      if (!supabase) return;
-      const currentUser = session.user.id;
-      const lastUser = localStorage.getItem('app_last_session_user');
-      const isSameUser = lastUser === currentUser;
+  const handleLogout = async () => {
+    // 0. Final Sync (Inventory) ensures latest state is saved before logout
+    if (session?.user?.id && myInventory.size > 0) {
+      await saveInventory(myInventory);
+    }
 
-      // Update tracker
-      localStorage.setItem('app_last_session_user', currentUser);
+    // 1. Clear Local State immediately
+    clearFavorites();
+    clearInventory();
+    localStorage.removeItem('app_last_session_user'); // Clear legacy sync tracker
 
-      try {
-        // --- 1. Favorites Strategy ---
-        // If switching users or new login (Guest -> User), MERGE local additions to server.
-        // If restoring session (Same User), TRUST SERVER (Overwrite local to prevent zombie items).
-
-        if (!isSameUser) {
-          const localArray = Array.from(favorites);
-          if (localArray.length > 0) {
-            // Check existing on server to avoid duplicates (though insert handles it usually, cleaner to check)
-            const { data: existing } = await supabase.from('favorites').select('recipe_id').eq('user_id', currentUser);
-            const existingIds = new Set(existing?.map((x: { recipe_id: string }) => x.recipe_id) || []);
-
-            // Only insert items that are NOT on server yet
-            const toAdd = localArray.filter(id => !existingIds.has(id));
-            if (toAdd.length > 0) {
-              await supabase.from('favorites').insert(toAdd.map(id => ({ user_id: currentUser, recipe_id: id })));
-            }
-          }
-        }
-
-        // ALWAYS fetch final state from server to ensure consistency
-        const { data: dbFavs, error: favError } = await supabase.from('favorites').select('recipe_id').eq('user_id', currentUser);
-        if (!favError && dbFavs) {
-          // Verify we aren't overwriting with empty if fetch failed dangerously, but error check handles that.
-          setFavorites(new Set(dbFavs.map((f: { recipe_id: string }) => f.recipe_id)));
-        }
-
-        // --- 2. Inventory Strategy ---
-        // Similar logic: If new flow, merge. If restore, trust server (or merge conservatively).
-        // For simplicity and safety, we merge if !isSameUser, and trust server if isSameUser.
-
-        const { data: invData, error: invError } = await supabase.from('user_inventory').select('ingredients').eq('user_id', currentUser).single();
-
-        if (!invError && invData) {
-          const ingredientsArray: string[] = Array.isArray(invData.ingredients) ? invData.ingredients : [];
-          const serverInv = new Set<string>(ingredientsArray);
-
-          if (!isSameUser && myInventory.size > 0) {
-            // Merge Local -> Server
-            const combined = new Set<string>([...serverInv, ...myInventory]);
-            // If combined has more items than server, update server
-            if (combined.size > serverInv.size) {
-              await supabase.from('user_inventory').upsert({
-                user_id: currentUser,
-                ingredients: Array.from(combined),
-                updated_at: new Date().toISOString()
-              });
-              setMyInventory(combined);
-            } else {
-              setMyInventory(serverInv);
-            }
-          } else {
-            // Restore Session: Trust Server
-            setMyInventory(serverInv);
-          }
-        }
-      } catch (e) {
-        console.error('Sync Error:', e);
-      }
-    };
-
-    sync();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [session]); // Only run on session change
-
-  const saveInventory = async (inv: Set<string>) => {
-    setMyInventory(inv); // Optimistic Update
-    if (!session?.user || !supabase) return;
-    await supabase.from('user_inventory').upsert({
-      user_id: session.user.id,
-      ingredients: Array.from(inv),
-      updated_at: new Date().toISOString()
-    });
+    // 2. Call Supabase SignOut
+    await logout();
   };
 
-  const toggleFavorite = async (id: string, e?: React.MouseEvent) => {
-    e?.stopPropagation();
-    const prevFavs = new Set(favorites); // Backup
-    const newFavs = new Set(favorites);
-    const isAdding = !newFavs.has(id);
-
-    // Optimistic Update
-    if (isAdding) newFavs.add(id); else newFavs.delete(id);
-    setFavorites(newFavs);
-
-    if (session && supabase) {
-      try {
-        const cleanId = id.trim();
-        if (isAdding) {
-          // Check if already exists to prevent duplicate key error if UI is out of sync
-          const { data: existing } = await supabase.from('favorites').select('id').eq('recipe_id', cleanId).eq('user_id', session.user.id).maybeSingle();
-          if (!existing) {
-            const { error } = await supabase.from('favorites').insert({ user_id: session.user.id, recipe_id: cleanId });
-            if (error) throw error;
-          }
-        } else {
-          // Use 'match' or simple eq. Rely on RLS for user_id security to minimize mismatch risk.
-          const { error } = await supabase.from('favorites').delete({ count: 'exact' }).eq('recipe_id', cleanId);
-          if (error) throw error;
-
-          // If count is 0, it means it wasn't in the DB anyway. That's fine (Result is "Not Favorited").
-          // No need to revert.
-        }
-      } catch (err) {
-        console.error('Toggle Favorite Error:', err);
-        // Revert on error
-        setFavorites(prevFavs);
-        // Optional: Show toast here
+  const handleDeleteAccount = async () => {
+    // Original logic: delete -> logout -> alert.
+    // useAuth.deleteAccount calls logout internally.
+    try {
+      const success = await deleteAccount();
+      if (success) {
+        clearFavorites();
+        clearInventory();
+        alert('Your account has been permanently deleted.');
       }
+    } catch (e) {
+      alert('Failed to delete account. Please try again.');
     }
   };
 
@@ -426,90 +204,7 @@ function App() {
     if (idx < currentList.length - 1) setSelectedRecipe(currentList[idx + 1]);
   };
 
-  const handleLogin = async (provider: 'google' | 'apple') => {
-    if (!supabase) return;
-
-    if (Capacitor.isNativePlatform()) {
-      // Native: Use Browser Plugin to ensure Safari View Controller (SVC)
-      // This satisfies App Store Guideline 4.0 (avoiding default browser app)
-
-      const { data, error } = await supabase.auth.signInWithOAuth({
-        provider: provider,
-        options: {
-          redirectTo: 'homebartonight://auth/callback',
-          skipBrowserRedirect: true // We handle redirection manually via Browser.open
-        }
-      });
-
-      if (error) {
-        console.error('Login Error:', error);
-        return;
-      }
-
-      if (data?.url) {
-        // Open the Auth URL in the In-App Browser (SVC on iOS)
-        await Browser.open({
-          url: data.url,
-          windowName: '_self', // Suggests opening in-place/SVC
-          presentationStyle: 'fullscreen' // Fallback to fullscreen as pageSheet is flaky on some versions
-        });
-      }
-    } else {
-      // Web: Standard Redirect
-      await supabase.auth.signInWithOAuth({
-        provider: provider,
-        options: { redirectTo: window.location.origin }
-      });
-    }
-  };
-
-  const handleLogout = async () => {
-    if (!supabase) return;
-    const userId = session?.user?.id;
-
-    try {
-      // 0. Final Sync (Inventory) ensures latest state is saved before logout
-      if (userId && myInventory.size > 0) {
-        await supabase.from('user_inventory').upsert({
-          user_id: userId,
-          ingredients: Array.from(myInventory),
-          updated_at: new Date().toISOString()
-        });
-      }
-
-      // 1. Clear Local State immediately
-      setFavorites(new Set());
-      setMyInventory(new Set());
-      localStorage.removeItem('app_last_session_user'); // Clear sync tracker
-      setSession(null); // Force UI update
-
-      // 2. Call Supabase SignOut
-      const { error } = await supabase.auth.signOut();
-      if (error) console.error('SignOut Error:', error);
-    } catch (e) {
-      console.error('Logout Exception:', e);
-    }
-  };
-
-  const handleDeleteAccount = async () => {
-    if (!supabase) return;
-    try {
-      const { error } = await supabase.rpc('delete_own_account');
-      if (error) throw error;
-      // After successful deletion, clean up like logout
-      await handleLogout();
-      alert('Your account has been permanently deleted.');
-    } catch (e) {
-      console.error('Delete Account Error:', e);
-      alert('Failed to delete account. Please try again.');
-    }
-  };
-
-  // Helper function to filter recipes based on collection rules
-  const filterRecipes = useMemo(() => (collection: Collection, recipes: Recipe[]): Recipe[] => {
-    // Unify logic: Filter recipes that have this collection's ID in their collections array
-    return recipes.filter(r => r.collections && r.collections.includes(collection.id));
-  }, []);
+  const handleLogin = (provider: 'google' | 'apple') => login(provider);
 
   useEffect(() => {
     // Handle browser back/forward for collection detail page
@@ -611,7 +306,9 @@ function App() {
               allRecipes={allRecipes}
               myInventory={myInventory}
               setMyInventory={saveInventory}
-              allIngredients={allIngredients}
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              allIngredients={allIngredients as any}
+              categoriesMetadata={categoriesMetadata}
               lang={lang}
               onSelectRecipe={handleSelectRecipe}
               favorites={favorites}
