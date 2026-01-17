@@ -7,7 +7,9 @@ export interface Collection {
     type: 'curated' | 'filter';
     recipeIds?: string[]; // For curated
     coverImage?: string;
-    coverImageEn?: string; // Localized cover image for English
+    coverImageEn?: string | null; // Localized cover image for English
+    blurhash?: string | null;
+    blurhashEn?: string | null;
     themeColor?: string; // CSS gradient classes
     description?: { en: string; zh: string };
     sortOrder?: number;

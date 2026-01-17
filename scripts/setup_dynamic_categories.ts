@@ -68,6 +68,7 @@ const subcategories = [
 
     // Garnish
     { id: 'pantry', category_id: 'garnish', name_en: 'Pantry', name_zh: '家中常備', sort_order: 1 },
+    { id: 'herbs_spices', category_id: 'garnish', name_en: 'Herbs & Spices', name_zh: '香料 & 藥草', sort_order: 2 },
 ];
 
 async function setup() {

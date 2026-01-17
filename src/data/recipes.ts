@@ -23,6 +23,7 @@ export interface Recipe {
     image: string;
     collections?: string[];
     is_premium?: boolean;
+    blurhash?: string;
 }
 
 export const recipes: Recipe[] = [

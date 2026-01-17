@@ -79,7 +79,7 @@ function App() {
 
   // Custom Hooks
   const { session, login, logout, deleteAccount } = useAuth();
-  const { allRecipes, allCollections, refreshRecipes } = useRecipes();
+  const { allRecipes, allCollections, loading: recipesLoading, refreshRecipes } = useRecipes();
   // Alias hooked ingredients to match prop name
   const { ingredients: allIngredients, categoriesMetadata, refetch: refetchIngredients } = useIngredients();
   const { favorites, toggleFavorite, clearFavorites } = useFavorites(session);
@@ -248,6 +248,7 @@ function App() {
               toggleFavorite={toggleFavorite}
               favorites={favorites}
               onRefresh={handleRefresh}
+              loading={recipesLoading}
             />
 
             <AnimatePresence>
@@ -297,6 +298,7 @@ function App() {
               lang={lang}
               onShake={handleShake}
               onRefresh={handleRefresh}
+              loading={recipesLoading}
             />
           </div>
 

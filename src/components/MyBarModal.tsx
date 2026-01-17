@@ -27,6 +27,18 @@ interface MyBarModalProps {
     onRefresh?: () => Promise<void>;
 }
 
+// Map tailwind bg classes to hex values for reliable borders
+// Using darker shades (600/500) to ensure white text is readable
+const CATEGORY_COLORS: Record<string, string> = {
+    'bg-amber-500': '#d97706', // Amber 600
+    'bg-orange-500': '#ea580c', // Orange 600
+    'bg-red-500': '#dc2626',    // Red 600
+    'bg-zinc-400': '#71717a',   // Zinc 500
+    'bg-blue-400': '#2563eb',   // Blue 600
+    'bg-pink-400': '#db2777',   // Pink 600
+    'bg-green-500': '#16a34a',  // Green 600
+};
+
 export function MyBarModal({
     isOpen,
     onClose,
@@ -253,15 +265,21 @@ export function MyBarModal({
                                         <section key={sectionMeta.id}>
                                             <div className="flex justify-between items-center mb-4 sticky top-0 bg-black py-3 z-10 px-4 -mx-4 border-b border-white/5">
                                                 <h3 className="text-base font-bold text-zinc-300 uppercase tracking-wider flex items-center gap-2">
-                                                    <span className={`w-1.5 h-1.5 rounded-full ${color}`}></span>
+                                                    <span
+                                                        className={`w-1.5 h-1.5 rounded-full`}
+                                                        style={{ backgroundColor: CATEGORY_COLORS[color] || color.replace('bg-', '') }} // Apply consistent color
+                                                    ></span>
                                                     {title}
                                                 </h3>
                                                 <button
                                                     onClick={() => toggleSection(sectionData)}
                                                     className={`text-sm px-2 py-1 rounded transition-colors ${isSectionSelected(sectionData)
                                                         ? 'text-zinc-400 hover:text-zinc-200 hover:bg-white/10'
-                                                        : 'text-indigo-500 hover:text-indigo-400 hover:bg-indigo-500/10'
+                                                        : 'hover:bg-white/5'
                                                         }`}
+                                                    style={{
+                                                        color: isSectionSelected(sectionData) ? undefined : (CATEGORY_COLORS[color] || '#60a5fa')
+                                                    }}
                                                 >
                                                     {isSectionSelected(sectionData)
                                                         ? (lang === 'zh' ? '全取消' : 'Unselect All')
@@ -277,7 +295,11 @@ export function MyBarModal({
                                                     if (!items || items.length === 0) return null;
 
                                                     return (
-                                                        <div key={subMeta.id} className="mb-4 pl-2 border-l border-white/5 ml-1">
+                                                        <div
+                                                            key={subMeta.id}
+                                                            className="mb-8 pl-3 border-l-2 border-solid ml-1"
+                                                            style={{ borderColor: CATEGORY_COLORS[color] || '#a1a1aa' }}
+                                                        >
                                                             <div className="flex justify-between items-center mb-2">
                                                                 <h4 className="text-xs font-semibold text-zinc-500 uppercase tracking-wide">
                                                                     {lang === 'zh' ? subMeta.name_zh : subMeta.name_en}
@@ -291,9 +313,14 @@ export function MyBarModal({
                                                                         className={clsx(
                                                                             "whitespace-nowrap px-4 py-2 rounded-full text-sm font-medium border transition-colors",
                                                                             myInventory.has(item)
-                                                                                ? "bg-indigo-500 text-white border-indigo-500 shadow-md shadow-indigo-500/20"
+                                                                                ? "text-white shadow-md border-transparent"
                                                                                 : "bg-zinc-800/40 text-zinc-400 border-white/10 hover:bg-zinc-700"
                                                                         )}
+                                                                        style={myInventory.has(item) ? {
+                                                                            backgroundColor: CATEGORY_COLORS[color] || '#6366f1',
+                                                                            borderColor: CATEGORY_COLORS[color] || '#6366f1',
+                                                                            boxShadow: `0 4px 6px -1px ${(CATEGORY_COLORS[color] || '#6366f1')}33`
+                                                                        } : undefined}
                                                                     >
                                                                         {getLabel(item)}
                                                                     </button>
@@ -314,9 +341,14 @@ export function MyBarModal({
                                                             className={clsx(
                                                                 "whitespace-nowrap px-4 py-2 rounded-full text-sm font-medium border transition-colors",
                                                                 myInventory.has(item)
-                                                                    ? "bg-indigo-500 text-white border-indigo-500 shadow-md shadow-indigo-500/20"
+                                                                    ? "text-white shadow-md border-transparent"
                                                                     : "bg-zinc-800/40 text-zinc-400 border-white/10 hover:bg-zinc-700"
                                                             )}
+                                                            style={myInventory.has(item) ? {
+                                                                backgroundColor: CATEGORY_COLORS[color] || '#6366f1',
+                                                                borderColor: CATEGORY_COLORS[color] || '#6366f1',
+                                                                boxShadow: `0 4px 6px -1px ${(CATEGORY_COLORS[color] || '#6366f1')}33`
+                                                            } : undefined}
                                                         >
                                                             {getLabel(item)}
                                                         </button>

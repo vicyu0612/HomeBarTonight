@@ -4,6 +4,7 @@ import { Heart, X, Flame, GlassWater, Smile, Wine, ChevronLeft, ChevronRight } f
 import clsx from 'clsx';
 import { useSwipeBack } from './hooks/useSwipeBack';
 import { Paywall } from './components/Paywall';
+import { ImageWithLoader } from './components/ImageWithLoader';
 import { useSubscription } from './hooks/useSubscription';
 
 interface SpecBarProps {
@@ -84,17 +85,14 @@ export const RecipeDetailModal = ({ recipe, onClose, isFavorite, onToggleFavorit
             <div
                 className="w-full h-full overflow-hidden relative flex flex-col"
             >
-                {/* Dynamic Background Image */}
-                <motion.div className="absolute inset-0 z-0 h-[60vh]">
-                    <motion.img
+                <motion.div className="absolute inset-0 z-0 h-[60vh]" style={{ filter: useMotionTemplate`blur(${imageBlur}px)`, scale: imageScale }}>
+                    <ImageWithLoader
                         src={recipe.image}
                         alt={recipe.name.en}
-                        onError={(e) => {
-                            e.currentTarget.src = "/placeholder.png";
-                            e.currentTarget.onerror = null;
-                        }}
+                        blurHash={recipe.blurhash} // Pass blurhash
                         className="w-full h-full object-cover"
-                        style={{ filter: useMotionTemplate`blur(${imageBlur}px)`, scale: imageScale }}
+                        containerClassName="w-full h-full"
+                        priority
                     />
                     <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-transparent" />
                     <motion.div className="absolute inset-0 bg-black" style={{ opacity: overlayOpacity }} />

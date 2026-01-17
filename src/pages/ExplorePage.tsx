@@ -6,6 +6,7 @@ import { RecipeCard } from '../components/RecipeCard';
 import { RecipeCardSkeleton } from '../components/RecipeCardSkeleton';
 import { useSubscription } from '../hooks/useSubscription';
 import { PullToRefresh } from '../components/PullToRefresh';
+import { ImageWithLoader } from '../components/ImageWithLoader';
 import clsx from 'clsx';
 
 interface FeaturedBanner {
@@ -29,6 +30,7 @@ interface ExplorePageProps {
     toggleFavorite: (id: string, e?: React.MouseEvent) => void;
     favorites: Set<string>;
     onRefresh?: () => Promise<void>;
+    loading?: boolean;
 }
 
 export function ExplorePage({
@@ -40,7 +42,8 @@ export function ExplorePage({
     onSelectRecipe,
     toggleFavorite,
     favorites,
-    onRefresh
+    onRefresh,
+    loading
 }: ExplorePageProps) {
     const { isPro } = useSubscription();
     const [isScrolled, setIsScrolled] = useState(false);
@@ -142,10 +145,13 @@ export function ExplorePage({
                         )}
                     >
                         {(lang === 'en' && heroCollection.coverImageEn ? heroCollection.coverImageEn : heroCollection.coverImage) && (
-                            <img
-                                src={lang === 'en' && heroCollection.coverImageEn ? heroCollection.coverImageEn : heroCollection.coverImage}
+                            <ImageWithLoader
+                                src={(lang === 'en' && heroCollection.coverImageEn ? heroCollection.coverImageEn : heroCollection.coverImage) || ''}
                                 alt="Hero Cover"
-                                className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                                blurHash={(lang === 'en' && heroCollection.blurhashEn ? heroCollection.blurhashEn : heroCollection.blurhash) || undefined}
+                                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                                containerClassName="absolute inset-0 w-full h-full"
+                                priority={true}
                             />
                         )}
 
@@ -194,7 +200,7 @@ export function ExplorePage({
                                 style={{ WebkitOverflowScrolling: 'touch' }}
                             >
                                 <div className="snap-start shrink-0 w-0" /> {/* Leading Spacer (w-0 + gap-4 = 1rem offset) */}
-                                {allRecipes.length === 0 ? (
+                                {(loading && allRecipes.length === 0) ? (
                                     Array.from({ length: 3 }).map((_, i) => (
                                         <div key={i} className="snap-start shrink-0 w-[160px]">
                                             <RecipeCardSkeleton variant="vertical" />

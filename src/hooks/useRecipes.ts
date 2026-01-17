@@ -28,9 +28,10 @@ export function useRecipes() {
                     description: r.description,
                     specs: r.specs,
                     color: r.color,
-                    image: r.image ? `${r.image}?v=${new Date().getTime()}` : (r.image || ""),
+                    image: r.image || "",
                     collections: r.collections,
-                    is_premium: r.is_premium
+                    is_premium: r.is_premium,
+                    blurhash: r.blurhash
                 })));
             }
 
@@ -51,6 +52,8 @@ export function useRecipes() {
                     recipeIds: c.recipe_ids,
                     coverImage: c.cover_image,
                     coverImageEn: c.cover_image_en,
+                    blurhash: c.blurhash,
+                    blurhashEn: c.blurhash_en,
                     themeColor: c.theme_color,
                     description: c.description,
                     sortOrder: c.sort_order,

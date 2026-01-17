@@ -4,6 +4,22 @@ export default {
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
+  safelist: [
+    "bg-amber-500",
+    "bg-orange-500",
+    "bg-red-500",
+    "bg-zinc-400",
+    "bg-blue-400",
+    "bg-pink-400",
+    "bg-green-500",
+    "border-amber-500",
+    "border-orange-500",
+    "border-red-500",
+    "border-zinc-400",
+    "border-blue-400",
+    "border-pink-400",
+    "border-green-500"
+  ],
   future: {
     hoverOnlyWhenSupported: true,
   },

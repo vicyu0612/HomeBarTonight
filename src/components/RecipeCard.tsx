@@ -1,5 +1,6 @@
 import { motion, type HTMLMotionProps } from 'framer-motion';
 import { Heart, Martini, Crown } from 'lucide-react';
+import { ImageWithLoader } from './ImageWithLoader';
 import clsx from 'clsx';
 import type { Recipe } from '../data/recipes';
 import { forwardRef } from 'react';
@@ -55,12 +56,13 @@ export const RecipeCard = forwardRef<HTMLDivElement, RecipeCardProps>(({
     const ImageContent = (
         <>
             {recipe.image ? (
-                <img
+                <ImageWithLoader
                     src={recipe.image}
                     alt={recipe.name[lang]}
-                    onError={(e) => { e.currentTarget.src = "/placeholder.png"; }}
-                    loading={priority ? "eager" : "lazy"}
+                    priority={priority}
+                    blurHash={recipe.blurhash} // Pass blurhash
                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                    containerClassName="w-full h-full"
                 />
             ) : (
                 <div className="w-full h-full flex items-center justify-center text-zinc-700">

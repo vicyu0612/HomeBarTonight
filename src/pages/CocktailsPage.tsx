@@ -20,9 +20,10 @@ interface CocktailsPageProps {
     lang: 'en' | 'zh';
     onShake: () => void;
     onRefresh?: () => Promise<void>;
+    loading?: boolean;
 }
 
-export function CocktailsPage({ allRecipes, favorites, toggleFavorite, onSelectRecipe, lang, onShake, onRefresh }: CocktailsPageProps) {
+export function CocktailsPage({ allRecipes, favorites, toggleFavorite, onSelectRecipe, lang, onShake, onRefresh, loading }: CocktailsPageProps) {
     const { isPro } = useSubscription();
 
     // State Initialization with URL Search Params
@@ -102,8 +103,18 @@ export function CocktailsPage({ allRecipes, favorites, toggleFavorite, onSelectR
 
     const activeFilterCount = selectedCategories.size + selectedSpirits.size;
 
+    // Fisher-Yates Shuffle
+    const shuffledAllRecipes = useMemo(() => {
+        const array = [...allRecipes];
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    }, [allRecipes]);
+
     const filteredRecipes = useMemo(() => {
-        return allRecipes.filter(recipe => {
+        return shuffledAllRecipes.filter(recipe => {
             // Category filter (OR logic within categories)
             const categoryMatch = selectedCategories.size === 0 ||
                 (selectedCategories.has('classic') && recipe.type === 'classic') ||
@@ -128,7 +139,7 @@ export function CocktailsPage({ allRecipes, favorites, toggleFavorite, onSelectR
 
             return categoryMatch && spiritMatch && searchMatch;
         });
-    }, [allRecipes, selectedCategories, selectedSpirits, searchQuery]);
+    }, [shuffledAllRecipes, selectedCategories, selectedSpirits, searchQuery]);
 
     const [isSticky, setIsSticky] = useState(false);
 
@@ -344,7 +355,7 @@ export function CocktailsPage({ allRecipes, favorites, toggleFavorite, onSelectR
 
             {/* Recipe Grid */}
             <div className="px-4 flex-1 pt-4 pb-24">
-                {allRecipes.length === 0 ? (
+                {loading ? (
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pb-12">
                         {Array.from({ length: 6 }).map((_, i) => (
                             <RecipeCardSkeleton key={i} variant="horizontal" />
